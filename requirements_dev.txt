@@ -13,3 +13,5 @@ pytest-runner==4.2
 
 six==1.12.0
 XlsxWriter==1.1.8
+pandas==0.24.2
+xlrd == 1.2.0
