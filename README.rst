@@ -1,5 +1,5 @@
 ============
-spectrum-etl
+spectrum_etl
 ============
 
 
@@ -9,8 +9,8 @@ spectrum-etl
 .. image:: https://img.shields.io/travis/arfathpasha/spectrum_etl.svg
         :target: https://travis-ci.org/arfathpasha/spectrum_etl
 
-.. image:: https://readthedocs.org/projects/spectrum-etl/badge/?version=latest
-        :target: https://spectrum-etl.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/spectrum_etl/badge/?version=latest
+        :target: https://spectrum_etl.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
 
@@ -20,7 +20,7 @@ A repo for all ETL work that is needed in the larger spectrum workflow involving
 
 
 * Free software: MIT license
-* Documentation: https://spectrum-etl.readthedocs.io.
+* Documentation: https://spectrum_etl.readthedocs.io.
 
 
 Features
