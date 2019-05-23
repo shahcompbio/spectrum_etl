@@ -1,4 +1,4 @@
-Welcome to spectrum-etl's documentation!
+Welcome to spectrum_etl's documentation!
 ======================================
 
 .. toctree::

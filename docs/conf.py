@@ -47,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'spectrum-etl'
+project = u'spectrum_etl'
 copyright = u"2019, Arfath Pasha"
 author = u"Arfath Pasha"
 
@@ -129,7 +129,7 @@ latex_elements = {
 # [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'spectrum_etl.tex',
-     u'spectrum-etl Documentation',
+     u'spectrum_etl Documentation',
      u'Arfath Pasha', 'manual'),
 ]
 
@@ -140,7 +140,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc, 'spectrum_etl',
-     u'spectrum-etl Documentation',
+     u'spectrum_etl Documentation',
      [author], 1)
 ]
 
@@ -152,7 +152,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'spectrum_etl',
-     u'spectrum-etl Documentation',
+     u'spectrum_etl Documentation',
      author,
      'spectrum_etl',
      'One line description of project.',
