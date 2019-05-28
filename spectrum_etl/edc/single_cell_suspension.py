@@ -4,12 +4,7 @@ Created on May 23, 2019
 @author: pashaa@mskcc.org
 '''
 from abc import ABC
-import pandas as pd
 from openpyxl.styles import PatternFill
-from pandas import ExcelWriter
-from pandas import ExcelFile
-
-from spectrum_etl.edc.data.patient import Patient
 
 from openpyxl import load_workbook, styles
 
