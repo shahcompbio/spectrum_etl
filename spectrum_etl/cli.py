@@ -3,7 +3,7 @@
 """Console script for spectrum_etl."""
 import sys
 import click
-from .edc.single_cell_suspension import SingleCellSuspension
+from .edc.single_cell_suspension_workbook import SingleCellSuspension
 
 @click.command()
 def main(args=None):
