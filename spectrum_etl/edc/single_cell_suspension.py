@@ -5,13 +5,21 @@ Created on May 23, 2019
 '''
 from abc import ABC
 import pandas as pd
+from openpyxl.styles import PatternFill
 from pandas import ExcelWriter
 from pandas import ExcelFile
 
 from spectrum_etl.edc.data.patient import Patient
 
-from openpyxl import load_workbook
+from openpyxl import load_workbook, styles
 
+
+# DONE get and set cell color
+# DONE get and set worksheet protection state
+# TODO read patient tab, check for one new patient entry and store value
+# TODO read surgeries tab, check for one new surgery type entry, store value and generate surgery id
+# TODO read specimen tab, get one or more specimen sites and counts, store and generate speciment ids
+# TODO read generate aliquot ids
 
 class SingleCellSuspension(ABC):
     '''
@@ -21,7 +29,7 @@ class SingleCellSuspension(ABC):
     def __init__(self):
         wb = load_workbook('tests/spectrum_etl/edc/single_cell_suspension.xlsx')
 
-        patient_sheet = wb.get_sheet_by_name('patients')
+        patient_sheet = wb['patients']
 
 
         patient_mrn_cell = patient_sheet['A2']
@@ -58,7 +66,7 @@ class SingleCellSuspension(ABC):
         # for cell_tup in surgery_id_cell_range:
         #     print(">>>>>" + str(cell_tup[0].value))
 
-        wb.save('single_cell_suspension_v1.xlsx')
+
 
 
 
@@ -91,3 +99,33 @@ class SingleCellSuspension(ABC):
         # writer.save()
         #
         # # test with pre-existing data
+
+
+        #### get and set cell color ###
+
+        index = patient_mrn_cell.fill.fgColor.index
+        Colors = styles.colors.COLOR_INDEX
+        # Colors[index] # for themed colors
+        # 00000000 for no fill
+        print(">>>>>> cell fill value: "+index)
+
+        patient_mrn_cell.fill = PatternFill("solid", fgColor="CFE7F7")
+
+        index = patient_mrn_cell.fill.fgColor.index
+        value = patient_mrn_cell.fill.fgColor.value
+        Colors = styles.colors.COLOR_INDEX
+        print(">>>>>> cell fill value: " + str(index) + "; " + "; " + str(value))
+
+        wb.save('single_cell_suspension_v1.xlsx')
+
+
+        ####  get and set worksheet protection state  ###
+        ws = patient_sheet
+        ws.protection.sheet = True
+        ws.protection.enable()
+        #ws.protection.disable()
+
+        print(">>>>> sheet protection: "+ str(patient_sheet.protection.sheet))
+
+        wb.save('single_cell_suspension_v1.xlsx')
+
