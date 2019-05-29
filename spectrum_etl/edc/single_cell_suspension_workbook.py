@@ -3,7 +3,6 @@ Created on May 23, 2019
 
 @author: pashaa@mskcc.org
 '''
-from abc import ABC
 from openpyxl.styles import PatternFill
 
 from openpyxl import load_workbook, styles
@@ -15,8 +14,9 @@ from openpyxl import load_workbook, styles
 # TODO read surgeries tab, check for one new surgery type entry, store value and generate surgery id
 # TODO read specimen tab, get one or more specimen sites and counts, store and generate speciment ids
 # TODO read generate aliquot ids
+# TODO add logs
 
-class SingleCellSuspension(ABC):
+class SingleCellSuspension():
     '''
     Creates a spreadsheet for the Electronic Data Capture of SPECTRUM single cell suspension data.
     '''
