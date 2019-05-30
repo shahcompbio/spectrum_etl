@@ -31,18 +31,22 @@ class Patient(object):
 
 
     def validate(self) -> None:
+        # patient_mrn
         try:
             self.patient_mrn = int(self.patient_sheet[MRN_CELL].value)
         except ValueError as ex:
             print('%s %s must be an integer in patients tab. %s' %
                   (MRN_CELL, self.patient_sheet[MRN_CELL], ex))
 
-        try:
-            id_val = str(self.patient_sheet[ID_CELL].value)
-            self.patient_id = filter(None, re.match(ID_PATTERN, id_val).groups())
-        except AttributeError:
-            self.patient_id = None
+        # patient_id
+        id_val = str(self.patient_sheet[ID_CELL].value)
+
+        match = re.match(ID_PATTERN, id_val)
+
+        if match is None:
             print('Invalid format for patient_id "%s" in patients tab. Expecting "%s"' % (id_val, ID_PATTERN))
+        else:
+            self.patient_id = match.groups()[0]
 
 
     def get_mrn(self) -> int:

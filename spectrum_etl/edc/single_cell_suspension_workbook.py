@@ -33,7 +33,7 @@ class SingleCellSuspension():
         # print('>>>>>>'+str(patient_mrn_cell.value))
         # print('>>>>>>' + str(patient_id_cell.value))
 
-        surgery_sheet = wb.get_sheet_by_name('surgeries')
+        surgery_sheet = wb['surgeries']
 
         surgery_type_cell_range = surgery_sheet['A2':'A10']
 

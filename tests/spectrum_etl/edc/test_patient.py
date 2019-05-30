@@ -19,7 +19,7 @@ class TestPatient(object):
         class.  setup_method is invoked for every test method of a class.
         """
         self.tmpdir = tmpdir
-        wb = load_workbook('tests/spectrum_etl/edc/single_cell_suspension.xlsx')
+        wb = load_workbook('tests/spectrum_etl/edc/data/patient_valid.xlsx')
         self.patient_sheet = wb['patients']
 
 
