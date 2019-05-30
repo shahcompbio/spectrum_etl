@@ -47,7 +47,7 @@ class Patient(object):
         try:
             self.patient_mrn = int(self.patient_sheet[MRN_CELL].value)
         except ValueError as ex:
-            print('%s %s must be an integer in patients tab. %s' %
+            raise ValueError('%s %s must be an integer in patients tab. %s' %
                   (MRN_CELL, self.patient_sheet[MRN_CELL], ex))
 
         # patient_id
@@ -56,7 +56,7 @@ class Patient(object):
         match = re.match(ID_PATTERN, id_val)
 
         if match is None:
-            raise Exception('Invalid format for patient_id "%s" in patients tab. Expecting "%s"' % (id_val, ID_PATTERN))
+            raise ValueError('%s is invalid format for patient_id in patients tab. Expecting "%s"' % (id_val, ID_PATTERN))
         else:
             self.patient_id = match.groups()[0]
 

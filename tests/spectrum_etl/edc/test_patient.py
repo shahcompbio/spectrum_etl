@@ -35,15 +35,24 @@ class TestPatient(object):
     def test_valid_patient(self):
         wb = load_workbook('tests/spectrum_etl/edc/data/patient_valid.xlsx')
         patient_sheet = wb['patients']
+
         patient = Patient(patient_sheet)
         assert patient.get_mrn() == 12345
         assert patient.get_id() == 'SPECTRUM-OV-001'
 
-    def test_valid_patient_mrn(self):
-        pass
+    def test_invalid_patient_mrn(self):
+        wb = load_workbook('tests/spectrum_etl/edc/data/patient_invalid_mrn.xlsx')
+        patient_sheet = wb['patients']
+
+        with pytest.raises(ValueError, match=r".*must be an integer in patients tab.*"):
+            Patient(patient_sheet)
 
     def test_invalid_patient_id(self):
-        pass
+        wb = load_workbook('tests/spectrum_etl/edc/data/patient_invalid_id.xlsx')
+        patient_sheet = wb['patients']
+
+        with pytest.raises(ValueError, match=r".*invalid format for patient_id in patients tab.*"):
+            Patient(patient_sheet)
 
 
     def test_set_patient_as_processed(self):
