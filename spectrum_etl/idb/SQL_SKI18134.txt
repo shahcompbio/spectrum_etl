@@ -1,0 +1,330 @@
+
+  with pt as (
+select distinct
+	   pt_mrn as mrn,
+	   pt_pt_deidentification_id,
+	   pt_first_name as patient_first_name,
+	   pt_last_name as patient_last_name,
+	   pt_birth_dte as patient_date_of_birth,
+	   pt_sex as patient_gender,
+	   pt_race_desc as patient_race,
+	   pt_addr1 as patient_residence_address_1,
+	   pt_addr2 as patient_residence_address_2,
+	   pt_city as patient_residence_address_city,
+	   pt_state as patient_residence_address_state,
+	   pt_zip_cd as patient_residence_address_zip_code,
+	   pt_country as patient_residence_address_country,
+	   pt_death_dte as patient_overall_survival_date
+  from dv.patient_demographics
+ where pt_mrn in (select mrn from dvidic.ski18134)
+)
+
+--------------------------------------------------------------------------------------------------
+, xm as (
+select distinct 
+	   pdrx_pt_deidentification_id, 
+	   pdrx_dmp_patient_id,
+	   t.*-- , pdrx_xml_value, dt.pdrx_path_rpt_id 
+  from dv.pathology_dmp_results_xml dt
+ cross
+  join xmltable('$c/root/*' passing dt.PDRX_XML_VALUE as "c" columns 
+	   tumor_type_name varchar(264) path '../meta-data/tumor_type_name',
+	   tumor_type_code varchar(100) path '../meta-data/tumor_type_code',
+	   primary_site varchar(100) path '../meta-data/primary_site',
+	   metastasis_site varchar(100) path '../meta-data/metastasis_site',
+	   part_description varchar(2000) path '../meta-data/part_description'
+   	) t  
+ where pdrx_pt_deidentification_id in (select pt_pt_deidentification_id from pt)
+   and(tumor_type_name is not null
+	or tumor_type_code is not null
+	or primary_site is not null
+	or metastasis_site is not null)
+)
+--select * from xm
+
+--------------------------------------------------------------------------------------------------
+, tm as (
+select distinct tm_mrn,
+	   max(tm_dx_dte) as patient_diagnosis_date
+  from idb.cdb_tumor
+  join idb.clm h
+	on tm_hist_cd = h.clm_clsf_cd
+  join idb.clm s
+	on tm_site_cd = s.clm_clsf_cd
+ where tm_case_sts in ('1','3','6','7','8')
+   and tm_site_cd = 'C569'	--ovary
+   and tm_mrn in (select mrn from pt)
+ group
+	by tm_mrn
+)
+
+--select * from tm
+
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+, consents as (
+select distinct ac_mrn,
+	   ac_irb_no as patient_consent_irb,
+	   ac_cons_dte as patient_consent_date,
+	   reg_network_dscrp as patient_consent_location
+  from idb.accruals
+  left
+  join nn.crdb_dash_pt
+	on pt_mrn = ac_mrn
+   and prt_id = ac_irb_no
+ where ac_mrn in (select mrn from pt)
+)
+
+--select * from consents
+
+--------------------------------------------------------------------------------------------------
+, consults as (
+select distinct --cdd_doc_name
+	   cdd_mrn, cdo_value_text as consult
+--	   cdd_doc_guid, cdd_service_dte, cdd_doc_name
+--	   cdo_section, cdo_ctlg_displ_nm, cdo_mstr_item_nm, cdo_item_name, cdo_value_text, cdo_large_value_text_ind
+  from idb.cd_document
+  join idb.cd_observation
+	on cdo_doc_guid = cdd_doc_guid
+   and cdo_authored_dte = cdd_authored_dte
+ where cdd_cancel_ind     = '0'
+   and cdd_incomplete_ind = '0'
+   and cdd_doc_name = 'Initial Consult/Initial Visit, AMB - DOM-Gynecologic Med Onc'
+   and cdo_item_name = 'GYN History'
+--   AND UPPER(CDD_DOC_NAME) LIKE '%GYN%'
+--   AND UPPER(CDD_DOC_NAME) LIKE '%MED%ONC%%'
+--   AND UPPER(CDD_DOC_NAME) LIKE '%INIT%'
+--   AND UPPER(CDD_DOC_NAME) LIKE '%CON%'
+   and cdd_mrn in (select mrn from pt)
+)
+
+--select * from consults
+
+--------------------------------------------------------------------------------------------------
+, measures as (
+select pmh_mrn,
+	   pmh_measure_dte as measure_date,
+	   pmh_ht_cm as measure_height,
+	   pmh_wt_kg as measure_weight
+  from idb.pt_measures_hx
+ where pmh_mrn in (select mrn from pt)
+)
+
+--select * from measures
+
+--------------------------------------------------------------------------------------------------
+, labs as (
+select distinct 
+	   lr_mrn,
+       lr_performed_dte as laboratory_test_date,
+	   lr_cluster_id as laboratory_test_cluster,
+	   lr_test_name as laboratory_test_name,
+	   lr_subtest_name as laboratory_test_subname,
+	   lr_result_value as laboratory_test_biomarker_level,
+	   lr_unit_measure as laboratory_test_biomarker_units,
+	   lr_result_sts_cd as laboratory_test_status,
+	   lr_abnormality_cd as laboratory_test_abnormality,
+	   lr_test_up_limit as laboratory_test_upper_limit,
+	   lr_test_low_limit as laboratory_test_lower_limit--,
+--       ltl_text_result as text_result
+  from idb.lab_results 
+--         left
+--         join idb.lab_text_line                                  
+--           on ltl_result_guid = lr_result_guid
+ where 1=1
+   and lr_mrn in (select mrn from pt)
+)
+
+--select * from labs
+
+--------------------------------------------------------------------------------------------------
+, chemo as (
+select distinct
+	   apr_mrn,
+	   apr_route as treatment_administration_route,
+	   apr_start_dt as treatment_start_datetime,
+	   apr_end_dt as treatment_end_datetime,
+	   apr_location as treatment_location,
+	   apr_drug_name as treatment_name_rx,
+	   apr_generic_name as treatment_name_rx_ontology,
+	   apr_total_given_dose as treatment_dose_value_rx,
+	   apr_dose_uom as treatment_dose_unit_rx
+  from idb.antineoplastic_pt_rx
+  join idb.chemo_drug_generic
+	on apr_generic_name = cdg_generic_name
+   and cdg_chemo_flag = 'Y'
+   and apr_mrn in (select mrn from pt)
+)
+
+--select * from chemo
+
+--------------------------------------------------------------------------------------------------
+, ppbc as (
+select distinct
+	   mrn,
+	   tba_procurement_dte as specimen_collection_date,
+	   time(tba_resect_dt) as specimen_collection_time,
+	   tba_accession_num as specimen_ppbc_accession_number,
+	   tba_part_num as specimen_part_num,
+	   tba_sub_part_num as asspecimen_sub_part_num,
+	   tbd_specimen_type_desc as specimen_class,
+	   tba_site_desc as specimen_site,
+	   tba_sub_site_desc as specimen_sub_site,
+	   tba_sub2_site_desc as specimen_sub_site2,
+	   tbd_category_desc as specimen_type,
+	   tbd_quality_desc as specimen_preserve
+
+--	   tbd_distribution_id, tbd_reserved_request_id,
+--	   tbd_bank_num as specimen_ppbc_bank_number,
+--	   tbd_bank_seq_num,
+--	   tbd_category_cd,
+--	   tbd_quality_cd,
+--	   tbd_quality_desc,
+--	   case when tbd_quality_cd = 'PARF'
+--			then strip(tbd_bank_num) || '.' || strip(char(tbd_bank_seq_num)) || '.' || strip(tbd_category_cd) end as specimen_ppbc_ffpe_label
+
+  from pt
+  join dv.tissue_bank_accession tba
+	on tba_pt_deidentification_id = pt_pt_deidentification_id
+  left
+  join dv.tissue_bank_detail tbd
+	on tba_accession_num = tbd_accession_num
+   and tba_part_num = tbd_part_num
+   and tba_sub_part_num = tbd_sub_part_num
+ where 1=1
+   and(tbd_distribution_id is null or tbd_distribution_id = '') --i.e. is available
+   and(tbd_reserved_request_id is null or tbd_reserved_request_id = '') --i.e. is available
+   and tbd_quality_desc = 'Frozen Specimen'
+   and tbd_specimen_type_desc = 'Tissue'
+   and left(tbd_accession_num,1) in ('S','H','A')
+)
+
+--select * from ppbc
+
+--------------------------------------------------------------------------------------------------
+, path as (
+select prpt_mrn,
+	   prpt_accession_no as he_pathology_slide_id,
+--	   prpt_procedure_dte,
+--	   prpt_report_dte,
+--	   prpt_report_type,
+--	   prpt_report_type_desc,
+
+	   case when length(prpt_report) <= 15000 then rtrim(cast(substr(prpt_report, 1, 15000) as varchar(15000))) else
+ 	 		cast(substr(prpt_report, 1, 15000) as varchar(15000)) 
+			end as he_pathology_report, 	 
+	   case when length(prpt_report) > 15000 then rtrim(cast(substr(prpt_report, 15001, 15000) as varchar(15000))) else  ''
+			end as he_pathology_report2
+
+  from pt
+  join dv.pathology_report_v
+	on prpt_pt_deidentification_id = pt_pt_deidentification_id
+ where prpt_report_type_desc in (
+		'Autopsy Report',
+		'Hematopathology Report',
+		'Surgical Pathology')
+)
+
+--select * from path
+
+--------------------------------------------------------------------------------------------------
+, ct as (
+select distinct 
+       pt_mrn as mrn, 
+	   rrpt_accession_no as ct_accession_no,
+       rrpt_performed_dte as ct_acquisition_date,
+       time(rrpt_performed_dt) as ct_acquisition_time,
+	   rrpt_order_location as ct_acquisition_location,
+	   rrpt_procedure_name as ct_region,
+
+	   REPLACE(REPLACE(DV.REGEXSTR('(?i)IMPRESSION:[\w\W]*(?=DICTATED BY:)' ,RRPT_REPORT_TXT),'IMPRESSION:',''),'FINAL REPORT','') as ct_scan_impression--,
+
+--	   case when length(RRPT_REPORT_TXT) <= 15000 then rtrim(cast(substr(RRPT_REPORT_TXT, 1, 15000) as varchar(15000))) else
+-- 	 		cast(substr(RRPT_REPORT_TXT, 1, 15000) as varchar(15000)) 
+--			end as ct_scan_report, 	 
+--	   case when length(RRPT_REPORT_TXT) > 15000 then rtrim(cast(substr(RRPT_REPORT_TXT, 15001, 15000) as varchar(15000))) else  ''
+--			end as ct_scan_report2
+
+FROM
+     /* DV.PATIENT_DEMOGRAPHICS_V */ "DV"."PATIENT_DEMOGRAPHICS_V" "T1" 
+    LEFT JOIN /* DV.PATIENT_DEIDENTIFIED */ "DV"."PATIENT_DEIDENTIFIED" "T3" 
+            ON "T1"."PT_PT_DEIDENTIFICATION_ID" = "T3"."PDI_PT_DEIDENTIFICATION_ID" 
+    LEFT JOIN /* DV.RADIOLOGY_REPORT_V */ "DV"."RADIOLOGY_REPORT_V" "T2" 
+            ON "T3"."PDI_PT_DEIDENTIFICATION_ID" = "T2"."RRPT_PT_DEIDENTIFICATION_ID" 
+    LEFT JOIN /* DV.PATIENT_IDENTIFICATION_MRN_V */ "DV"."PATIENT_IDENTIFICATION_MRN_V" "T4" 
+            ON "T1"."PT_PT_DEIDENTIFICATION_ID" = "T4"."PI_PT_DEIDENTIFICATION_ID"  
+WHERE  
+    PI_SOURCE_SYSTEM_PT_ID IN (SELECT MRN FROM PT)
+    AND RRPT_ORDER_GROUP like '%CT%'
+)
+
+--select * from ct
+
+--------------------------------------------------------------------------------------------------
+, pet_mri as (
+select distinct 
+       pt_mrn as mrn,
+	   rrpt_accession_no as pet_mri_accession_no,
+--	   rrpt_requester,
+--	   rrpt_procedure_name,
+	   REPLACE(DV.REGEXSTR('(?i)Electronically\W*Signed\W*By\W*:? ?[^\r\n\(]*',RRPT_REPORT_TXT), DV.REGEXSTR('(?i)Electronically\W*Signed\W*By\W*:? ?', RRPT_REPORT_TXT), '') AS pet_mri_radiologist_name,
+       rrpt_performed_dte as pet_mri_acquisition_date,
+       time(rrpt_performed_dt) as pet_mri_acquisition_time
+
+--UPPER(CASE WHEN LENGTH(RRPT_REPORT_TXT) <= 15000 THEN RTRIM(CAST(SUBSTR(RRPT_REPORT_TXT, 1, 15000) AS VARCHAR(15000))) ELSE
+-- 	 		CAST(SUBSTR(RRPT_REPORT_TXT, 1, 15000) AS VARCHAR(15000)) 
+-- 	 END) AS "PRPT_REPORT"
+
+FROM
+     /* DV.PATIENT_DEMOGRAPHICS_V */ "DV"."PATIENT_DEMOGRAPHICS_V" "T1" 
+    LEFT JOIN /* DV.PATIENT_DEIDENTIFIED */ "DV"."PATIENT_DEIDENTIFIED" "T3" 
+            ON "T1"."PT_PT_DEIDENTIFICATION_ID" = "T3"."PDI_PT_DEIDENTIFICATION_ID" 
+    LEFT JOIN /* DV.RADIOLOGY_REPORT_V */ "DV"."RADIOLOGY_REPORT_V" "T2" 
+            ON "T3"."PDI_PT_DEIDENTIFICATION_ID" = "T2"."RRPT_PT_DEIDENTIFICATION_ID" 
+    LEFT JOIN /* DV.PATIENT_IDENTIFICATION_MRN_V */ "DV"."PATIENT_IDENTIFICATION_MRN_V" "T4" 
+            ON "T1"."PT_PT_DEIDENTIFICATION_ID" = "T4"."PI_PT_DEIDENTIFICATION_ID"  
+WHERE  
+    PI_SOURCE_SYSTEM_PT_ID IN (SELECT MRN FROM PT)
+    AND(RRPT_ORDER_GROUP LIKE '%PET%'
+	 OR RRPT_ORDER_GROUP LIKE '%MR%')
+)
+
+--select * from pet_mri
+
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+select distinct
+	   mrn,
+	   pdrx_dmp_patient_id as patient_dmp_id,
+	   pt_pt_deidentification_id as patient_darwin_id,
+	   '' as patient_cmo_id,
+	   patient_first_name,
+	   patient_last_name,
+	   patient_date_of_birth,
+	   patient_gender,
+	   patient_race,
+	   patient_residence_address_1,
+	   patient_residence_address_2,
+	   patient_residence_address_city,
+	   patient_residence_address_state,
+	   patient_residence_address_zip_code,
+	   patient_residence_address_country,
+	   tumor_type_name as patient_cancer_type,
+	   tumor_type_code as patient_cancer_type_code,
+	   primary_site as patient_cancer_primary_site,
+	   metastasis_site as patient_cancer_metastasis_site,
+	   patient_diagnosis_date,
+	   patient_overall_survival_date,
+	   part_description
+
+  from pt
+  left
+  join xm
+	on pdrx_pt_deidentification_id = pt_pt_deidentification_id
+  left
+  join tm
+	on tm_mrn = mrn
+--------------------------------------------------------------------------------------------------
+
+
+
