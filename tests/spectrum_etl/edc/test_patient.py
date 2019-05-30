@@ -33,3 +33,9 @@ class TestPatient(object):
         self.patient = Patient(self.patient_sheet)
         assert self.patient.get_mrn() == 12345
         assert self.patient.get_id() == 'SPECTRUM-OV-001'
+
+    def test_valid_patient_mrn(self):
+        pass
+
+    def test_invalid_patient_id(self):
+        pass

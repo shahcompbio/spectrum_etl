@@ -10,19 +10,34 @@ from openpyxl import load_workbook, styles
 
 # DONE get and set cell color
 # DONE get and set worksheet protection state
-# TODO read patient tab, check for one new patient entry and store value
+# DONE read patient tab, check for one new patient entry and store value
 # TODO read surgeries tab, check for one new surgery type entry, store value and generate surgery id
 # TODO read specimen tab, get one or more specimen sites and counts, store and generate speciment ids
 # TODO read generate aliquot ids
 # TODO add logs
+from spectrum_etl.edc.patient import Patient
 
-class SingleCellSuspension():
+
+class SingleCellSuspensionWorkbook(object):
     '''
-    Creates a spreadsheet for the Electronic Data Capture of SPECTRUM single cell suspension data.
+    An object that represents a single cell suspension workbook for electronic data capture. It contains methods for
+    performing a set of automated processes on the workbook.
+
+    Invariants: Manual entries in the workbook are never modified.
+                Workbook is always protected.
     '''
 
-    def __init__(self):
-        wb = load_workbook('tests/spectrum_etl/edc/single_cell_suspension.xlsx')
+    patient: Patient
+
+    def __init__(self, path_to_workbook):
+        '''
+        pre-condition:
+        @:param path_to_workbook relative or absolute path to a single cell suspension workbook.
+        '''
+        if path_to_workbook is None:
+            raise Exception("Error: no workbook path specified. Please specify a path!")
+
+        wb = load_workbook(path_to_workbook)
 
         patient_sheet = wb['patients']
 

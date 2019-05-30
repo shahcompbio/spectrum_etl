@@ -14,6 +14,8 @@ ID_PATTERN = r"(^SPECTRUM-OV-\d\d\d$)"
 class Patient(object):
     '''
     A patient object.
+
+    Invariants: patient_mrn and patient_id are never changed in the worksheet.
     '''
 
     patient_sheet: Worksheet
@@ -22,8 +24,8 @@ class Patient(object):
 
     def __init__(self, patient_sheet: Worksheet):
         '''
-
-        :param patient: a patient pandas dataframe from an excel sheet
+        pre-condition:
+        :param patient_sheet: a non None patient_sheet
         '''
 
         self.patient_sheet = patient_sheet
@@ -31,6 +33,13 @@ class Patient(object):
 
 
     def validate(self) -> None:
+        '''
+        pre-condition: a non None patient sheet.
+        post-condition: a valid patient object or exception
+        '''
+        if self.patient_sheet is None:
+            print("Error: Unable to find patient sheet in workbook!")
+
         # patient_mrn
         try:
             self.patient_mrn = int(self.patient_sheet[MRN_CELL].value)
@@ -44,50 +53,36 @@ class Patient(object):
         match = re.match(ID_PATTERN, id_val)
 
         if match is None:
-            print('Invalid format for patient_id "%s" in patients tab. Expecting "%s"' % (id_val, ID_PATTERN))
+            raise Exception('Invalid format for patient_id "%s" in patients tab. Expecting "%s"' % (id_val, ID_PATTERN))
         else:
             self.patient_id = match.groups()[0]
 
 
     def get_mrn(self) -> int:
+        '''
+        pre-condition: none
+        post-condition: a valid patient_mrn returned
+        '''
         return self.patient_mrn
 
     def get_id(self) -> str:
+        '''
+        pre-condition: none
+        post-condition: a valid patient_id returned
+        '''
         return self.patient_id
 
-    def lock_columns(self, columns: List[str]):
+    def set_patient_as_processed(self):
         '''
-        Locks the specified columns. Sheet is always kept protected.
-        :param columns a list of valid column names.
-        :return: None
-        '''
-        pass
-
-    def unlock_columns(self, columns: List[str]):
-        '''
-        Unlocks the specified columns. Sheet is always kept protected.
-        :param columns a list of valid column names.
-        :return: None
+        pre-condition: None
+        Post-condition: cells are colored blue and locked.
         '''
         pass
 
-    def lock_cells(self, cells: List[str]) -> None:
-        '''
-        Locks the specified cells. Sheet is always kept protected.
-        :param cells a list of valid cell addresses [column, row]
-        :return: None
-        '''
-        self.patient_sheet = True
-        self.patient_sheet.enable()
+        # color cells
 
-    def unlock_cells(self, cells: List[str]) -> None:
-        '''
-        Unlocks the specified cells. Sheet is always kept protected.
-        :param cells a list of valid cell addresses [column, row]
-        :return: None
-        '''
-        self.patient_sheet = True
-        self.patient_sheet.disable()
+        # lock cells
+
 
 
 
