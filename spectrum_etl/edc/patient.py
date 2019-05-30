@@ -5,11 +5,14 @@ Created on May 23, 2019
 '''
 import re
 from typing import List
+
+from openpyxl.styles import PatternFill, Protection
 from openpyxl.worksheet.worksheet import Worksheet
 
 MRN_CELL: str = 'A2'
 ID_CELL: str = 'B2'
 ID_PATTERN = r"(^SPECTRUM-OV-\d\d\d$)"
+COLOR_PROCESSED = 'CFE7F7'  # a light shade of blue
 
 class Patient(object):
     '''
@@ -75,13 +78,20 @@ class Patient(object):
     def set_patient_as_processed(self):
         '''
         pre-condition: None
-        Post-condition: cells are colored blue and locked.
+        Post-condition: cells are colored blue, locked and worksheet is protected.
         '''
-        pass
-
         # color cells
+        self.patient_sheet[MRN_CELL].fill = PatternFill("solid", fgColor=COLOR_PROCESSED)
+        self.patient_sheet[ID_CELL].fill = PatternFill("solid", fgColor=COLOR_PROCESSED)
 
         # lock cells
+        self.patient_sheet[MRN_CELL].protection = Protection(locked=True, hidden=False)
+        self.patient_sheet[ID_CELL].protection = Protection(locked=True, hidden=False)
+
+        ####  get and set worksheet protection state  ###
+        self.patient_sheet.protection.sheet = True
+        self.patient_sheet.protection.enable()
+
 
 
 

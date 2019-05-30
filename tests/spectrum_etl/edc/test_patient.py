@@ -7,8 +7,12 @@ Created on May 29, 2019
 '''
 from openpyxl import load_workbook
 import pytest
+from openpyxl.styles import Protection
 
 from spectrum_etl.edc.patient import Patient
+from spectrum_etl.edc.patient import MRN_CELL
+from spectrum_etl.edc.patient import ID_CELL
+from spectrum_etl.edc.patient import COLOR_PROCESSED
 
 
 class TestPatient(object):
@@ -19,8 +23,7 @@ class TestPatient(object):
         class.  setup_method is invoked for every test method of a class.
         """
         self.tmpdir = tmpdir
-        wb = load_workbook('tests/spectrum_etl/edc/data/patient_valid.xlsx')
-        self.patient_sheet = wb['patients']
+
 
 
     def teardown_method(self, tmpdir):
@@ -30,12 +33,37 @@ class TestPatient(object):
         self.tmpdir = None
 
     def test_valid_patient(self):
-        self.patient = Patient(self.patient_sheet)
-        assert self.patient.get_mrn() == 12345
-        assert self.patient.get_id() == 'SPECTRUM-OV-001'
+        wb = load_workbook('tests/spectrum_etl/edc/data/patient_valid.xlsx')
+        patient_sheet = wb['patients']
+        patient = Patient(patient_sheet)
+        assert patient.get_mrn() == 12345
+        assert patient.get_id() == 'SPECTRUM-OV-001'
 
     def test_valid_patient_mrn(self):
         pass
 
     def test_invalid_patient_id(self):
         pass
+
+
+    def test_set_patient_as_processed(self):
+        wb = load_workbook('tests/spectrum_etl/edc/data/patient_as_processed.xlsx')
+        patient_sheet = wb['patients']
+        assert patient_sheet[MRN_CELL].fill.fgColor.value == '00000000'  # no color
+        assert patient_sheet[ID_CELL].fill.fgColor.value == '00000000'  # no color
+        assert patient_sheet[MRN_CELL].protection.locked is False  # unlocked
+        assert patient_sheet[ID_CELL].protection.locked is False  # unlocked
+        assert patient_sheet.protection.sheet is False  # unprotected
+
+
+        patient = Patient(patient_sheet)
+        patient.set_patient_as_processed()
+
+        assert patient_sheet[MRN_CELL].fill.fgColor.value == '00'+COLOR_PROCESSED  # processed color
+        assert patient_sheet[ID_CELL].fill.fgColor.value == '00'+COLOR_PROCESSED  # processed color
+        assert patient_sheet[MRN_CELL].protection.locked is True  # locked
+        assert patient_sheet[ID_CELL].protection.locked is True  # locked
+        assert patient_sheet.protection.sheet is True  # unprotected
+
+
+        wb.save('tests/spectrum_etl/edc/data/patient_as_processed_output.xlsx')
