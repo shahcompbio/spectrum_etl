@@ -39,12 +39,13 @@ select distinct
 	or tumor_type_code is not null
 	or primary_site is not null
 	or metastasis_site is not null)
+--	or part_description is not null)
 )
 --select * from xm
 
 --------------------------------------------------------------------------------------------------
 , tm as (
-select distinct tm_mrn,
+select tm_mrn,
 	   max(tm_dx_dte) as patient_diagnosis_date
   from idb.cdb_tumor
   join idb.clm h
@@ -58,7 +59,7 @@ select distinct tm_mrn,
 	by tm_mrn
 )
 
---select * from tm
+--select * from tm2
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
@@ -101,6 +102,60 @@ select distinct --cdd_doc_name
 --select * from consults
 
 --------------------------------------------------------------------------------------------------
+, diagnoses as (
+select distinct tm_mrn,
+	   tm_dx_dte as diagnosis_date,
+	   tm_icd9_cd as diagnosis_icd9,
+	   tm_icd10_cd as diagnosis_icd10,
+	   tm_tumor_seq as diagnosis_sequence_number,
+	   tm_site_txt as diagnosis_site,
+	   s.clm_clsf_desc_msk as diagnosis_site_desc,
+	   tm_site_cd as diagnosis_site_code,
+	   tm_hist_txt as diagnosis_histology,
+	   h.clm_clsf_desc_msk as diagnosis_hist_desc,
+	   tm_hist_cd as diagnosis_histology_code,
+	   tm_laterality_cd as diagnosis_laterality_code,
+	   la.av_desc as diagnosis_laterality,
+--	   tm_ca125_pretrx_interp as diagnosis_ca125,
+--	   tm_cea_pretrx_interp as diagnosis_cea,
+	   tm_smoking_hx as diagnosis_smoking_history_code,
+	   sm.av_desc as diagnosis_smoking_history,
+	   tm_dx_confrm_cd as diagnosis_confirmation_code,
+	   cc.cdb_av_desc as diagnosis_confirmation
+  from idb.cdb_tumor
+  join idb.clm h
+	on tm_hist_cd = h.clm_clsf_cd
+  join idb.clm s
+	on tm_site_cd = s.clm_clsf_cd
+  left
+  join idb.allowvals sm
+    on sm.av_element = 'SMOKING_HX'
+   and sm.av_code = tm_smoking_hx
+  left
+  join idb.allowvals la
+    on la.av_element = 'LATERALITY_CD'
+   and la.av_code = tm_laterality_cd
+  left
+  join idb.cdb_allowvals cc
+    on cc.cdb_av_element = 'DX_CONFRM_CD'
+   and cdb_av_code = tm_dx_confrm_cd
+ where tm_case_sts in ('1','3','6','7','8')
+   and tm_site_cd = 'C569'	--ovary
+   and tm_mrn in (select mrn from pt)
+)
+
+--select * from diagnoses
+
+
+--select *
+--  from SYSIBM.SYSCOLUMNS
+-- where NAME LIKE '%CEA%'
+
+--SELECT *
+--FROM IDB.CDB_ALLOWVALS
+--WHERE CDB_AV_ELEMENT = 'DX_CONFRM_CD'
+
+--------------------------------------------------------------------------------------------------
 , measures as (
 select pmh_mrn,
 	   pmh_measure_dte as measure_date,
@@ -116,12 +171,14 @@ select pmh_mrn,
 , labs as (
 select distinct 
 	   lr_mrn,
-       lr_performed_dte as laboratory_test_date,
+       lr_performed_dt as laboratory_test_datetime,
+	   lr_accession_no as laboratory_accession_no,
 	   lr_cluster_id as laboratory_test_cluster,
 	   lr_test_name as laboratory_test_name,
 	   lr_subtest_name as laboratory_test_subname,
 	   lr_result_value as laboratory_test_biomarker_level,
 	   lr_unit_measure as laboratory_test_biomarker_units,
+	   lr_result_type_cd as laboratory_test_type,
 	   lr_result_sts_cd as laboratory_test_status,
 	   lr_abnormality_cd as laboratory_test_abnormality,
 	   lr_test_up_limit as laboratory_test_upper_limit,
@@ -148,7 +205,10 @@ select distinct
 	   apr_drug_name as treatment_name_rx,
 	   apr_generic_name as treatment_name_rx_ontology,
 	   apr_total_given_dose as treatment_dose_value_rx,
-	   apr_dose_uom as treatment_dose_unit_rx
+	   apr_dose_uom as treatment_dose_unit_rx,
+	   apr_duration as treatment_duration,
+	   apr_set_name as treatment_order_set
+
   from idb.antineoplastic_pt_rx
   join idb.chemo_drug_generic
 	on apr_generic_name = cdg_generic_name
@@ -159,20 +219,20 @@ select distinct
 --select * from chemo
 
 --------------------------------------------------------------------------------------------------
-, ppbc as (
+, specimen as (
 select distinct
 	   mrn,
-	   tba_procurement_dte as specimen_collection_date,
-	   time(tba_resect_dt) as specimen_collection_time,
+	   tba_procurement_dte as specimen_procurement_date,
+	   tba_resect_dt as specimen_resection_datetime,
 	   tba_accession_num as specimen_ppbc_accession_number,
 	   tba_part_num as specimen_part_num,
-	   tba_sub_part_num as asspecimen_sub_part_num,
+	   tba_sub_part_num as specimen_sub_part_num,
 	   tbd_specimen_type_desc as specimen_class,
 	   tba_site_desc as specimen_site,
 	   tba_sub_site_desc as specimen_sub_site,
 	   tba_sub2_site_desc as specimen_sub_site2,
 	   tbd_category_desc as specimen_type,
-	   tbd_quality_desc as specimen_preserve
+	   tbd_quality_desc as specimen_preservation
 
 --	   tbd_distribution_id, tbd_reserved_request_id,
 --	   tbd_bank_num as specimen_ppbc_bank_number,
@@ -199,16 +259,17 @@ select distinct
    and left(tbd_accession_num,1) in ('S','H','A')
 )
 
---select * from ppbc
+--select * from specimen
 
 --------------------------------------------------------------------------------------------------
 , path as (
 select prpt_mrn,
+	   prpt_accession_no as he_pathology_accession_number,
 	   prpt_accession_no as he_pathology_slide_id,
---	   prpt_procedure_dte,
---	   prpt_report_dte,
---	   prpt_report_type,
---	   prpt_report_type_desc,
+	   prpt_procedure_dte as he_pathology_acquisition_date,
+	   prpt_report_dte as he_pathology_report_date,
+	   prpt_report_type as he_pathology_report_type,
+	   prpt_report_type_desc as he_pathology_report_description,
 
 	   case when length(prpt_report) <= 15000 then rtrim(cast(substr(prpt_report, 1, 15000) as varchar(15000))) else
  	 		cast(substr(prpt_report, 1, 15000) as varchar(15000)) 
@@ -226,24 +287,43 @@ select prpt_mrn,
 )
 
 --select * from path
+--------------------------------------------------------------------------------------------------
+, impact as (
+select prpt_mrn,
+	   pdrx_dmp_sample_id as impact_dmp_sample_id,
+	   prpt_accession_no as impact_dmp_accession_number,
+	   prpt_procedure_dte as impact_dmp_procedure_date,
+	   prpt_report_dte as impact_dmp_report_date,
+
+	   case when length(prpt_report) <= 15000 then rtrim(cast(substr(prpt_report, 1, 15000) as varchar(15000))) else
+ 	 		cast(substr(prpt_report, 1, 15000) as varchar(15000)) 
+			end as impact_dmp_report, 	 
+	   case when length(prpt_report) > 15000 then rtrim(cast(substr(prpt_report, 15001, 15000) as varchar(15000))) else  ''
+			end as impact_dmp_report2
+
+  from dv.pathology_dmp_results_xml
+  join dv.pathology_report_v
+	on pdrx_accession_no = prpt_accession_no
+ where pdrx_pt_deidentification_id in (select pt_pt_deidentification_id from pt)
+)
+
+--select * from impact
 
 --------------------------------------------------------------------------------------------------
 , ct as (
 select distinct 
        pt_mrn as mrn, 
 	   rrpt_accession_no as ct_accession_no,
-       rrpt_performed_dte as ct_acquisition_date,
-       time(rrpt_performed_dt) as ct_acquisition_time,
+       rrpt_performed_dt as ct_acquisition_datetime,
 	   rrpt_order_location as ct_acquisition_location,
 	   rrpt_procedure_name as ct_region,
-
-	   REPLACE(REPLACE(DV.REGEXSTR('(?i)IMPRESSION:[\w\W]*(?=DICTATED BY:)' ,RRPT_REPORT_TXT),'IMPRESSION:',''),'FINAL REPORT','') as ct_scan_impression--,
-
---	   case when length(RRPT_REPORT_TXT) <= 15000 then rtrim(cast(substr(RRPT_REPORT_TXT, 1, 15000) as varchar(15000))) else
--- 	 		cast(substr(RRPT_REPORT_TXT, 1, 15000) as varchar(15000)) 
---			end as ct_scan_report, 	 
---	   case when length(RRPT_REPORT_TXT) > 15000 then rtrim(cast(substr(RRPT_REPORT_TXT, 15001, 15000) as varchar(15000))) else  ''
---			end as ct_scan_report2
+	   REPLACE(DV.REGEXSTR('(?i)Electronically\W*Signed\W*By\W*:? ?[^\r\n\(]*',RRPT_REPORT_TXT), DV.REGEXSTR('(?i)Electronically\W*Signed\W*By\W*:? ?', RRPT_REPORT_TXT), '') AS ct_radiologist_name,
+	   REPLACE(REPLACE(DV.REGEXSTR('(?i)IMPRESSION:[\w\W]*(?=DICTATED BY:)' ,RRPT_REPORT_TXT),'IMPRESSION:',''),'FINAL REPORT','') as ct_scan_impression,
+	   case when length(RRPT_REPORT_TXT) <= 15000 then rtrim(cast(substr(RRPT_REPORT_TXT, 1, 15000) as varchar(15000))) else
+ 	 		cast(substr(RRPT_REPORT_TXT, 1, 15000) as varchar(15000)) 
+			end as ct_scan_report, 	 
+	   case when length(RRPT_REPORT_TXT) > 15000 then rtrim(cast(substr(RRPT_REPORT_TXT, 15001, 15000) as varchar(15000))) else  ''
+			end as ct_scan_report2
 
 FROM
      /* DV.PATIENT_DEMOGRAPHICS_V */ "DV"."PATIENT_DEMOGRAPHICS_V" "T1" 
@@ -261,19 +341,20 @@ WHERE
 --select * from ct
 
 --------------------------------------------------------------------------------------------------
-, pet_mri as (
+, mri as (
 select distinct 
-       pt_mrn as mrn,
-	   rrpt_accession_no as pet_mri_accession_no,
---	   rrpt_requester,
---	   rrpt_procedure_name,
-	   REPLACE(DV.REGEXSTR('(?i)Electronically\W*Signed\W*By\W*:? ?[^\r\n\(]*',RRPT_REPORT_TXT), DV.REGEXSTR('(?i)Electronically\W*Signed\W*By\W*:? ?', RRPT_REPORT_TXT), '') AS pet_mri_radiologist_name,
-       rrpt_performed_dte as pet_mri_acquisition_date,
-       time(rrpt_performed_dt) as pet_mri_acquisition_time
-
---UPPER(CASE WHEN LENGTH(RRPT_REPORT_TXT) <= 15000 THEN RTRIM(CAST(SUBSTR(RRPT_REPORT_TXT, 1, 15000) AS VARCHAR(15000))) ELSE
--- 	 		CAST(SUBSTR(RRPT_REPORT_TXT, 1, 15000) AS VARCHAR(15000)) 
--- 	 END) AS "PRPT_REPORT"
+       pt_mrn as mrn, 
+	   rrpt_accession_no as mri_accession_no,
+       rrpt_performed_dt as mri_acquisition_datetime,
+	   rrpt_order_location as mri_acquisition_location,
+	   rrpt_procedure_name as mri_region,
+	   REPLACE(DV.REGEXSTR('(?i)Electronically\W*Signed\W*By\W*:? ?[^\r\n\(]*',RRPT_REPORT_TXT), DV.REGEXSTR('(?i)Electronically\W*Signed\W*By\W*:? ?', RRPT_REPORT_TXT), '') AS mri_radiologist_name,
+	   REPLACE(REPLACE(DV.REGEXSTR('(?i)IMPRESSION:[\w\W]*(?=DICTATED BY:)' ,RRPT_REPORT_TXT),'IMPRESSION:',''),'FINAL REPORT','') as mri_scan_impression,
+	   case when length(RRPT_REPORT_TXT) <= 15000 then rtrim(cast(substr(RRPT_REPORT_TXT, 1, 15000) as varchar(15000))) else
+ 	 		cast(substr(RRPT_REPORT_TXT, 1, 15000) as varchar(15000)) 
+			end as mri_scan_report, 	 
+	   case when length(RRPT_REPORT_TXT) > 15000 then rtrim(cast(substr(RRPT_REPORT_TXT, 15001, 15000) as varchar(15000))) else  ''
+			end as mri_scan_report2
 
 FROM
      /* DV.PATIENT_DEMOGRAPHICS_V */ "DV"."PATIENT_DEMOGRAPHICS_V" "T1" 
@@ -285,11 +366,41 @@ FROM
             ON "T1"."PT_PT_DEIDENTIFICATION_ID" = "T4"."PI_PT_DEIDENTIFICATION_ID"  
 WHERE  
     PI_SOURCE_SYSTEM_PT_ID IN (SELECT MRN FROM PT)
-    AND(RRPT_ORDER_GROUP LIKE '%PET%'
-	 OR RRPT_ORDER_GROUP LIKE '%MR%')
+    AND RRPT_ORDER_GROUP like '%MR%'
 )
 
---select * from pet_mri
+--select * from mri
+
+--------------------------------------------------------------------------------------------------
+, pet as (
+select distinct 
+       pt_mrn as mrn, 
+	   rrpt_accession_no as pet_accession_no,
+       rrpt_performed_dt as pet_acquisition_datetime,
+	   rrpt_order_location as pet_acquisition_location,
+	   rrpt_procedure_name as pet_region,
+	   REPLACE(DV.REGEXSTR('(?i)Electronically\W*Signed\W*By\W*:? ?[^\r\n\(]*',RRPT_REPORT_TXT), DV.REGEXSTR('(?i)Electronically\W*Signed\W*By\W*:? ?', RRPT_REPORT_TXT), '') AS pet_radiologist_name,
+	   REPLACE(REPLACE(DV.REGEXSTR('(?i)IMPRESSION:[\w\W]*(?=DICTATED BY:)' ,RRPT_REPORT_TXT),'IMPRESSION:',''),'FINAL REPORT','') as pet_scan_impression,
+	   case when length(RRPT_REPORT_TXT) <= 15000 then rtrim(cast(substr(RRPT_REPORT_TXT, 1, 15000) as varchar(15000))) else
+ 	 		cast(substr(RRPT_REPORT_TXT, 1, 15000) as varchar(15000)) 
+			end as pet_scan_report, 	 
+	   case when length(RRPT_REPORT_TXT) > 15000 then rtrim(cast(substr(RRPT_REPORT_TXT, 15001, 15000) as varchar(15000))) else  ''
+			end as pet_scan_report2
+
+FROM
+     /* DV.PATIENT_DEMOGRAPHICS_V */ "DV"."PATIENT_DEMOGRAPHICS_V" "T1" 
+    LEFT JOIN /* DV.PATIENT_DEIDENTIFIED */ "DV"."PATIENT_DEIDENTIFIED" "T3" 
+            ON "T1"."PT_PT_DEIDENTIFICATION_ID" = "T3"."PDI_PT_DEIDENTIFICATION_ID" 
+    LEFT JOIN /* DV.RADIOLOGY_REPORT_V */ "DV"."RADIOLOGY_REPORT_V" "T2" 
+            ON "T3"."PDI_PT_DEIDENTIFICATION_ID" = "T2"."RRPT_PT_DEIDENTIFICATION_ID" 
+    LEFT JOIN /* DV.PATIENT_IDENTIFICATION_MRN_V */ "DV"."PATIENT_IDENTIFICATION_MRN_V" "T4" 
+            ON "T1"."PT_PT_DEIDENTIFICATION_ID" = "T4"."PI_PT_DEIDENTIFICATION_ID"  
+WHERE  
+    PI_SOURCE_SYSTEM_PT_ID IN (SELECT MRN FROM PT)
+    AND RRPT_ORDER_GROUP like '%PET%'
+)
+
+--select * from pet
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
@@ -313,9 +424,9 @@ select distinct
 	   tumor_type_code as patient_cancer_type_code,
 	   primary_site as patient_cancer_primary_site,
 	   metastasis_site as patient_cancer_metastasis_site,
+	   part_description,
 	   patient_diagnosis_date,
-	   patient_overall_survival_date,
-	   part_description
+	   patient_overall_survival_date
 
   from pt
   left
