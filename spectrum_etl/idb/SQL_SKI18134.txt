@@ -41,11 +41,12 @@ select distinct
 	or metastasis_site is not null)
 --	or part_description is not null)
 )
+
 --select * from xm
 
 --------------------------------------------------------------------------------------------------
 , tm as (
-select tm_mrn,
+select tm_mrn as patient_mrn,
 	   max(tm_dx_dte) as patient_diagnosis_date
   from idb.cdb_tumor
   join idb.clm h
@@ -64,7 +65,7 @@ select tm_mrn,
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 , consents as (
-select distinct ac_mrn,
+select distinct ac_mrn as patient_mrn,
 	   ac_irb_no as patient_consent_irb,
 	   ac_cons_dte as patient_consent_date,
 	   reg_network_dscrp as patient_consent_location
@@ -81,7 +82,7 @@ select distinct ac_mrn,
 --------------------------------------------------------------------------------------------------
 , consults as (
 select distinct --cdd_doc_name
-	   cdd_mrn, cdo_value_text as consult
+	   cdd_mrn as patient_mrn, cdo_value_text as consult
 --	   cdd_doc_guid, cdd_service_dte, cdd_doc_name
 --	   cdo_section, cdo_ctlg_displ_nm, cdo_mstr_item_nm, cdo_item_name, cdo_value_text, cdo_large_value_text_ind
   from idb.cd_document
@@ -103,7 +104,7 @@ select distinct --cdd_doc_name
 
 --------------------------------------------------------------------------------------------------
 , diagnoses as (
-select distinct tm_mrn,
+select distinct tm_mrn as patient_mrn,
 	   tm_dx_dte as diagnosis_date,
 	   tm_icd9_cd as diagnosis_icd9,
 	   tm_icd10_cd as diagnosis_icd10,
@@ -148,7 +149,7 @@ select distinct tm_mrn,
 --------------------------------------------------------------------------------------------------
 , measures as (
 select distinct 
-	   pmh_mrn,
+	   pmh_mrn as patient_mrn,
 	   pmh_measure_dte as measure_date,
 	   pmh_ht_cm as measure_height,
 	   pmh_wt_kg as measure_weight
@@ -161,7 +162,7 @@ select distinct
 --------------------------------------------------------------------------------------------------
 , labs as (
 select distinct 
-	   lr_mrn,
+	   lr_mrn as patient_mrn,
        lr_performed_dt as laboratory_test_datetime,
 	   lr_accession_no as laboratory_accession_no,
 	   lr_cluster_id as laboratory_test_cluster,
@@ -188,7 +189,7 @@ select distinct
 --------------------------------------------------------------------------------------------------
 , chemo as (
 select distinct
-	   apr_mrn,
+	   apr_mrn as patient_mrn,
 	   apr_route as treatment_administration_route,
 	   apr_start_dt as treatment_start_datetime,
 	   apr_end_dt as treatment_end_datetime,
@@ -212,7 +213,7 @@ select distinct
 --------------------------------------------------------------------------------------------------
 , specimens as (
 select distinct
-	   mrn,
+	   mrn as patient_mrn,
 	   tba_procurement_dte as specimen_procurement_date,
 	   tba_resect_dt as specimen_resection_datetime,
 	   tba_accession_num as specimen_ppbc_accession_number,
@@ -252,7 +253,7 @@ select distinct
 
 --------------------------------------------------------------------------------------------------
 , path as (
-select distinct prpt_mrn,
+select distinct prpt_mrn as patient_mrn,
 	   prpt_accession_no as he_pathology_accession_number,
 	   '' as he_pathology_slide_id,
 	   prpt_procedure_dte as he_pathology_acquisition_date,
@@ -279,7 +280,7 @@ select distinct prpt_mrn,
 
 --------------------------------------------------------------------------------------------------
 , impact as (
-select distinct prpt_mrn,
+select distinct prpt_mrn as patient_mrn,
 	   pdrx_dmp_sample_id as impact_dmp_sample_id,
 	   prpt_accession_no as impact_dmp_accession_number,
 	   prpt_procedure_dte as impact_dmp_procedure_date,
@@ -302,7 +303,7 @@ select distinct prpt_mrn,
 --------------------------------------------------------------------------------------------------
 , ct as (
 select distinct 
-       pt_mrn as mrn, 
+       pt_mrn as patient_mrn, 
 	   rrpt_accession_no as ct_accession_no,
        rrpt_performed_dt as ct_acquisition_datetime,
 	   rrpt_order_location as ct_acquisition_location,
@@ -333,7 +334,7 @@ WHERE
 --------------------------------------------------------------------------------------------------
 , mri as (
 select distinct 
-       pt_mrn as mrn, 
+       pt_mrn as patient_mrn, 
 	   rrpt_accession_no as mri_accession_no,
        rrpt_performed_dt as mri_acquisition_datetime,
 	   rrpt_order_location as mri_acquisition_location,
@@ -364,7 +365,7 @@ WHERE
 --------------------------------------------------------------------------------------------------
 , pet as (
 select distinct 
-       pt_mrn as mrn, 
+       pt_mrn as patient_mrn, 
 	   rrpt_accession_no as pet_accession_no,
        rrpt_performed_dt as pet_acquisition_datetime,
 	   rrpt_order_location as pet_acquisition_location,
@@ -396,7 +397,7 @@ WHERE
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 select distinct
-	   mrn,
+	   mrn as patient_mrn,
 	   pdrx_dmp_patient_id as patient_dmp_id,
 	   pt_pt_deidentification_id as patient_darwin_id,
 	   '' as patient_cmo_id,
@@ -425,7 +426,7 @@ select distinct
 	on pdrx_pt_deidentification_id = pt_pt_deidentification_id
   left
   join tm
-	on tm_mrn = mrn
+	on mrn = patient_mrn
 --------------------------------------------------------------------------------------------------
 
 
