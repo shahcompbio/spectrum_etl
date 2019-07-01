@@ -1,6 +1,7 @@
 
   with pt as (
 select distinct
+	   patient_id,
 	   pt_mrn as mrn,
 	   pt_pt_deidentification_id,
 	   pt_first_name as patient_first_name,
@@ -16,7 +17,10 @@ select distinct
 	   pt_country as patient_residence_address_country,
 	   pt_death_dte as patient_overall_survival_date
   from dv.patient_demographics
- where pt_mrn in (select mrn from dvidic.ski18134) --dvidic.rad17703
+  join dvidic.ski18134 --dvidic.rad17703
+	on mrn = pt_mrn
+ order
+	by 1
 )
 
 --------------------------------------------------------------------------------------------------
@@ -40,6 +44,8 @@ select distinct
 	or primary_site is not null
 	or metastasis_site is not null)
 --	or part_description is not null)
+ order
+	by 1
 )
 
 --select * from xm
@@ -48,14 +54,15 @@ select distinct
 , tm as (
 select tm_mrn as patient_mrn,
 	   max(tm_dx_dte) as patient_diagnosis_date
-  from idb.cdb_tumor
+  from pt
+  join idb.cdb_tumor
+	on tm_mrn = mrn
   join idb.clm h
 	on tm_hist_cd = h.clm_clsf_cd
   join idb.clm s
 	on tm_site_cd = s.clm_clsf_cd
  where tm_case_sts in ('1','3','6','7','8')
    and tm_site_cd = 'C569'	--ovary
-   and tm_mrn in (select mrn from pt)
  group
 	by tm_mrn
 )
@@ -65,16 +72,21 @@ select tm_mrn as patient_mrn,
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 , consents as (
-select distinct ac_mrn as patient_mrn,
+select distinct
+	   patient_id,
+	   ac_mrn as patient_mrn,
 	   ac_irb_no as patient_consent_irb,
 	   ac_cons_dte as patient_consent_date,
 	   reg_network_dscrp as patient_consent_location
-  from idb.accruals
+  from pt
+  join idb.accruals
+	on ac_mrn = mrn
   left
   join nn.crdb_dash_pt
 	on pt_mrn = ac_mrn
    and prt_id = ac_irb_no
- where ac_mrn in (select mrn from pt)
+ order
+	by 1
 )
 
 --select * from consents
@@ -82,10 +94,14 @@ select distinct ac_mrn as patient_mrn,
 --------------------------------------------------------------------------------------------------
 , consults as (
 select distinct --cdd_doc_name
-	   cdd_mrn as patient_mrn, cdo_value_text as consult
+	   patient_id,
+	   cdd_mrn as patient_mrn,
+	   cdo_value_text as consult
 --	   cdd_doc_guid, cdd_service_dte, cdd_doc_name
 --	   cdo_section, cdo_ctlg_displ_nm, cdo_mstr_item_nm, cdo_item_name, cdo_value_text, cdo_large_value_text_ind
-  from idb.cd_document
+  from pt
+  join idb.cd_document
+	on cdd_mrn = mrn
   join idb.cd_observation
 	on cdo_doc_guid = cdd_doc_guid
    and cdo_authored_dte = cdd_authored_dte
@@ -97,14 +113,17 @@ select distinct --cdd_doc_name
 --   AND UPPER(CDD_DOC_NAME) LIKE '%MED%ONC%%'
 --   AND UPPER(CDD_DOC_NAME) LIKE '%INIT%'
 --   AND UPPER(CDD_DOC_NAME) LIKE '%CON%'
-   and cdd_mrn in (select mrn from pt)
+ order
+	by 1
 )
 
 --select * from consults
 
 --------------------------------------------------------------------------------------------------
 , diagnoses as (
-select distinct tm_mrn as patient_mrn,
+select distinct
+	   patient_id,
+	   tm_mrn as patient_mrn,
 	   tm_dx_dte as diagnosis_date,
 	   tm_icd9_cd as diagnosis_icd9,
 	   tm_icd10_cd as diagnosis_icd10,
@@ -121,7 +140,9 @@ select distinct tm_mrn as patient_mrn,
 	   sm.av_desc as diagnosis_smoking_history,
 	   tm_dx_confrm_cd as diagnosis_confirmation_code,
 	   cc.cdb_av_desc as diagnosis_confirmation
-  from idb.cdb_tumor
+  from pt
+  join idb.cdb_tumor
+	on tm_mrn = mrn
   join idb.clm h
 	on tm_hist_cd = h.clm_clsf_cd
   join idb.clm s
@@ -141,27 +162,33 @@ select distinct tm_mrn as patient_mrn,
    and cdb_av_cd_sts = 'A'
  where tm_case_sts in ('1','3','6','7','8')
    and tm_site_cd = 'C569'	--ovary
-   and tm_mrn in (select mrn from pt)
+ order
+	by 1
 )
 
 --select * from diagnoses
 
 --------------------------------------------------------------------------------------------------
 , measures as (
-select distinct 
+select distinct
+	   patient_id,
 	   pmh_mrn as patient_mrn,
 	   pmh_measure_dte as measure_date,
 	   pmh_ht_cm as measure_height,
 	   pmh_wt_kg as measure_weight
-  from idb.pt_measures_hx
- where pmh_mrn in (select mrn from pt)
+  from pt
+  join idb.pt_measures_hx
+	on pmh_mrn = mrn
+ order
+	by 1
 )
 
 --select * from measures
 
 --------------------------------------------------------------------------------------------------
 , labs as (
-select distinct 
+select distinct
+	   patient_id,
 	   lr_mrn as patient_mrn,
        lr_performed_dt as laboratory_test_datetime,
 	   lr_accession_no as laboratory_accession_no,
@@ -176,12 +203,15 @@ select distinct
 	   lr_test_up_limit as laboratory_test_upper_limit,
 	   lr_test_low_limit as laboratory_test_lower_limit--,
 --       ltl_text_result as text_result
-  from idb.lab_results 
+  from pt
+  join idb.lab_results 
+	on lr_mrn = mrn
 --         left
 --         join idb.lab_text_line                                  
 --           on ltl_result_guid = lr_result_guid
  where 1=1
-   and lr_mrn in (select mrn from pt)
+ order
+	by 1
 )
 
 --select * from labs
@@ -189,6 +219,7 @@ select distinct
 --------------------------------------------------------------------------------------------------
 , chemo as (
 select distinct
+	   patient_id,
 	   apr_mrn as patient_mrn,
 	   apr_route as treatment_administration_route,
 	   apr_start_dt as treatment_start_datetime,
@@ -201,11 +232,14 @@ select distinct
 	   apr_duration as treatment_duration,
 	   apr_set_name as treatment_order_set
 
-  from idb.antineoplastic_pt_rx
+  from pt
+  join idb.antineoplastic_pt_rx
+	on apr_mrn = mrn
   join idb.chemo_drug_generic
 	on apr_generic_name = cdg_generic_name
    and cdg_chemo_flag = 'Y'
-   and apr_mrn in (select mrn from pt)
+ order
+	by 1
 )
 
 --select * from chemo
@@ -213,6 +247,7 @@ select distinct
 --------------------------------------------------------------------------------------------------
 , specimens as (
 select distinct
+	   patient_id,
 	   mrn as patient_mrn,
 	   tba_procurement_dte as specimen_procurement_date,
 	   tba_resect_dt as specimen_resection_datetime,
@@ -226,7 +261,7 @@ select distinct
 	   tbd_category_desc as specimen_type,
 	   tbd_quality_desc as specimen_preservation,
 	   tbd_reserved_request_id as specimen_reserved_request_id
-
+,tbd_distribution_id , TBD_DISTRIBUTION_DT
 --	   tbd_distribution_id, tbd_reserved_request_id,
 --	   tbd_bank_num as specimen_ppbc_bank_number,
 --	   tbd_bank_seq_num,
@@ -245,15 +280,21 @@ select distinct
    and tba_part_num = tbd_part_num
    and tba_sub_part_num = tbd_sub_part_num
  where 1=1
-   and tbd_reserved_request_id in ('1232', '1204')
    and tbd_category_desc = 'Tumor'
+   and(tbd_reserved_request_id in ('1232')
+	or(tbd_reserved_request_id in ('1204')
+   and tbd_distribution_dt is null))
+ order
+	by 1
 )
 
 --select * from specimens
 
 --------------------------------------------------------------------------------------------------
 , path as (
-select distinct prpt_mrn as patient_mrn,
+select distinct
+	   patient_id,
+	   prpt_mrn as patient_mrn,
 	   prpt_accession_no as he_pathology_accession_number,
 	   '' as he_pathology_slide_id,
 	   prpt_procedure_dte as he_pathology_acquisition_date,
@@ -274,13 +315,17 @@ select distinct prpt_mrn as patient_mrn,
 		'Autopsy Report',
 		'Hematopathology Report',
 		'Surgical Pathology')
+ order
+	by 1
 )
 
 --select * from path
 
 --------------------------------------------------------------------------------------------------
 , impact as (
-select distinct prpt_mrn as patient_mrn,
+select distinct 
+	   patient_id,
+	   prpt_mrn as patient_mrn,
 	   pdrx_dmp_sample_id as impact_dmp_sample_id,
 	   prpt_accession_no as impact_dmp_accession_number,
 	   prpt_procedure_dte as impact_dmp_procedure_date,
@@ -292,17 +337,21 @@ select distinct prpt_mrn as patient_mrn,
 	   case when length(prpt_report) > 15000 then rtrim(cast(substr(prpt_report, 15001, 15000) as varchar(15000))) else  ''
 			end as impact_dmp_report2
 
-  from dv.pathology_dmp_results_xml
+  from pt
+  join dv.pathology_dmp_results_xml
+	on pdrx_pt_deidentification_id = pt_pt_deidentification_id
   join dv.pathology_report_v
 	on pdrx_accession_no = prpt_accession_no
- where pdrx_pt_deidentification_id in (select pt_pt_deidentification_id from pt)
+ order
+	by 1
 )
 
 --select * from impact
 
 --------------------------------------------------------------------------------------------------
 , ct as (
-select distinct 
+select distinct
+	   patient_id,
        pt_mrn as patient_mrn, 
 	   rrpt_accession_no as ct_accession_no,
        rrpt_performed_dt as ct_acquisition_datetime,
@@ -316,24 +365,26 @@ select distinct
 	   case when length(RRPT_REPORT_TXT) > 15000 then rtrim(cast(substr(RRPT_REPORT_TXT, 15001, 15000) as varchar(15000))) else  ''
 			end as ct_scan_report2
 
-FROM
-     /* DV.PATIENT_DEMOGRAPHICS_V */ "DV"."PATIENT_DEMOGRAPHICS_V" "T1" 
+FROM pt
+		 JOIN /* DV.PATIENT_DEMOGRAPHICS_V */ "DV"."PATIENT_DEMOGRAPHICS_V" "T1" 
+			ON PT_MRN = mrn
     LEFT JOIN /* DV.PATIENT_DEIDENTIFIED */ "DV"."PATIENT_DEIDENTIFIED" "T3" 
             ON "T1"."PT_PT_DEIDENTIFICATION_ID" = "T3"."PDI_PT_DEIDENTIFICATION_ID" 
     LEFT JOIN /* DV.RADIOLOGY_REPORT_V */ "DV"."RADIOLOGY_REPORT_V" "T2" 
             ON "T3"."PDI_PT_DEIDENTIFICATION_ID" = "T2"."RRPT_PT_DEIDENTIFICATION_ID" 
     LEFT JOIN /* DV.PATIENT_IDENTIFICATION_MRN_V */ "DV"."PATIENT_IDENTIFICATION_MRN_V" "T4" 
             ON "T1"."PT_PT_DEIDENTIFICATION_ID" = "T4"."PI_PT_DEIDENTIFICATION_ID"  
-WHERE  
-    PI_SOURCE_SYSTEM_PT_ID IN (SELECT MRN FROM PT)
-    AND RRPT_ORDER_GROUP like '%CT%'
+WHERE   RRPT_ORDER_GROUP like '%CT%'
+ order
+	by 1
 )
 
 --select * from ct
 
 --------------------------------------------------------------------------------------------------
 , mri as (
-select distinct 
+select distinct
+	   patient_id,
        pt_mrn as patient_mrn, 
 	   rrpt_accession_no as mri_accession_no,
        rrpt_performed_dt as mri_acquisition_datetime,
@@ -347,24 +398,26 @@ select distinct
 	   case when length(RRPT_REPORT_TXT) > 15000 then rtrim(cast(substr(RRPT_REPORT_TXT, 15001, 15000) as varchar(15000))) else  ''
 			end as mri_scan_report2
 
-FROM
-     /* DV.PATIENT_DEMOGRAPHICS_V */ "DV"."PATIENT_DEMOGRAPHICS_V" "T1" 
+FROM pt
+		 JOIN /* DV.PATIENT_DEMOGRAPHICS_V */ "DV"."PATIENT_DEMOGRAPHICS_V" "T1" 
+			ON PT_MRN = mrn
     LEFT JOIN /* DV.PATIENT_DEIDENTIFIED */ "DV"."PATIENT_DEIDENTIFIED" "T3" 
             ON "T1"."PT_PT_DEIDENTIFICATION_ID" = "T3"."PDI_PT_DEIDENTIFICATION_ID" 
     LEFT JOIN /* DV.RADIOLOGY_REPORT_V */ "DV"."RADIOLOGY_REPORT_V" "T2" 
             ON "T3"."PDI_PT_DEIDENTIFICATION_ID" = "T2"."RRPT_PT_DEIDENTIFICATION_ID" 
     LEFT JOIN /* DV.PATIENT_IDENTIFICATION_MRN_V */ "DV"."PATIENT_IDENTIFICATION_MRN_V" "T4" 
             ON "T1"."PT_PT_DEIDENTIFICATION_ID" = "T4"."PI_PT_DEIDENTIFICATION_ID"  
-WHERE  
-    PI_SOURCE_SYSTEM_PT_ID IN (SELECT MRN FROM PT)
-    AND RRPT_ORDER_GROUP like '%MR%'
+WHERE   RRPT_ORDER_GROUP like '%MR%'
+ order
+	by 1
 )
 
 --select * from mri
 
 --------------------------------------------------------------------------------------------------
 , pet as (
-select distinct 
+select distinct
+	   patient_id,
        pt_mrn as patient_mrn, 
 	   rrpt_accession_no as pet_accession_no,
        rrpt_performed_dt as pet_acquisition_datetime,
@@ -378,25 +431,60 @@ select distinct
 	   case when length(RRPT_REPORT_TXT) > 15000 then rtrim(cast(substr(RRPT_REPORT_TXT, 15001, 15000) as varchar(15000))) else  ''
 			end as pet_scan_report2
 
-FROM
-     /* DV.PATIENT_DEMOGRAPHICS_V */ "DV"."PATIENT_DEMOGRAPHICS_V" "T1" 
+FROM pt
+		 JOIN /* DV.PATIENT_DEMOGRAPHICS_V */ "DV"."PATIENT_DEMOGRAPHICS_V" "T1" 
+			ON PT_MRN = mrn
     LEFT JOIN /* DV.PATIENT_DEIDENTIFIED */ "DV"."PATIENT_DEIDENTIFIED" "T3" 
             ON "T1"."PT_PT_DEIDENTIFICATION_ID" = "T3"."PDI_PT_DEIDENTIFICATION_ID" 
     LEFT JOIN /* DV.RADIOLOGY_REPORT_V */ "DV"."RADIOLOGY_REPORT_V" "T2" 
             ON "T3"."PDI_PT_DEIDENTIFICATION_ID" = "T2"."RRPT_PT_DEIDENTIFICATION_ID" 
     LEFT JOIN /* DV.PATIENT_IDENTIFICATION_MRN_V */ "DV"."PATIENT_IDENTIFICATION_MRN_V" "T4" 
             ON "T1"."PT_PT_DEIDENTIFICATION_ID" = "T4"."PI_PT_DEIDENTIFICATION_ID"  
-WHERE  
-    PI_SOURCE_SYSTEM_PT_ID IN (SELECT MRN FROM PT)
-    AND RRPT_ORDER_GROUP like '%PET%'
+WHERE   RRPT_ORDER_GROUP like '%PET%'
     AND RRPT_ORDER_GROUP not like '%CT%'
+ order
+	by 1
 )
 
 --select * from pet
 
 --------------------------------------------------------------------------------------------------
+, imf as (
+select distinct patient_id, ia.*,
+	   isr.IMF_SAMPLE_RECEIVED_ID, TUBE_TYPE, TUBE_TYPE_DSCRP, TUBE_NUM, COLLECTION_DATETIME, RECEIVED_DATETIME, RECEIVED_BY, RECEIVED_BY_DSCRP,
+	   ip.IMF_PRODUCT_ID, PRODUCT_TYPE, PRODUCT_TYPE_DSCRP, TOTAL_VOL, TOTAL_VOL_UNIT, /*ip.UNIT_DSCRP,*/ VIABLE_CELLS, VIABLILITY, TOTAL_CELLS_NUM, TOTAL_VIABLE_CELLS_ORIGINAL, TOTAL_CELLS_NUM_ORIGINAL,
+	   ipd.IMF_PRODUCT_DTL_ID, CELLS_NUM, VOLUME, VOLUME_UNIT, /*ipd.UNIT_DSCRP,*/ IMF_TANK_SLOT_SEQ_ID, CHECK_IN_TIME, CHECK_IN_PERSON, VIAL_NUM,
+	   ico.IMF_CHECK_OUT_ID, CHECK_OUT_TIME, CHECK_OUT_PERSON, CHECK_OUT_VOLUME, REQUESTER, PURPOSE
+
+  from pt
+  join nn.IMF_ACCESSION ia
+	on pt_mrn = mrn
+
+  join nn.IMF_SAMPLE_RECEIVED isr
+	on ia.IMF_ACCESSION_ID = isr.IMF_ACCESSION_ID
+
+  join nn.IMF_PRODUCT ip
+	on isr.IMF_SAMPLE_RECEIVED_ID = ip.IMF_SAMPLE_RECEIVED_ID
+
+  join nn.IMF_PRODUCT_DTL ipd
+	on ip.IMF_PRODUCT_ID = ipd.IMF_PRODUCT_ID
+
+  left
+  join nn.IMF_CHECK_OUT ico
+	on ipd.IMF_PRODUCT_DTL_ID = ico.IMF_PRODUCT_DTL_ID
+
+-- where ia.IMF_PRT_ID = '15-200'
+
+ order
+	by 1
+)
+
+--select * from imf
+
+--------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 select distinct
+	   patient_id,
 	   mrn as patient_mrn,
 	   pdrx_dmp_patient_id as patient_dmp_id,
 	   pt_pt_deidentification_id as patient_darwin_id,
@@ -427,6 +515,9 @@ select distinct
   left
   join tm
 	on mrn = patient_mrn
+
+ order
+	by 1
 --------------------------------------------------------------------------------------------------
 
 
