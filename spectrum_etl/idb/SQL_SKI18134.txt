@@ -1,4 +1,13 @@
 
+--------------------------------
+--drop table dvidic.ski18134
+--delete from dvidic.ski18134
+--create table dvidic.ski18134
+--	(patient_id char(20),
+--	 mrn char(8)) 
+--select * from dvidic.ski18134
+--------------------------------
+
   with pt as (
 select distinct
 	   patient_id,
@@ -245,31 +254,56 @@ select distinct
 --select * from chemo
 
 --------------------------------------------------------------------------------------------------
-, specimens as (
+, surgery as (
 select distinct
 	   patient_id,
 	   mrn as patient_mrn,
-	   tba_procurement_dte as specimen_procurement_date,
-	   tba_resect_dt as specimen_resection_datetime,
+	   sse_surg_dte as surgery_date,
+	   ssp_proc_cpt4_cd as surgery_cpt_code,
+	   ssp_proc_cpt4_desc as surgery_procedure_desc,
+--	   ssp_surg_svc_cd as surgery_service
+	   doc_dr_no as surgery_dr_no, 
+	   ssp_surg_last_nm as surgery_surgeon_last_name,
+	   ssp_surg_first_nm as surgery_surgeon_first_name,
+	   doc_acdmc_dpt as surgery_department,
+	   doc_acdmc_svc as surgery_service
+  from pt
+  join idb.srg_surg_event
+	on mrn = sse_mrn
+  join idb.srg_surg_procedure
+	on sse_log_id = ssp_log_id
+  left
+  join idb.doc
+	on ssp_res_id = doc_dr_no
+ where 1=1
+   and ssp_proc_cpt4_cd not like '9999%'
+--   and sse_surg_loc not like '%ir%' and sse_surg_loc not like '%endo%' and sse_source_type <> 'e'
+ order
+	by 1
+)
+
+--select * from surgery
+
+--------------------------------------------------------------------------------------------------
+, specimen_ppbc as (
+select distinct
+	   patient_id,
+	   mrn as patient_mrn,
+	   tba_procurement_dte as specimen_ppbc_procurement_date,
+	   tba_resect_dt as specimen_ppbc_resection_datetime,
 	   tba_accession_num as specimen_ppbc_accession_number,
 	   tba_part_num as specimen_ppbc_part_num,
 	   tba_sub_part_num as specimen_ppbc_sub_part_num,
-	   tbd_specimen_type_desc as specimen_class,
-	   tba_site_desc as specimen_site,
-	   tba_sub_site_desc as specimen_sub_site,
-	   tba_sub2_site_desc as specimen_sub_site2,
-	   tbd_category_desc as specimen_type,
-	   tbd_quality_desc as specimen_preservation,
-	   tbd_reserved_request_id as specimen_reserved_request_id
-,tbd_distribution_id , TBD_DISTRIBUTION_DT
---	   tbd_distribution_id, tbd_reserved_request_id,
---	   tbd_bank_num as specimen_ppbc_bank_number,
---	   tbd_bank_seq_num,
---	   tbd_category_cd,
---	   tbd_quality_cd,
---	   tbd_quality_desc,
---	   case when tbd_quality_cd = 'PARF'
---			then strip(tbd_bank_num) || '.' || strip(char(tbd_bank_seq_num)) || '.' || strip(tbd_category_cd) end as specimen_ppbc_ffpe_label
+	   tbd_specimen_type_desc as specimen_ppbc_class,
+	   tba_site_desc as specimen_ppbc_site,
+	   tba_sub_site_desc as specimen_ppbc_sub_site,
+	   tba_sub2_site_desc as specimen_ppbc_sub_site2,
+	   tbd_category_desc as specimen_ppbc_type,
+	   tbd_quality_desc as specimen_ppbc_preservation,
+	   tbd_reserved_request_id as specimen_ppbc_reserved_request_id,
+--	   tbd_distribution_id,
+	   tbd_distribution_dt as specimen_ppbc_distribution_datetime,
+	   tbd_request_id as specimen_ppbc_request_id
 
   from pt
   join dv.tissue_bank_accession tba
@@ -288,9 +322,118 @@ select distinct
 	by 1
 )
 
---select * from specimens
+--select * from specimen_ppbc
 
 --------------------------------------------------------------------------------------------------
+, specimen_lab_medicine as (
+select distinct
+	   patient_id,
+	   lr_mrn as patient_mrn,
+       lr_performed_dt as specimen_lab_medicine_datetime,
+	   lr_accession_no as specimen_lab_medicine_accession_no,
+	   lr_cluster_id as specimen_lab_medicine_test_cluster,
+	   lr_test_name as specimen_lab_medicine_test_name,
+	   lr_subtest_name as specimen_lab_medicine_subname,
+	   lr_result_value as specimen_lab_medicine_test_biomarker_level,
+	   lr_unit_measure as specimen_lab_medicine_test_biomarker_units,
+	   lr_result_type_cd as specimen_lab_medicine_test_type,
+	   lr_result_sts_cd as specimen_lab_medicine_test_status,
+	   lr_abnormality_cd as specimen_lab_medicine_test_abnormality,
+	   lr_test_up_limit as specimen_lab_medicine_test_upper_limit,
+	   lr_test_low_limit as specimen_lab_medicine_test_lower_limit--,
+--       ltl_text_result as text_result
+  from pt
+  join idb.lab_results 
+	on lr_mrn = mrn
+--         left
+--         join idb.lab_text_line                                  
+--           on ltl_result_guid = lr_result_guid
+ where 1=1
+   and lr_test_name = 'cfDNA'
+ order
+	by 1
+)
+
+--select * from specimen_lab_medicine
+
+--------------------------------------------------------------------------------------------------
+, specimen_imf as (
+select distinct
+	   patient_id,
+	   ia.pt_mrn as patient_mrn,
+	   ia.imf_accession_id as specimen_imf_accession_id,
+	   ia.prt_id as specimen_imf_prt_id,
+	   ia.imf_prt_id as specimen_imf_imf_prt_id,
+	   ia.protocol_dscrp as specimen_imf_protocol_dscrp,
+	   ia.pt_seq_id as specimen_imf_pt_seq_id,
+	   ia.visit as specimen_imf_visit,
+	   ia.notes as specimen_imf_notes,
+	   
+	   isr.imf_sample_received_id as specimen_imf_sample_received_id,
+	   isr.tube_type as specimen_imf_tube_type,
+	   isr.tube_type_dscrp as specimen_imf_tube_type_dscrp,
+	   isr.tube_num as specimen_imf_tube_num,
+	   isr.collection_datetime as specimen_imf_collection_datetime,
+	   isr.received_datetime as specimen_imf_received_datetime,
+	   isr.received_by as specimen_imf_received_by,
+	   isr.received_by_dscrp as specimen_imf_received_by_dscrp,
+
+	   ip.imf_product_id as specimen_imf_product_id,
+	   ip.product_type as specimen_imf_product_type,
+	   ip.product_type_dscrp as specimen_imf_product_type_dscrp,
+	   ip.total_vol as specimen_imf_total_vol,
+	   ip.total_vol_unit as specimen_imf_total_vol_unit,
+	   /*ip.unit_dscrp,*/
+	   ip.viable_cells as specimen_imf_viable_cells,
+	   ip.viablility as specimen_imf_viablility,
+	   ip.total_cells_num as specimen_imf_total_cells_num,
+	   ip.total_viable_cells_original as specimen_imf_total_viable_cells_original,
+	   ip.total_cells_num_original as specimen_imf_total_cells_num_original,
+	 
+	   ipd.imf_product_dtl_id as specimen_imf_product_dtl_id,
+	   ipd.cells_num as specimen_imf_cells_num,
+	   ipd.volume as specimen_imf_volume,
+	   ipd.volume_unit as specimen_imf_volume_unit,
+	   /*ipd.unit_dscrp,*/
+	   ipd.imf_tank_slot_seq_id as specimen_imf_tank_slot_seq_id,
+	   ipd.check_in_time as specimen_imf_check_in_time,
+	   ipd.check_in_person as specimen_imf_check_in_person,
+	   ipd.vial_num as specimen_imf_vial_num,
+
+	   ico.imf_check_out_id as specimen_imf_check_out_id,
+	   ico.check_out_time as specimen_imf_check_out_time,
+	   ico.check_out_person as specimen_imf_check_out_person,
+	   ico.check_out_volume as specimen_imf_check_out_volume,
+	   ico.requester as specimen_imf_requester,
+	   ico.purpose as specimen_imf_purpose
+
+  from pt
+  join nn.imf_accession ia
+	on pt_mrn = mrn
+
+  join nn.imf_sample_received isr
+	on ia.imf_accession_id = isr.imf_accession_id
+
+  join nn.imf_product ip
+	on isr.imf_sample_received_id = ip.imf_sample_received_id
+
+  join nn.imf_product_dtl ipd
+	on ip.imf_product_id = ipd.imf_product_id
+
+  left
+  join nn.imf_check_out ico
+	on ipd.imf_product_dtl_id = ico.imf_product_dtl_id
+
+-- where ia.imf_prt_id = '15-200'
+
+ order
+	by 1
+)
+
+--select * from specimen_imf
+
+--------------------------------------------------------------------------------------------------
+
 , path as (
 select distinct
 	   patient_id,
@@ -311,10 +454,10 @@ select distinct
   from pt
   join dv.pathology_report_v
 	on prpt_pt_deidentification_id = pt_pt_deidentification_id
- where prpt_report_type_desc in (
-		'Autopsy Report',
-		'Hematopathology Report',
-		'Surgical Pathology')
+-- where prpt_report_type_desc in (
+--		'Autopsy Report',
+--		'Hematopathology Report',
+--		'Surgical Pathology')
  order
 	by 1
 )
@@ -447,39 +590,6 @@ WHERE   RRPT_ORDER_GROUP like '%PET%'
 )
 
 --select * from pet
-
---------------------------------------------------------------------------------------------------
-, imf as (
-select distinct patient_id, ia.*,
-	   isr.IMF_SAMPLE_RECEIVED_ID, TUBE_TYPE, TUBE_TYPE_DSCRP, TUBE_NUM, COLLECTION_DATETIME, RECEIVED_DATETIME, RECEIVED_BY, RECEIVED_BY_DSCRP,
-	   ip.IMF_PRODUCT_ID, PRODUCT_TYPE, PRODUCT_TYPE_DSCRP, TOTAL_VOL, TOTAL_VOL_UNIT, /*ip.UNIT_DSCRP,*/ VIABLE_CELLS, VIABLILITY, TOTAL_CELLS_NUM, TOTAL_VIABLE_CELLS_ORIGINAL, TOTAL_CELLS_NUM_ORIGINAL,
-	   ipd.IMF_PRODUCT_DTL_ID, CELLS_NUM, VOLUME, VOLUME_UNIT, /*ipd.UNIT_DSCRP,*/ IMF_TANK_SLOT_SEQ_ID, CHECK_IN_TIME, CHECK_IN_PERSON, VIAL_NUM,
-	   ico.IMF_CHECK_OUT_ID, CHECK_OUT_TIME, CHECK_OUT_PERSON, CHECK_OUT_VOLUME, REQUESTER, PURPOSE
-
-  from pt
-  join nn.IMF_ACCESSION ia
-	on pt_mrn = mrn
-
-  join nn.IMF_SAMPLE_RECEIVED isr
-	on ia.IMF_ACCESSION_ID = isr.IMF_ACCESSION_ID
-
-  join nn.IMF_PRODUCT ip
-	on isr.IMF_SAMPLE_RECEIVED_ID = ip.IMF_SAMPLE_RECEIVED_ID
-
-  join nn.IMF_PRODUCT_DTL ipd
-	on ip.IMF_PRODUCT_ID = ipd.IMF_PRODUCT_ID
-
-  left
-  join nn.IMF_CHECK_OUT ico
-	on ipd.IMF_PRODUCT_DTL_ID = ico.IMF_PRODUCT_DTL_ID
-
--- where ia.IMF_PRT_ID = '15-200'
-
- order
-	by 1
-)
-
---select * from imf
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
