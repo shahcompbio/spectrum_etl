@@ -12,7 +12,7 @@ from openpyxl.styles import Protection
 from spectrum_etl.edc.patient import Patient
 from spectrum_etl.edc.patient import MRN_CELL
 from spectrum_etl.edc.patient import ID_CELL
-from spectrum_etl.edc.patient import COLOR_PROCESSED
+from spectrum_etl.edc.constants import COLOR_PROCESSED
 
 
 class TestPatient(object):
@@ -66,7 +66,7 @@ class TestPatient(object):
 
 
         patient = Patient(patient_sheet)
-        patient.set_patient_as_processed()
+        patient.set_sheet_as_processed()
 
         assert patient_sheet[MRN_CELL].fill.fgColor.value == '00'+COLOR_PROCESSED  # processed color
         assert patient_sheet[ID_CELL].fill.fgColor.value == '00'+COLOR_PROCESSED  # processed color

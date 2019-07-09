@@ -4,19 +4,20 @@ Created on May 23, 2019
 @author: pashaa@mskcc.org
 '''
 import re
-from typing import List
 
 from openpyxl.styles import PatternFill, Protection
 from openpyxl.worksheet.worksheet import Worksheet
 
+from spectrum_etl.edc.constants import COLOR_PROCESSED
+
 MRN_CELL: str = 'A2'
 ID_CELL: str = 'B2'
 ID_PATTERN = r"(^SPECTRUM-OV-\d\d\d$)"
-COLOR_PROCESSED = 'CFE7F7'  # a light shade of blue
+
 
 class Patient(object):
     '''
-    A patient object.
+    A patient object. Holds information for a single patient.
 
     Invariants: patient_mrn and patient_id are never changed in the worksheet.
     '''
@@ -40,8 +41,6 @@ class Patient(object):
         pre-condition: a non None patient sheet.
         post-condition: a valid patient object or exception
         '''
-        if self.patient_sheet is None:
-            print("Error: Unable to find patient sheet in workbook!")
 
         # patient_mrn
         try:
@@ -75,7 +74,7 @@ class Patient(object):
         '''
         return self.patient_id
 
-    def set_patient_as_processed(self):
+    def set_sheet_as_processed(self):
         '''
         pre-condition: None
         Post-condition: cells are colored blue, locked and worksheet is protected.
@@ -88,7 +87,7 @@ class Patient(object):
         self.patient_sheet[MRN_CELL].protection = Protection(locked=True, hidden=False)
         self.patient_sheet[ID_CELL].protection = Protection(locked=True, hidden=False)
 
-        ####  get and set worksheet protection state  ###
+        # protect sheet
         self.patient_sheet.protection.sheet = True
         self.patient_sheet.protection.enable()
 
