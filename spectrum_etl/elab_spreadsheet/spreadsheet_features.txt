@@ -1,0 +1,13 @@
+Spreadsheet Features:
+---------------------
+
+1. The spreadsheet shows or hides columns (or fields) based on the values of cells in other columns called conditional columns (or conditional fields)
+
+2. On opening the spreadsheet, columns that should be hidden are hidden.
+
+3. As user enters values in the conditional columns, the dependent columns are either shown or hidden based on the values entered. This is done through the excel macros event handler.
+
+4. A button is provided to expand all columns, copy all cell values to clipboard.
+
+5. A button is provided to hide only those columns that should be kept hidden.
+

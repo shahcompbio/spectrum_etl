@@ -1,0 +1,8 @@
+
+eLab_test_sheet.xlsm is a test sheet that goes with eLab sample type called test_sample_import
+
+todo : - each excel sheet should have a list of tests mentioned that can be conducted manually each time a change is made (sort of like manual unit tests)
+
+todo: would be good to use constants in the macros instead of hardcoding values in the functions
+
+todo: The actual copy-paste step is vulnerable to human error. To eliminate chance for human error at this step in the process, a possible solution is to have a monitoring process that compares values in stored spreadsheets to values in eLab. Until such a process is set up, the user must make sure to do manual visual verification after copy-paste is performed

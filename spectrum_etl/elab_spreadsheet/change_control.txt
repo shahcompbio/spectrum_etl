@@ -1,0 +1,15 @@
+This procedure must be followed for every change made to the elab spreadsheets.
+
+1. Make one change to eLab sample template
+
+2. Make corresponding change to eLab sample spreadsheet
+
+3. Go through the following change-control tests
+
+3.1. Cycle through opening and closing spreadsheet while making a change to test Workbook_open event.
+
+3.2. Ensure that default values are provided for all fields. Being explicit can help avoid accidental omissions.
+
+3.3. Make sure all fields in eLab template are set to be required. This aligns with point 2 above.
+
+4. commit changes
