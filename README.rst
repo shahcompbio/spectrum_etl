@@ -26,7 +26,7 @@ A repo for all ETL work that is needed in the larger spectrum workflow involving
 Features
 --------
 
-* TODO
+*  spectrum_etl/elab_spreadsheet/ contains Excel spreadsheets that have been designed for manual metadata entry for samples collected and accessioned by Shah Lab. The Excel sheets have been designed for easy metadata import into the multi-user eLABINVENTORY system.  
 
 Credits
 -------
