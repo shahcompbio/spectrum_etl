@@ -2,7 +2,11 @@ This procedure must be followed for every change made to the elab spreadsheets.
 
 1. Make one change to eLab sample template
 
-2. Make corresponding change to eLab sample spreadsheet
+2. Test entire eLab sample template, especially if field change is related to conditional trigger field(s" or conditional section(s"
+
+3. Make corresponding change to eLab sample spreadsheet.
+
+4. Do a field to field comparison between eLab fields and excel sheet fields.
 
 3. Go through the following change-control tests
 
@@ -12,4 +16,34 @@ This procedure must be followed for every change made to the elab spreadsheets.
 
 3.3. Make sure all fields in eLab template are set to be required. This aligns with point 2 above.
 
+3.4. Ensure order of field names in elab sample definition matches order of field names in corresponding Excel columns.
+
+3.5. Test the following functions
+    - Open workbook, expand all columns, Save, close, open workbook again and verify that all hidden columns are hidden.
+    - verify as triggers the first, a middle and the last cell in each conditional column for show/hide functionality.
+    - "Expand Columns and Copy Paste Data" - verify expansion of all conditional columns. Verify proper bounding rectangle.
+    - "Shrink Columns" - verify function for all conditional columns, and first, middle, last as cells in each conditional column as triggers for show/hide.
+
 4. commit changes
+
+
+Questions for Jamie:
+Sorted scRNA sequencing OR Sorted Single Cell Sequencing for Downstream Submission?
+We have 2 sequencing info sections. Can we give them different names?
+There is an inconsistency between the headers "Inclusion Status" and "Diagnosis" between Excel and eLab sample type Sections.
+There are two Downstream Submission fields - in PPBC and Processing Info sections. Should name them differently?
+
+
+Diagnosis
+Reason for Exclusion
+Processing info
+Sorting Info
+Flow Sorting Info
+Sequencing Info
+PPBC Info
+Bulk WGS Info
+Microdissection Info
+Extraction Info
+Sequencing Info
+IF Info "Downstream Submission is IF"
+
