@@ -27,23 +27,3 @@ This procedure must be followed for every change made to the elab spreadsheets.
 4. commit changes
 
 
-Questions for Jamie:
-Sorted scRNA sequencing OR Sorted Single Cell Sequencing for Downstream Submission?
-We have 2 sequencing info sections. Can we give them different names?
-There is an inconsistency between the headers "Inclusion Status" and "Diagnosis" between Excel and eLab sample type Sections.
-There are two Downstream Submission fields - in PPBC and Processing Info sections. Should name them differently?
-
-
-Diagnosis
-Reason for Exclusion
-Processing info
-Sorting Info
-Flow Sorting Info
-Sequencing Info
-PPBC Info
-Bulk WGS Info
-Microdissection Info
-Extraction Info
-Sequencing Info
-IF Info "Downstream Submission is IF"
-

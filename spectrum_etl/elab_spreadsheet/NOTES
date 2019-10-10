@@ -6,3 +6,10 @@ todo : - each excel sheet should have a list of tests mentioned that can be cond
 todo: would be good to use constants in the macros instead of hardcoding values in the functions
 
 todo: The actual copy-paste step is vulnerable to human error. To eliminate chance for human error at this step in the process, a possible solution is to have a monitoring process that compares values in stored spreadsheets to values in eLab. Until such a process is set up, the user must make sure to do manual visual verification after copy-paste is performed
+
+
+Questions for Jamie:
+Should we rename "Sorted scRNA sequencing" in eLab to Sorted Single Cell Sequencing for Downstream Submission to be consistent with spreadsheet?
+We have 2 "Sequencing Info" sections in eLab. Can we give them different names?
+There is an inconsistency between the headers "Inclusion Status" and "Diagnosis" (as to what fields they include) between Excel and eLab sample type Sections.
+There are two "Downstream Submission" fields - in PPBC and Processing Info sections. Should name them differently?
