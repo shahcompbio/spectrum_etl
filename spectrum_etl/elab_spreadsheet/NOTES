@@ -13,3 +13,18 @@ Should we rename "Sorted scRNA sequencing" in eLab to Sorted Single Cell Sequenc
 We have 2 "Sequencing Info" sections in eLab. Can we give them different names?
 There is an inconsistency between the headers "Inclusion Status" and "Diagnosis" (as to what fields they include) between Excel and eLab sample type Sections.
 There are two "Downstream Submission" fields - in PPBC and Processing Info sections. Should name them differently?
+
+Github Commands:
+
+# to download a local copy of the repo
+git clone https://github.com/shahcompbio/spectrum_etl.git
+
+# to check for what changes you made
+git status
+
+# to pull changes from github
+git pull
+
+# to push local changes up to github
+git commit -m "message" <list of file paths>
+git push
