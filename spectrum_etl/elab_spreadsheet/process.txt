@@ -4,20 +4,22 @@ The list below details the process that must be followed when entering data into
 
 1. Create copy of the workbook and save under another name (patient_id_surgery_id)
 
-2. Populate data in spreadsheet.
+2. Make sure Excel has Auto-Save set to on
 
-3. Create an empty sample import form on eLab with the specified some of sample entries. See https://www.elabinventory.com/doc/ImportingSamples.html
+3. Populate data in spreadsheet.
 
-4. Press the "Expand Columns and Copy Paste Data" button on the spreadsheet.
+4. Create an empty sample import form on eLab with the specified some of sample entries. See https://www.elabinventory.com/doc/ImportingSamples.html
 
-5. IMPORTANT: Make sure to place the cursor on the top left cell before pasting.
+5. Press the "Expand Columns and Copy Paste Data" button on the spreadsheet.
 
-6. Press the button "Paste from clipboard" and paste the data in
+6. IMPORTANT: Make sure to place the cursor on the top left cell before pasting.
 
-7. Verify if data was properly pasted by ensuring all columns are filled correctly, not empty cells exist and there are no errors flagged.
+7. Press the button "Paste from clipboard" and paste the data in
 
-8. IMPORTANT: If an error is flagged by eLab after a copy-paste, the error must be fixed in the excel sheet first. Cancel out of the copy-pasted form and create a new empty import form to copy paste into. Do not try to overwrite by pasting into a prefilled form. This is highly error prone.
+8. Verify if data was properly pasted by ensuring all columns are filled correctly, not empty cells exist and there are no errors flagged.
 
-9. If copy-pasted data looks good, press the import button.
+9. IMPORTANT: If an error is flagged by eLab after a copy-paste, the error must be fixed in the excel sheet first. Cancel out of the copy-pasted form and create a new empty import form to copy paste into. Do not try to overwrite by pasting into a prefilled form. This is highly error prone.
 
-10. Protect sheet to prevent accidental edits and save.
+10. If copy-pasted data looks good, press the import button.
+
+11. Protect sheet to prevent accidental edits and save.
