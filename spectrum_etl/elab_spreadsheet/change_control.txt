@@ -19,10 +19,16 @@ This procedure must be followed for every change made to the elab spreadsheets.
 3.4. Ensure order of field names in elab sample definition matches order of field names in corresponding Excel columns.
 
 3.5. Test the following functions
-    - Open workbook, expand all columns, Save, close, open workbook again and verify that all hidden columns are hidden.
-    - verify as triggers the first, a middle and the last cell in each conditional column for show/hide functionality.
+    1. Check header alignment between excel spreadsheet headers and elab schema headers (get elab schema headers by going to Inventory -> Sample List -> Import -> <select tissue type> -> copy-paste from "Select Fields to Import" list Into excel column, then compare to excel headers transposed into an adjacent column.
+    2. Open workbook, expand all columns, Save, close, open workbook again and verify that all hidden columns are hidden.
+    3. Baseline expand-shrink test. Empty all cells. Expand all columns. Verify expansion. Shrink all columns. Verify shrinking. Expand all columns again. Verify expansion.
+    4. Step through conditional sections in elab schema and verify corresponding show/hide functionality in spreadsheet for each schema conditional.
+        4.1. Set conditional column to empty
+        4.2. Expand out all columns. Verify hidden columns being tested are all visible. Verify section boundaries by equating column counts to elab field counts for the section being tested.
+        4.3. Shrink all columns. Verify hidden columns are hidden
+        4.4. Set visibility condition field to trigger value. Verify all hidden columns show
+        4.5. Set visibility condition field to non-trigger values. Verify that hidden columns remain hidden
     - "Expand Columns and Copy Paste Data" - verify expansion of all conditional columns. Verify proper bounding rectangle.
-    - "Shrink Columns" - verify function for all conditional columns, and first, middle, last as cells in each conditional column as triggers for show/hide.
 
 4. commit changes
 
