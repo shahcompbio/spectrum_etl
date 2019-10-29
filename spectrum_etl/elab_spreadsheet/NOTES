@@ -4,6 +4,9 @@ eLab_test_sheet.xlsm is a test sheet that goes with eLab sample type called test
 todo: The actual copy-paste step is vulnerable to human error. To eliminate chance for human error at this step in the process, a possible solution is to have a monitoring process that compares values in stored spreadsheets to values in eLab. Until such a process is set up, the user must make sure to do manual visual verification after copy-paste is performed
 
 
+@todo: add unit tests to verify show/hide states for each conditional.
+
+
 Github Commands:
 
 # to download a local copy of the repo
