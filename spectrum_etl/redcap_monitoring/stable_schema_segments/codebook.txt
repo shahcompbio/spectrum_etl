@@ -1,0 +1,3480 @@
+Edit field in Online Designer
+1	patient_id	Patient identifier.	text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+2	study_id	Study identifier.	dropdown, Required
+1	SPECTRUM-OV
+
+Field Annotation: @DEFAULT="SPECTRUM-OV"
+Edit field in Online Designer
+Edit branching logic in Online Designer
+3	patient_mrn
+Section Header: Demographic data
+Patient's MRN.	text (number), Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+4	patient_dmp_id	Patient's DMP identifier.
+This is a de-identified patient ID. Field automatically queried from DMP database. [Source: PDRX_DMP_PATIENT_ID in DV.PATHOLOGY_DMP_RESULTS_XML]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+5	patient_cmo_id	Patient's CMO identifier.
+This is a de-identified patient ID. Field automatically queried from CMO database.
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+6	patient_darwin_id	Patient's Darwin identifier.
+This is a de-identified patient ID. [Source: PDRX_PT_DEIDENTIFICATION_ID in DV.PATHOLOGY_DMP_RESULTS_XML]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+7	patient_isabl_id	Patient's Isabl identifier.
+[Source: patient.system_id in Isabl]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+8	patient_first_name	Patient's first name.
+[Source: PT_FIRST_NAME in IDB.PATIENT]
+text, Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+9	patient_middle_name	Patient's middle name.
+[Source: PT_FIRST_NAME in IDB.PATIENT]
+text, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+10	patient_last_name	Patient's last name.
+[Source: PT_LAST_NAME in IDB.PATIENT]
+text, Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+11	patient_date_of_birth	Patient's date of birth.
+[Source: PT_DATE_OF_BIRTH in IDB.PATIENT]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+12	patient_age	Patient's age.	calc, Required
+Calculation: rounddown( datediff("today", [patient_date_of_birth], "y", "dmy"), 0 )
+Edit field in Online Designer
+Edit branching logic in Online Designer
+13	patient_gender	Patient's gender.
+Record the patient's gender, as reported by the patient or caretaker. [Source: PT_SEX in IDB.PATIENT]
+text, Required
+Custom alignment: RH
+Field Annotation: @DEFAULT="Female"
+Edit field in Online Designer
+Edit branching logic in Online Designer
+14	patient_race	Patient's race.
+[Source: PT_RACE in IDB.PATIENT]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+15	patient_residence_address_1	Patient's residence address (line 1).
+[Source: PT_ADDR1 in IDB.PATIENT]
+text, Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+16	patient_residence_address_2	Patient's residence address (line 2).
+[Source: PT_ADDR2 in IDB.PATIENT]
+text, Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+17	patient_residence_address_city	Patient's city of residence.
+[Source: PT_CITY in IDB.PATIENT]
+text, Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+18	patient_residence_address_state	Patient's state of residence.
+[Source: PT_STATE in IDB.PATIENT]
+text, Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+19	patient_residence_address_zip_code	Patient's zip code.
+[Source: PT_ZIP_CD in IDB.PATIENT]
+text (zipcode), Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+20	patient_residence_address_country	Patient's country of residence.
+[Source: PT_COUNTRY in IDB.PATIENT]
+text, Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+21	primary_medical_oncologist_name
+Section Header: Clinical data
+Name of primary medical oncologist.
+[Source: Manual entry]
+dropdown, Required
+1	Carol Aghajanian
+2	Karen Cadoo
+3	Seth Cohen
+4	Claire Friedman
+5	Rachel Grisham
+6	Martee Hensley
+7	David Hyman
+8	Jason Konner
+9	Chrisann Kyi
+10	Vicky Makker
+11	Roisin O'Cearbhaill
+12	Paul Sabbatini
+13	Alison Schram
+14	William Tew
+15	Dmitriy Zamarin
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+22	primary_surgeon_name	Name of primary surgeon.
+[Source: Manual entry]
+dropdown, Required
+1	Nadeem Abu-Rustum
+2	Vance Broach
+3	Carol Brown
+4	Dennis Chi
+5	Ginger Gardner
+6	Elizabeth Jewell
+7	Mario Leitao
+8	Kara Long-Roche
+9	Jennifer Mueller
+10	Yukio Sonoda
+11	Oliver Zivanovic
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+23	patient_cancer_type	Patient cancer type.
+Cancer type based on Oncotree code (http://oncotree.mskcc.org). [Source: Tumor type name from DV.PATHOLOGY_DMP_RESULTS_XML]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+24	patient_cancer_type_code	Patient cancer type (acronym).
+Acronym of cancer type based on Oncotree code (http://oncotree.mskcc.org). Cancer type based on Oncotree code (http://oncotree.mskcc.org). [Source: Tumor type code from DV.PATHOLOGY_DMP_RESULTS_XML]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+25	patient_diagnosis_date	Date of patient diagnosis.
+[Source: max(TM_DX_DTE) in IDB.CDB_TUMOR where site is ovary]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+26	patient_overall_survival_status	Patient's overall survival status.	radio, Required
+1	Alive
+2	Deceased
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+27	patient_overall_survival_date
+Show the field ONLY if:
+[patient_overall_survival_status]="2"
+Date of patient's death.	text (date_mdy)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+28	patient_progression_free_survival_status	Progression free survival status, indicating whether patient's disease has recurred/progressed.
+For HGSOC, this is platinum resistance status based on time to progression (sensitive if >=182 days since last treatment, else resistant). Platinum criteria only apply to carboplatin or cisplatin, regardless of whether they were combined with pactlitaxel or docetaxel or whether the patient received subsequent maintenance therapy.
+text
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+29	patient_progression_free_survival_date
+Show the field ONLY if:
+[patient_progression_free_survival_status]="1"
+Date of disease progression.	calc
+Calculation: [relapses][relapse_date][first-instance]
+Edit field in Online Designer
+Edit branching logic in Online Designer
+30	patient_num_recurrence_events	Number of recurrence events.
+Starting at 0 (for non-recurred).
+calc, Required
+Calculation: [relapses][relapse_date][last-instance]
+Edit field in Online Designer
+Edit branching logic in Online Designer
+31	patient_inclusion_date
+Section Header: Study enrolment
+Date of inclusion in the study.
+[Source: Manual entry]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+32	patient_exclusion_date	Date of exclusion from the study.
+[Source: Manual entry]
+text (date_mdy)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+33	patient_inclusion_exclusion	Patient flag for inclusion or exclusion from the study.
+Patients can only be excluded after inclusion (e.g. due to revised HGSOC diagnosis). [Source: Manual entry]
+calc, Required
+Calculation: if([patient_inclusion_date] != "", if([patient_exclusion_date] = "", "Included", "Excluded"), "")
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+34	patient_exclusion_comments	Reasons for exclusion from the study.
+[Source: Manual entry]
+dropdown
+1	Patient residence outside study area
+2	Diagnosis reevaluation
+3	Patient no longer wants to participate in research
+
+Custom alignment: RH
+
+35	patients_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Consents(consents)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+36	patient_consent_irb
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn]
+Patient's IRB.
+Choose the IRB protocols that the patient has consented to. [Source: Manual entry or AC_IRB_NO in IDB.ACCRUALS]
+text, Required
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+37	patient_consent_date	Patient's consent date.
+[Source: Manual entry or AC_CONS_DTE in IDB.ACCRUALS]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+38	patient_consent_location	Patient's consent location.
+[Source: Manual entry or nn.crdb_dash_pt.REG_NETWORK_DSCRP]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+39	patient_consent_extra_blood_collection
+Show the field ONLY if:
+[patient_consent_irb]="1"
+Patient's consent for extra blood collection.
+[Source: Manual entry]
+yesno, Required
+1	Yes
+0	No
+
+Custom alignment: RH
+
+40	consents_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Consultations(consultations)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+41	consult_date
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn]
+Consultation date.
+[Source: MSK Gyn Surgery REDCap database]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+42	consult_location	Consultation location.
+[Source: MSK Gyn Surgery REDCap database]
+dropdown, Required
+1	Memorial Hospital
+
+Field Annotation: @DEFAULT = "Memorial Hospital"
+Edit field in Online Designer
+Edit branching logic in Online Designer
+43	consult_chief_complaint	Chief complaint.
+[Source: MSK Gyn Surgery REDCap database]
+dropdown, Required
+1	Adnexal mass
+2	RRBSO
+3	Ovarian cancer
+4	Recurrent ovarian cancer
+Edit field in Online Designer
+Edit branching logic in Online Designer
+44	consult_previous_outside_procedures	Previous outside procedures (either relevant to disease or producing path specimen reviewed).
+[Source: MSK Gyn Surgery REDCap database]
+text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+45	consult_prior_outside_treatment	Prior outside treatment (relevant to disease).
+[Source: MSK Gyn Surgery REDCap database]
+text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+46	consult_other_treatment	Other treatment (relevant to disease).
+[Source: MSK Gyn Surgery REDCap database]
+text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+47	consult_personal_cancer_history	Personal cancer history (free text).
+[Source: MSK Gyn Surgery REDCap database]
+notes
+Edit field in Online Designer
+Edit branching logic in Online Designer
+48	consult_family_cancer_history	Family cancer history (free text).
+[Source: MSK Gyn Surgery REDCap database]
+notes
+Edit field in Online Designer
+Edit branching logic in Online Designer
+49	consult_notes
+Section Header: OB/GYN history
+Consultation notes.	notes, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+50	consult_age_menarche	Age at menarche, in years.	text (integer), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+51	consult_gravidity	Gravidity (number of times the patient is or has been pregnant).
+G and P status for pregnancies are entered into OB history.
+text (integer), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+52	consult_parity	Parity (number of times the patient carried the pregnancies to a viable gestational age).
+G and P status for pregnancies are entered into OB history.
+text (integer), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+53	consult_menopause_age	Age at menopause, in years.	text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+54	consult_hormone_replacement_therapy	Use of hormone replacement therapy.	yesno, Required
+1	Yes
+0	No
+
+Custom alignment: RH
+
+55	consultations_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Diagnoses(diagnoses)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+56	diagnosis_sequence_number_auto
+Section Header: Diagnoses
+A system generated sequence number.
+[Source: TM_CDB_SEQ_NO in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+57	diagnosis_sequence_number_msk	Order of all primary malignant and/or benign tumor diagnosed during the patient's lifetime.
+Notes: Tumor sequence number is assigned to MSKCC tumors taking into account tumors treated elsewhere. [Source: TM_TUMOR_SEQ in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+58	diagnosis_case_reference_number	Case account number that was identified by the case finding query.
+[Source: TM_CASE_REF_NO in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+59	diagnosis_accrual_year	Year in which the patient was first seen at the reporting facility.
+[Source: TM_ACC_YEAR in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+60	diagnosis_first_msk_date	Date first seen at MSKCC for each primary tumor.
+[Source: TM_FIRST_MSK_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+61	diagnosis_case_status	Case status.
+Identifies the status of the patient's record. Cases reported to NYS: Case 3=full/complete; 6=path only /complete; 7=consult only/complete. Cases reported to National Cancer Database (NCDB): Case 3=full/complete, diagnosed and/or treated at MSKCC (TM_CLASS_ OF_CASE >= 2). Case status 8=Non Index Tumor/complete is not eported outside of MSKCC. Cases in suspense are written to table DBADM01.CS_SUSPENSE every week after the weekly update process. [Source: TM_CASE_STS in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+62	diagnosis_case_effective_date	Date on which the case was electronically suspended.
+[Source: TM_CASE_EFF_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+63	diagnosis_marital_status	Marital status at diagnosis.
+The patient's marital status at diagnosis for each primary tumor. [Source: TM_MARITAL_STS in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+64	diagnosis_smoking_history	Smoking history.
+Tobacco history. This code identifies the patient's part or current use of tobacco. [Source: TM_SMOKING_HX in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+65	diagnosis_date	Date of initial diagnosis.
+Date of initial diagnosis. The date patient was diagnosed for this primary tumor. [Source: TM_DX_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+66	diagnosis_class_of_case	Class of Case describes the patient�s reationship to MSK.
+Class of Case divides the data into analytic (patients diagnosed and/or treated at MSK) and non-analytic categories. Cases 0,1,2,and 6 are analytic cases. Cases 3,4,5, are non-analytical cases. TM_CLASS_OF_CASE falls under the old classification system in existence before AJCC 7th edition; codes are single digit values. [Source: TM_CLASS_OF_CASE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+67	diagnosis_icd9	Patient diagnosis based on ICD9 code.
+[Source: TM_ICD9_CD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+68	diagnosis_site	Anatomical location of the primary tumor described in text as defined by ICD-O.
+[Source: TM_SITE_TXT in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+69	diagnosis_site_code	Site code.
+[Source: TM_SITE_CD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+70	diagnosis_laterality_code	Laterality code.
+[Source: TM_LATERALITY_CD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+71	diagnosis_histology	Histology as expressed in text.
+[Source: TM_HIST_TXT in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+72	diagnosis_histology_code	Histology code as expressed in text.
+Histology. First character is "M" followed by a four digit number, a slash and a behavior code. Notes: Behavior code: 0 benign, 1 border line, 3 malignant. Records the miscropic cell anatomy on final pathologic diagnosis for solid tumors as per a) ICD-O morphology codes for cases diagnosed through 12/31/2006, or b) Multiple Primary & Histology Rules cases diagnosed 1/1/2007 forward. [Source: TM_HIST_CD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+73	diagnosis_histology_code_grade	Grade or differentiation of the tumor.
+The grade or differentiation of the tumor describes the tumor's resemblance to normal tissue. [Source: TM_HIST_CD_GRADE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+74	diagnosis_confirmation_code	Code for method of diagnosis confirmation.
+Diagnosis confirmation shows how the malignancy was confirmed. [Source: TM_DX_CONFRM_CD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+75	diagnosis_lymph_nodes_examined	CS Regional Lymph Nodes Examined.
+Records the total number of regional lymph nodes that were removed and examined by the pathologist. This field is populated only for cases diagnosed between 2004 and 2015. [Source: TM_REGNODE_EXM_NO in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+76	diagnosis_lymph_nodes_positive	CS Regional Lymph Node Positive.
+Records the exact number of regional lymph nodes examined by the pathologist and found to contain metastases. This field is populated only for cases diagnosed between 2004 and 2015. [Source: TM_REGNODE_POS_NO in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+77	diagnosis_lymph_nodes_examined_code	CS Regional Lymph Nodes Examined code.
+Coded value representing the total number of regional lymph nodes that were removed and examined by the pathologist.. This field is populated only for cases diagnosed between 2004 and 2015. [Source: TM_REGNODE_EXM_CD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+78	diagnosis_lymph_nodes_positive_code	CS Regional Lymph Node Positive code.
+Coded value representing the exact number of regional lymph nodes examined by the pathologist and found to contain metastases. This field is populated only for cases diagnosed between 2004 and 2015. [Source: TM_REGNODE_POS_CD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+79	diagnosis_primary_tumor_size	Size of primary tumor, in mm.
+Size of tumor is the largest dimension or the diameter of the primary tumor. Recorded in millimeters. [Source: TM_TUMOR_SIZE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+80	diagnosis_residual_tumor_code	Coded value indicating the absence/presence of tumor following resection.
+[Source: TM_RESID_TUMOR_CD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+81	diagnosis_general_stage	General Summary Stage.
+General Summary Stage is limited to all information available within two months of diagnosis, and for all sites (except prostate which is four months) based on pathologic, operative, and clinical assessments. [Source: TM_GENERAL_STG in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+82	diagnosis_tnm_edition	TNM Edition.
+All Commission on Cancer approved programs required to use the fourth edition of AJCC Manual for Staging of Cancer for cases diagnosed and/or treated on or after January 01, 1992. Default is 4. [Source: TM_TNM_EDITION in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+83	diagnosis_clinical_tnm_t	AJCC clinical T as coded per AJCC Staging Manual rules/codes. Clinical T reflects the size of the tumor before any treatment is initiated.
+[Source: TM_CLIN_TNM_T in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+84	diagnosis_clinical_tnm_n	AJCC clinical N as coded per AJCC Staging Manual rules/codes. Clinical N reflects the presence/absence of lymph node involvement before the patient receives any treatment.
+[Source: TM_CLIN_TNM_N in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+85	diagnosis_clinical_tnm_m	AJCC clinical M as coded per AJCC Staging Manual rules/codes. Clinical M reflects the presence/absence of metastatsis before the patient receives any treatment.
+[Source: TM_CLIN_TNM_M in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+86	diagnosis_clinical_stage_group	AJCC clinical Stage Group as determined per AJCC Staging Manual rules/codes. Clinical stage reflects the pt�s stage before any treatment is initiated.
+[Source: TM_CLIN_STG_GRP in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+87	diagnosis_clinical_stage_descriptor	Clinical Stage Descriptor.
+[Source: TM_CLIN_STG_DSCR in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+88	diagnosis_clinical_staged_by	Clinical Staged By. Staged by identifies the person who documented the clinical AJCC staging elements and stage group. Default is 1 in DMIS.
+[Source: TM_CLIN_STG_BY in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+89	diagnosis_pathology_tnm_t	Pathologic TNM. T - tumor size and/or extension.
+Pathologic classification is based on information obtained before treatment and is supplemented by additional evidence from surgery and the pathologic examination of the respected specimen. T - tumor size and/or extension. AJCC pathological T as coded per AJCC Staging Manual. [Source: TM_PATH_TNM_T in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+90	diagnosis_pathology_tnm_n	Pathologic TNM. N - lymph node metastasis.
+Pathologic classification is based on information obtained before treatment and is supplemented by additional evidence from surgery and the pathologic examination of the respected specimen. N - lymph node metastasis. AJCC pathological N as coded per AJCC Staging Manual. [Source: TM_PATH_TNM_N in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+91	diagnosis_pathology_tnm_m	Pathologic TNM. M - presence or absence of distant metastases.
+Pathologic classification is based on information obtained before treatment and is supplemented by additional evidence from surgery and the pathologic examination of the respected specimen. M - presence or absence of distant metastases. AJCC pathological M as coded per AJCC Staging Manual. [Source: TM_PATH_TNM_M in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+92	diagnosis_pathology_stage_group	Pathologic stage group.
+[Source: TM_PATH_STG_GRP in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+93	diagnosis_pathology_stage_descriptor	Pathologic stage descriptor.
+[Source: TM_PATH_STG_DSCR in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+94	diagnosis_pathology_staged_by	Pathological staged by.
+[Source: TM_PATH_STG_BY in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+95	diagnosis_pathology_report_availability	Is pathology report available?
+NYS required field. [Source: TM_PATH_RPT_AV in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+96	diagnosis_cancer_coding_schema	Commission on Cancer Coding System.
+Commission on Cancer Coding System identifies the coding scheme used for data collection. Default is 6. [Source: TM_CA_CD_SCHEMA in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+97	diagnosis_cancer_status_at_accession	Cancer status at accession.
+Cancer status is the absence or presence of clinical evidence of cancer at initial accession. [Source: TM_CA_STS_AT_ACC in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+98	diagnosis_first_recurrence_date	Date of first recurrence.
+The term "recurrence" defines the return or reappearance of the cancer after a disease-free intermission or remission. Records the date a physician determines disease progression, metastasis, or recurrence after a disease-free period. [Source: TM_FIRST_RECUR_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+99	diagnosis_first_recurrence_type	Type of first recurrence.
+Records the type of recurrence (in situ, invasiive, local, trocar) after a documented disease-free period or remission. [Source: TM_FIRST_RECUR_TYP in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+100	diagnosis_admit_date	Date of admission.
+Admit date associated with case findings account number. [Source: TM_ADM_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+101	diagnosis_discharge_date	Date of discharge.
+Discharge date associated with case findings account number. [Source: TM_DSCH_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+102	diagnosis_surgery_discharge_date	Date of surgery discharge.
+Date the patient was discharged following primary site surgery. [Source: TM_SURG_DSCH_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+103	diagnosis_readmission_within_30d	Date of readmission.
+Readmission within 30 days of discharge from hospital for surgical resection of the primary site. [Source: TM_READM_WTHN_30D in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+104	diagnosis_first_therapy_date	Date of the first cancer-directed therapy.
+[Source: TM_FIRST_TX_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+105	diagnosis_non_cancer_surgery_all	Non-Cancer Directed surgical procedure performed to diagnose cancer at any facility.
+Records the type of surgical procedure performed as part of initial diagnosis or workup at any facility. [Source: TM_NON_CA_SURG_SUM in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+106	diagnosis_non_cancer_surgery_msk	Non-Cancer Directed surgical procedure performed to diagnose cancer at MSKCC.
+Records the type of surgical procedure performed as part of initial diagnosis or workup at MSK. [Source: TM_NON_CA_SURG_MSK in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+107	diagnosis_non_cancer_surgery_date	Date that non cancer-directed surgery was performed.
+Records the date of the surgical procedure performed as part of initial diagnosis or workup at any facility. [Source: TM_NON_CA_SURG_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+108	diagnosis_cancer_surgery_all	Surgical procedure performed to the primary site as part of first course of treatment at any facility.
+[Source: TM_CA_SURG_03 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+109	diagnosis_cancer_surgery_msk	Surgical procedure performed to the primary site as part of first course of treatment at MSK.
+[Source: TM_CA_SURG_03_MSK in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+110	diagnosis_cancer_surgery_other_all	Surgical removal of distant lymph nodes or other tissues/organs beyond the primary site at any facility.
+[Source: TM_OTH_SURG_03 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+111	diagnosis_cancer_surgery_other_msk	Surgical removal of distant lymph nodes or other tissues/organs beyond the primary site at MSKCC.
+[Source: TM_OTH_SURG_03_MSK in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+112	diagnosis_cancer_surgery_other_description	Text description of other surgery.
+[Source: TM_OTH_SURG_CD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+113	diagnosis_cancer_surgery_lymph_node_all	Identifies removal, biopsy or aspiration of regional lymph nodes at the time of surgery for the primary site or during separate surgical event at any facility.
+[Source: TM_RGN_SCOP_03 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+114	diagnosis_cancer_surgery_lymph_node_msk	Identifies removal, biopsy or aspiration of regional lymph nodes at the time of surgery for the primary site or during separate surgical event at MSKCC.
+[Source: TM_RGN_SCOP_03_MSK in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+115	diagnosis_cancer_surgery_lymph_node_code	Scope of Regional Lymph Node Surgery code - Coded value representing the removal, biopsy, or aspiration of regional lymph node(s) as the timeof surgery of the primary site or during a separte surgical event.
+[Source: TM_REGNODE_SCOP_CD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+116	diagnosis_reconstructive_surgery	Reconstructive Surgery. Reconstructive surgery reconstructs, restores, or improves the shape and appearance or function of body structure that are missing, defecting, damaged, or misshapen by cancer, or cancer-directed therapies. Codes are site-specific.
+[Source: TM_RECON_SURG in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+117	diagnosis_cancer_surgery_date	Date that cancer-directed surgery was performed.
+[Source: TM_CA_SURG_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+118	diagnosis_cancer_surgery_date_invasive	Records the date of the most invasive surgical procedure performed to the primary site.
+[Source: TM_SURG_DEF_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+119	diagnosis_reason_no_cancer_surgery	Records why surgery was not performed to the primary site.
+[Source: TM_REASON_NO_SURG in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+120	diagnosis_reason_no_radiation	Records why no regional radiation therapy was administered to the patient.
+[Source: TM_REASON_NO_RAD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+121	diagnosis_radiation_first_date	Date radiation therapy began that is part of the first course of treatment.
+[Source: TM_RAD_STRT_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+122	diagnosis_radiation_last_date	Date on which the patient completes or receives the last radiation treatment.
+[Source: TM_RAD_END_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+123	diagnosis_radiation_modality	Dominant modality of radiation therapy used to deliver radiation in the first course of treatment.
+[Source: TM_RAD_TX_MOD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+124	diagnosis_radiation_modality_boost	Dominant modality of radiation therapy used to deliver the boost dose during the first course of treatment.
+[Source: TM_BOOST_RAD_MOD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+125	diagnosis_radiation_location	Name of the facility where radiation therapy was administered during first course of treatment.
+[Source: TM_LOC_RAD_TX in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+126	diagnosis_radiation_targeted_volume	Volume or anatomic target of the most clinically significant regional radiation therapy delivered during the first course of treatment.
+The targeted anatomic region to receive radiation therapy. [Source: TM_RAD_TX_VOL in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+127	diagnosis_radiation_sessions	Total number of radiation therapy sessions.
+Applies to radiation therapy. Reflects the total number of treatment sessions (fractions) administered during the first course of treatment. [Source: TM_NUM_TX_THIS_VOL in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+128	diagnosis_radiation_dose	Radiation dose to the primary site, in cGy.
+Total dose of regional radiation therapy delivered during the first course of treatment (cGy). [Source: TM_REG_RAD_DOSE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+129	diagnosis_radiation_dose_boost	Additional (boost) radiation dose, in cGy.
+Additional radiation therapy dose delivered (boost dose) in cGy. [Source: TM_BOOST_RAD_DOSE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+130	diagnosis_radiation_therapy_sequence	Sequencing of radiation and surgical procedures given as part of the first course of treatment.
+[Source: TM_RAD_SURG_SEQ in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+131	diagnosis_systemic_treatment_start_date	Records the date that the any systemic treatment was first administered to the patient as part of first course treatment.
+[Source: TM_SYST_STRT_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+132	diagnosis_other_treatment_start_date	Date on which other treatment began.
+[Source: TM_OTH_STRT_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+133	diagnosis_chemo_type_all	Type of chemo administered as first course of treatment at any facility.
+[Source: TM_CHEM_SUM in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+134	diagnosis_chemo_type_msk	Type of chemo administered as first course of treatment at MSK.
+[Source: TM_CHEM_SUM_MSK in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+135	diagnosis_hormone_type_all	Type of hormone therapy administered as first course of treatment at any facility.
+[Source: TM_HORM_SUM in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+136	diagnosis_hormone_type_msk	Type of hormone therapy administered as first course of treatment at MSK.
+[Source: TM_HORM_SUM_MSK in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+137	diagnosis_immuno_type_all	Type of immunotherapy administered as first course of treatment at any facility.
+[Source: TM_BRM_SUM in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+138	diagnosis_immuno_type_msk	Type of immunotherapy administered as first course of treatment at MSK.
+[Source: TM_BRM_SUM_MSK in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+139	diagnosis_other_treatment_all	Other treatment (not surgery, radiation, or systemic therapy as defined by FORDS) given at any facility.
+[Source: TM_OTH_SUM in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+140	diagnosis_other_treatment_msk	Other treatment (not surgery, radiation, or systemic therapy as defined by FORDS) given at MSKCC.
+[Source: TM_OTH_SUM_MSK in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+141	diagnosis_palliative_procedure_all	Any procedure performed in an effort to palliate symptoms at any facility.
+[Source: TM_PALLIA_PROC in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+142	diagnosis_palliative_procedure_msk	Any procedure performed in an effort to palliate symptoms at MSKCC.
+[Source: TM_PALLIA_PROC_MSK in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+143	diagnosis_systemic_procedure	Systemic procedures administered as part of first course of treatment (BMT, stem cell harvests, surgical and/or radiation endocrine therapy).
+[Source: TM_HEM_ENDOCR_PROC in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+144	diagnosis_follow_up_method	Method planned for next follow-up.
+[Source: TM_FFU_METHOD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+145	diagnosis_last_contact_date	Last known contact date at time of accession into CDB.
+[Source: TM_FFU_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+146	diagnosis_pathology_text	Pathology as expressed in text.
+[Source: TM_PATH_TEXT in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+147	diagnosis_surgery_text	Surgical report as expressed in text.
+[Source: TM_SURG_TEXT in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+148	diagnosis_cs_tumor_size	CS tumor size.
+Records the largest dimension or diameter of primary tumor, always recorded in mm. This field is populated only for cases diagnosed between 2004 and 2015. [Source: TM_CSSIZE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+149	diagnosis_cs_tumor_extension	CS extension.
+Identifies contiguous growth (extension) of the primary tumor within the organ of origin or its direct extension into neighboring organs. This field is populated only for cases diagnosed between 2004 and 2015. [Source: TM_CSEXT in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+150	diagnosis_cs_tumor_size_extension_evaluation	CS tumor size/extension evaluation.
+Records how the codes for the 2 items "CS Tumor Size" and "CS Extension" were determined, based on the diagnostic methods employed. This field is populated only for cases diagnosed between 2004 and 2015. [Source: TM_CSEXTEV in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+151	diagnosis_cs_lymph_nodes	CS lymph nodes.
+Identifies the regional lymph nodes involved with cancer at the time of diagnosis. This field is populated only for cases diagnosed between 2004 and 2015. [Source: TM_CSLMND in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+152	diagnosis_cs_lymph_nodes_evaluation	CS regional nodes evaluation.
+Records how the code for the item "CS Lymph Nodes" was determined, based on the diagnostic methods employed. This field is populated only for cases diagnosed between 2004 and 2015.mined, based on the diagnostic methods employed. [Source: TM_CSRGNEV in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+153	diagnosis_cs_metastasis_sites	Metastasis at diagnosis.
+Identifies the distant site(s) of metastatic involvement at the time of diagnosis. [Source: TM_CSMETDX in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+154	diagnosis_cs_metastasis_evaluation	CS metastasis evaluation.
+Records how the code for the item "CS Mets at Dx" was deterCS Mets Evaluation - Records how the code for the item "CS Mets at Dx" was determined based on the diagnostic methods employed. This field is populated only for cases diagnosed between 2004 and 2015.mined based on the diagnostic methods employed. [Source: TM_CSMETEV in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+155	diagnosis_ajcc_t	Derived AJCC T.
+This item is the derived AJCC "T" staging element from coded fields using the CS algorithm. [Source: TM_TSTAGE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+156	diagnosis_ajcc_n	Derived AJCC N.
+This item is the derived AJCC "N" staging element from coded fields using the CS algorithm. [Source: TM_NSTAGE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+157	diagnosis_ajcc_m	Derived AJCC M.
+This item is the derived AJCC "M" staging element from coded fields using the CS algorithm. [Source: TM_MSTAGE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+158	diagnosis_ajcc_t_descriptor	Derived AJCC T Descriptor.
+This item is the derived AJCC "T Descriptor" from coded fields using the CS algorithm. [Source: TM_TBASIS in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+159	diagnosis_ajcc_n_descriptor	Derived AJCC N Descriptor.
+This item is the derived AJCC "N Descriptor" from coded fields using the CS algorithm. [Source: TM_NBASIS in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+160	diagnosis_ajcc_m_descriptor	Derived AJCC M Descriptor.
+This item is the derived AJCC "M Descriptor" from coded fields using the CS algorithm. [Source: TM_MBASIS in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+161	diagnosis_ajcc_stage_group	Derived AJCC Stage Group.
+The AJCC Stage Group derived from the detailed site-specific codes using the CS algorithm. This item is not dettermined using the AJCC Staging manual. [Source: TM_AJCC in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+162	diagnosis_stage_comments	Records text comments concerning the patient�s stage.
+[Source: TM_STAG_TEXT in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+163	diagnosis_stage_msk	Define extent of disease, nodal spread and evidence for metastases based on pathology report and clinical information evident within 90 days of MSK presentation.
+If Class of case (TM_CLASS_OF_CASE) < = '2' then MSK Stage at Presentation = SEER Stage (TM_GENERAL_STG). Note this staging system does not exactly map to the AJCC staging system (I-IV). [Source: TM_MSK_STG in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+164	diagnosis_tumor_specimen_procurement	Specifies if tumor specimen was obtained at MSKCC.
+[Source: TM_TUMOR_TISSUE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+165	diagnosis_surgery_therapy_sequence	Records the sequencing of systemic therapy and surgical procedures given as part of first course of treatment.
+[Source: TM_SYST_SURG_SEQ in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+166	diagnosis_ambiguous	Identifies all cases where the diagnosis is based only on ambiguous terminology.
+Identifies cases for which an ambiguous term is the most definitive word or phrase used to establish a cancer diagnosis. This data field is valid for cases diagnosed between 2007-2015 only. [Source: TM_AMBIGUOUS_CD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+167	diagnosis_tumor_multiplicity_count	Number of tumors (multiplicity) reported as primary.
+Records the number of tumors (multiplicity) reported as a single primary. This data field is valid for cases diagnosed between 2007-2015 only. [Source: TM_MLTIPLCTY_CNT in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+168	diagnosis_tumor_multiplicity_type	Type of multiple tumors abstracted as primary.
+Identifies the the type of multiple tumors that are abstracted as a single primary. Ignore metastatic tumors for this data item. Multiple tumors must have the same histologic group as the original tumor and must be located in the same organ or primary site as the original tumor, using the primary site and histology coding rules. This data field is valid for cases diagnosed between 2007-2015 only. [Source: TM_MLTIPLCTY_TYP in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+169	diagnosis_tumor_conclusive_date	Date of a definite statement of malignancy if dx originally based on ambiguous terminology.
+This data field is valid for cases diagnosed between 2007-2015 only. [Source: TM_CONCLSIVE_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+170	diagnosis_tumor_multiplicity_date	Date when the patient is diagnosed with multiple or subsequent reportable tumor(s) reported as a single primary.
+Multiple tumors must have the same histologic group as the original tumor and must be located in the same organ or primary site as the original tumor, using the primary site and histology coding rules. This data field is valid for cases diagnosed between 2007-2015 only. [Source: TM_MLTIPLCTY_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+171	diagnosis_patient_id	Source system patient unique identifier.
+[Source: TM_PATIENT_ID in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+172	diagnosis_tumor_id	Source system tumor unique identifier.
+[Source: TM_TUMOR_ID in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+173	diagnosis_ssf1	Site-specific factor 1.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF1 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+174	diagnosis_ssf2	Site-specific factor 2.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF2 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+175	diagnosis_ssf3	Site-specific factor 3.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF3 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+176	diagnosis_ssf4	Site-specific factor 4.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF4 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+177	diagnosis_ssf5	Site-specific factor 5.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF5 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+178	diagnosis_ssf6	Site-specific factor 6.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF6 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+179	diagnosis_ssf7	Site-specific factor 7.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF7 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+180	diagnosis_ssf8	Site-specific factor 8.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF8 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+181	diagnosis_ssf9	Site-specific factor 9.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF9 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+182	diagnosis_ssf10	Site-specific factor 10.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF10 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+183	diagnosis_ssf11	Site-specific factor 11.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF11 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+184	diagnosis_ssf12	Site-specific factor 12.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF12 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+185	diagnosis_ssf13	Site-specific factor 13.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF13 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+186	diagnosis_ssf14	Site-specific factor 14.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF14 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+187	diagnosis_ssf15	Site-specific factor 15.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF15 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+188	diagnosis_ssf16	Site-specific factor 16.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF16 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+189	diagnosis_ssf17	Site-specific factor 17.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF17 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+190	diagnosis_ssf18	Site-specific factor 18.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF18 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+191	diagnosis_ssf19	Site-specific factor 19.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF19 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+192	diagnosis_ssf20	Site-specific factor 20.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF20 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+193	diagnosis_ssf21	Site-specific factor 21.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF21 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+194	diagnosis_ssf22	Site-specific factor 22.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF22 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+195	diagnosis_ssf23	Site-specific factor 23.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF23 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+196	diagnosis_ssf24	Site-specific factor 24.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF24 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+197	diagnosis_ssf25	Site-specific factor 25.
+Site Specific Factors (e.g. ER/PR/HER2, KRAS, PSA) as defined by anatomical site in Collaborative Staging (CS). SSF1-25 vary according to primary site; refer to the prevailing CS standard for definitions. [Source: TM_SSF25 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+198	diagnosis_cs_metastasis_bone_at_dx	CS Mets at Dx-Bone.
+This field is populated only for cases diagnosed between 2004 and 2015. [Source: TM_CSMETDX_BONE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+199	diagnosis_cs_metastasis_brain_at_dx	CS Mets at Dx-Brain.
+This field is populated only for cases diagnosed between 2004 and 2015. [Source: TM_CSMETDX_BRAIN in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+200	diagnosis_cs_metastasis_liver_at_dx	CS Mets at Dx-Liver.
+This field is populated only for cases diagnosed between 2004 and 2015. [Source: TM_CSMETDX_LIVER in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+201	diagnosis_cs_metastasis_lung_at_dx	CS Mets at Dx-Lung.
+This field is populated only for cases diagnosed between 2004 and 2015. [Source: TM_CSMETDX_LUNG in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+202	diagnosis_lymph_vascular_invasion	Lymph-vascular invasion.
+[Source: TM_LYMPH_VASC_INV in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+203	diagnosis_grade_pathology_value	Value of pathology grade.
+This data field is valid for cases diagnosed between 2007-2015 only. [Source: TM_GRADE_PATH_VAL in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+204	diagnosis_grade_pathology_system	System used for pathology grade.
+This data field is valid for cases diagnosed between 2007-2015 only. [Source: TM_GRADE_PATH_SYST in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+205	diagnosis_chemo_start_date	Date when chemotherapy started.
+[Source: TM_CHEMO_STRT_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+206	diagnosis_hormone_start_date	Date when hormone treatment started.
+[Source: TM_HORM_STRT_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+207	diagnosis_immuno_start_date	Date when immunotherapy started.
+[Source: TM_IMMUN_STRT_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+208	diagnosis_reason_no_chemo	Records why chemo therapy was not adminisered to the patient.
+[Source: TM_REASON_NO_CHEMO in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+209	diagnosis_reason_no_hormone	Records why hormone therapy was not adminisered to the patient.
+[Source: TM_REASON_NO_HORM in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+210	diagnosis_reason_no_immuno	Reason patient received/not received immunotherapy.
+[Source: TM_REASON_NO_IMMUNOTHERAPY in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+211	diagnosis_reason_no_hte	Reason patient received/not received BM transplant.
+[Source: TM_REASON_NO_HTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+212	diagnosis_reason_no_other	Reason patient received/not received other treatment.
+[Source: TM_REASON_NO_OTH in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+213	diagnosis_ssf1_date	Date of procedure associated w/SSF1.
+[Source: TM_SSF1_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+214	diagnosis_ssf2_date	Date of procedure associated w/SSF2.
+[Source: TM_SSF2_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+215	diagnosis_ssf8_date	Date of procedure associated w/SSF8.
+[Source: TM_SSF8_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+216	diagnosis_clinical_stage_date	The date the treating physician AJCC clinically staged the patient.
+[Source: TM_CLIN_STG_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+217	diagnosis_lost_to_followup_date	The date MSK last had contact with the patient prior to losing contact with them.
+Typically reflects date at least 15months beyond the patient's Date of Last Contact with MSK. [Source: TM_LOST_TO_FOLLOWUP_DTE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+218	diagnosis_icd10	Patient diagnosis based on ICD10 code.
+Enter the diagnosis code as specified by the International Classification of Diseases Version 10 (ICD-10) codes for diagnoses (https://www.who.int/classifications/icd/icdonlineversions/en/). This code is assigned at the end of the patient's stay and are used by the hospital to bill for care provided. [Source: TM_ICD10_CD in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+219	diagnosis_surgical_approach_msk	Surgical approach at MSK.
+[Source: TM_SURG_APPROACH_2010 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+220	diagnosis_metastasis_distant_lymph_nodes_at_dx	Metastatic disease to distant lymph nodes at time of initial diagnosis.
+[Source: TM_METS_AT_DX_DISTANT_LN in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+221	diagnosis_metastasis_other_at_dx	Metastatic disease to other than bone, brain, lung or distant lymph nodes at time of initial diagnosis.
+[Source: TM_METS_AT_DX_OTHER in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+222	diagnosis_clinical_tumor_size	Clinical tumor size at time of initial diagnosis.
+[Source: TM_TUMOR_SIZE_CLIN in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+223	diagnosis_pathology_tumor_size	Pathological tumor size at time of initial diagnosis.
+[Source: TM_TUMOR_SIZE_PATH in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+224	diagnosis_surgery_tumor_size	The most accurate measurement of a solid primary tumor, measured on surgical resection specimen.
+[Source: TM_TUMOR_SIZE_SUM in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+225	diagnosis_eod_m	Extent of Diasease (EOD) 2018 M staging element from coded fields.
+This item stores the derived Extent of Diasease (EOD) 2018 M staging element from coded fields using the EOD algorithm. Effective for cases diagnosed 1/1/2018 forward. [Source: TM_DERIVED_EOD_METS in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+226	diagnosis_eod_n	Extent of Diasease (EOD) 2018 N staging element from coded fields.
+This item stores the derived Extent of Diasease (EOD) 2018 N staging element from coded fields using the EOD algorithm. Effective for cases diagnosed 1/1/2018 forward. [Source: TM_DERIVED_EOD_REG_NODES in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+227	diagnosis_eod_t	Extent of Diasease (EOD) 2018 T value calculated from coded fields.
+This item stores the derived Extent of Diasease (EOD) 2018 T value calculated from coded fields using the EOD algorithm. Effective for cases diagnosed 1/1/2018 forward. [Source: TM_DERIVED_PRIMARY_TUMOR in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+228	diagnosis_eod_ss2018
+[Source: TM_DERIVED_SS2018 in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+229	diagnosis_ajcc_id	AJCC identifier.
+AJCC ID is used to link AJCC staging eligible sites/histologies with the appropriate AJCC chapter and staging algorithm. It will be derived by registry software based on site and histology codes entered by the registrar. IDs are assigned to cases for which AJCC staging is applicable. When staging is not applicable, code 'XX' is used. Refer to SSDI Manual Appendix A (https://www.naaccr.org/SSDI/SSDI-Manual-Appendix-A.pdf) for crosswalks for sites/histology, AJCC ID and Schema ID. AJCC ID is effective for cases diagnosed 1/1/2018 forward. [Source: TM_AJCC_ID in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+230	diagnosis_post_rx_m	Presence or absence of distant metastasis (M) post-Rx.
+Identifies the presence or absence of distant metastasis (M) of the tumor known following the completion of neoadjuvant therapy (satisfying the definition for that disease site) and planned postneoadjuvant therapy surgical resection. Effective for cases diagnosed 1/1/2018 forward. [Source: TM_POST_RX_N in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+231	diagnosis_post_rx_n	Presence or absence of regional lymph node (N) metastasis post-Rx.
+Identifies the presence or absence of distant metastasis (M) of the tumor known following the completion of neoadjuvant therapy (satisfying the definition for that disease site) and planned postneoadjuvant therapy surgical resection. Effective for cases diagnosed 1/1/2018 forward. [Source: TM_POST_RX_N in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+232	diagnosis_post_rx_t	Primary tumor (T) size post-Rx.
+Evaluates the primary tumor (T) and reflects the tumor size and/or extension of the tumor known following the completion of neoadjuvant therapy (satisfying the definition for that disease site) and planned post-neoadjuvant therapy surgical resection. Effective for cases diagnosed 1/1/2018 forward. [Source: TM_POST_RX_T in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+233	diagnosis_post_rx_stage_group	Anatomic extent of disease based on the T, N, and M post-Rx.
+Identifies the anatomic extent of disease based on the T, N, and M category data items of the tumor known following the completion of neoadjuvant therapy (satisfying the definition for that disease site) and planned post-neoadjuvant therapy surgical resection. Effective for cases diagnosed 1/1/2018 forward. [Source: TM_POST_RX_STG_GRP in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+234	diagnosis_ajcc_clinical_tnm_t	AJCC TNM clinical T category suffix for the tumor before therapy.
+Identifies the AJCC TNM clinical T category suffix for the tumor prior to the start of any therapy. Stage suffixes identify special cases that need separate analysis. Suffixes are adjuncts to and do not change the stage group. Effective for cases diagnosed 1/1/2018 forward. [Source: TM_CLIN_T_SUFFIX in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+235	diagnosis_ajcc_pathology_tnm_t	AJCC TMN pathological T category suffix for the tumor after surgery.
+Identifies the AJCC TMN pathological T category suffix for the tumor following the completion of surgical therapy. Stage suffixes identify special cases that need separate analysis. Suffixes are adjuncts to and do not change the stage group. Effective for cases diagnosed 1/1/2018 forward.[Source: TM_PATH_T_SUFFIX in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+236	diagnosis_ajcc_post_rx_tnm_t	AJCC TNM post therapy T category suffix for the tumor.
+Identifies the AJCC TNM post therapy T category suffix for the tumor known following the completion of neoadjuvant therapy (satisfying the definition for that disease site) and planned post-neoadjuvant therapy surgical resection. Stage suffixes identify special cases that need separate analysis. Suffixes are adjuncts to and do not change the stage group. Effective for cases diagnosed 1/1/2018 forward. [Source: TM_POST_RX_T_SUFFIX in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+237	diagnosis_ajcc_clinical_tnm_n	AJCC TNM clinical N category suffix for the tumor before therapy.
+Identifies the AJCC TNM clinical N category suffix for the tumor prior to the start of any therapy. Stage suffixes identify special cases that need separate analysis. Suffixes are adjuncts to and do not change the stage group. Effective for cases diagnosed 1/1/2018 forward. [Source: TM_CLIN_N_SUFFIX in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+238	diagnosis_ajcc_pathology_tnm_n	AJCC TNM pathological N suffix for the tumor after surgery.
+Identifies the AJCC TNM pathological N suffix for the tumor following the completion of surgical therapy. Stage suffixes identify special cases that need separate analysis. Suffixes are adjuncts to and do not change the stage group. Effective for cases diagnosed 1/1/2018 forward. [Source: TM_PATH_N_SUFFIX in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+239	diagnosis_ajcc_post_rx_tnm_n	AJCC TNM post therapy N suffix for the tumor.
+Identifies the AJCC TNM post therapy N suffix for the tumor known following the completion of neoadjuvant therapy (satisfying the definition for that disease site) and planned post-neoadjuvant therapy surgical resection. Stage suffixes identify special cases that need separate analysis. Suffixes are adjuncts to and do not change the stage group. Effective for cases diagnosed 1/1/2018 forward. [Source: TM_POST_RX_N_SUFFIX in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+240	diagnosis_ca125_interpretation	Interpretation of pre-treatment CA-125 value.
+Records the interpretation of the pre-treatment CA-125, a tumor marker that is useful for following the response to therapy in patients with ovarian cancer. Effective for diagnoses 1/1/2018 forward. It was previously collected as Ovary, CS SSF# 1. [Source: TM_CA125_PRETRX_INTERP in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+241	diagnosis_cea_interpretation	Interpretation of pre-treatment CEA value.
+Records the interpretation of the pre-treatment CEA lab value. Effective for diagnoses 1/1/2018 forward. Prior to 1/1/2018 CEA Pretreatment Interpretation was collected as Colon and Rectum, CS SSF #1. [Source: TM_CEA_PRETRX_INTERP in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+242	diagnosis_cea_level	Pre-treatment CEA lab value, in ng/ml.
+Records the pre-treatment CEA lab value in ng/ml. Effective for diagnoses 1/1/2018 forward. Prior to 1/1/2018 it was collected as Colon and Rectum, CS SSF# 3. [Source: TM_CEA_PRETRX_LAB_VALUE in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+243	diagnosis_tumor_grade_pre_resection_pre_therapy	Grade of solid primary tumor before treatment.
+This data item records the grade of a solid primary tumor before any treatment (surgical resection or initiation of any treatment including neoadjuvant). Effective for cases diagnosed 1/1/2018 forward. [Source: TM_GRADE_CLIN in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+244	diagnosis_tumor_grade_post_resection_pre_therapy	Grade of solid primary tumor after resection and before treatment.
+This data item records the grade of a solid primary tumor that has been resected and for which no neoadjuvant therapy was administered. Effective for cases diagnosed 1/1/2018 forward. [Source: TM_GRADE_PATH in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+245	diagnosis_tumor_grade_post_resection_post_therapy	Grade of solid primary tumor after resection and after treatment.
+This data item records the grade of a solid primary tumor that has been resected following neoadjuvant therapy. If AJCC staging is being assigned, the tumor must have met the surgical resection requirements in the AJCC manual. It records the highest grade documented from the surgical treatment resection specimen of the primary site following neoadjuvant therapy. Effective for cases diagnosed 1/1/2018 forward. [Source: TM_GRADE_POST_THERAPY in IDB.CDB_TUMOR]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+246	diagnosis_hiv_status	HIV status.
+HIV status refers to infection with the Human Immunodeficiency Virus which causes Acquired Immune Deficiency Syndrome (AIDS). AIDS is associated with increased risk of developing some lymphomas. HIV status may be collected by the surveillance community for neoplasms (e.g., Kaposi Sarcoma, Lymphomas) that are closely related to HIV/AIDS. Effective for diagnoses 1/1/2018 forward. Prior to 2018, Lymphoma SSF#1 and Kaposi Sarcoma SSF# 1, were used for HIV Status. [Source: TM_HIV_STS in IDB.CDB_TUMOR]
+text, Required
+
+247	diagnoses_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Measures(measures)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+248	measure_date
+Section Header: Patient measures
+Measurement date.
+[Source: PMH_MEASURE_DTE in IDB.PT_MEASURES_HX]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+249	measure_height	Patient's height, in cm.
+[Source: PMH_HT_CM in IDB.PT_MEASURES_HX]
+text (number, Min: 130, Max: 210), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+250	measure_weight	Patient's weight, in kg.
+[Source: PMH_WT_KG in IDB.PT_MEASURES_HX]
+text (number, Min: 30, Max: 250), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+251	measure_bmi	Patient's body mass index (BMI).	calc, Required
+Calculation: round(([measure_weight]*10000)/(([measure_height])^(2)),1)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+252	measure_bsa	Patient's body surface area (BSA).	calc, Required
+Calculation: round(([measure_height] * [measure_weight]) / 3600, 1)
+
+253	measures_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Laboratory tests(laboratory_tests)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+254	laboratory_test_date
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn]
+Date and time when the laboratory test was performed.
+[Source: LR_PERFORMED_DT in IDB.LAB_RESULTS]
+text (datetime_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+255	laboratory_test_guid	GUID of laboratory test.
+[Source: LR_RESULT_GUID in IDB.LAB_RESULTS]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+256	laboratory_test_accession_number	Accession number of laboratory test.
+[Source: LR_ACCESSION_NO in IDB.LAB_RESULTS]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+257	laboratory_test_cluster	Group of laboratory test results.
+Used to group observations together (specifically Microbiology results). [Source: LR_CLUSTER_ID in IDB. LAB_RESULTS]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+258	laboratory_test_name	Name of laboratory test.
+[Source: LR_TEST_NAME in IDB.LAB_RESULTS]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+259	laboratory_test_subname	Alternative name of laboratory test.
+The name of the result item. [Source: LR_SUBTEST_NAME in IDB.LAB_RESULTS, denormalized from LAB_CATALOG_ITEM.LCI_SUBTEST_NAME]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+260	laboratory_test_biomarker_level	Concentration of biomarker.
+Concentration of biomarker in serum, in mg/ml. [Source: LR_RESULT_VALUE in IDB.LAB_RESULTS]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+261	laboratory_test_biomarker_units	Units of biomarker level.
+[Source: LR_UNIT_MEASURE in IDB.LAB_RESULTS]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+262	laboratory_test_type	Type of laboratory test results.
+The type of laboratory test result. FT = Fixed Text; CT = Compressed Text; N = Numeric; LT = LongText. [Source: LR_RESULT_TYPE_CD in IDB.LAB_RESULTS]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+263	laboratory_test_status	Status of laboratory test.
+The chart item status. F = Final; I = Pending; P = Prelim; R = NotVerified; S = Partial; C = Corrected; D = Delete. [Source: LR_RESULT_STS_CD in IDB.LAB_RESULTS]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+264	laboratory_test_abnormality	The level of abnormality of the result.
+HH = Very High; H = High; LL = Very Low; L = Low; AA = Very Abnorm Txt; A = Abnorm Txt. [Source: LR_ABNORMALITY_CD in IDB.LAB_RESULTS]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+265	laboratory_test_upper_limit	Upper limit of the reference value.
+[Source: LR_TEST_UP_LIMIT in IDB.LAB_RESULTS]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+266	laboratory_test_lower_limit	Lower limit of the reference value.
+[Source: LR_TEST_LOW_LIMIT in IDB.LAB_RESULTS]
+text, Required
+
+267	laboratory_tests_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Surgeries(surgeries)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+268	surgery_consult_date
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn]
+Surgery consultation date.
+[Source: MSK Gyn Surgery REDCap database]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+269	surgery_preoperative_diagnosis	Pre-operative diagnosis.
+[Source: MSK Gyn Surgery REDCap database]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+270	surgeon_name	Surgeon's name.
+[Source: MSK Gyn Surgery REDCap database]
+dropdown, Required
+1	Nadeem Abu-Rustum
+2	Vance Broach
+3	Carol Brown
+4	Dennis Chi
+5	Ginger Gardner
+6	Elizabeth Jewell
+7	Mario Leitao
+8	Kara Long-Roche
+9	Jennifer Mueller
+10	Yukio Sonoda
+11	Oliver Zivanovic
+Edit field in Online Designer
+Edit branching logic in Online Designer
+271	surgery_ra_name	Name of Research Assistant for specimen collection.
+[Source: MSK Gyn Surgery REDCap database]
+dropdown, Required
+1	Yonina Bykov
+2	Jamie Lim
+3	Anthe Styliano
+Edit field in Online Designer
+Edit branching logic in Online Designer
+272	surgery_date	Surgery date.
+[Source: MSK Gyn Surgery REDCap database]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+273	surgery_time	Time at the start of the surgery.
+[Source: MSK Gyn Surgery REDCap database]
+text (time), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+274	surgery_duration	Duration of the surgery.
+[Source: MSK Gyn Surgery REDCap database]
+text (integer), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+275	surgery_location	Location of the surgery.
+[Source: MSK Gyn Surgery REDCap database]
+dropdown, Required
+1	Main OR
+2	MSK Josie Robertson Surgery Center
+Edit field in Online Designer
+Edit branching logic in Online Designer
+276	surgery_type	Type of surgery.
+[Source: MSK Gyn Surgery REDCap database]
+dropdown, Required
+1	Diagnostic laparoscopy with biopsies
+2	Primary debulking
+3	Interval debulking
+Edit field in Online Designer
+Edit branching logic in Online Designer
+277	surgery_staging	Surgery staging?
+[Source: MSK Gyn Surgery REDCap database]
+yesno, Required
+1	Yes
+0	No
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+278	surgery_maximal_effort	Surgery with maximal effort?
+[Source: MSK Gyn Surgery REDCap database]
+radio, Required
+1	Yes
+2	No
+3	N/A
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+279	surgery_resectability_score	Resectability score.
+[Source: MSK Gyn Surgery REDCap database]
+text (number)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+280	surgery_debulking_template_completion	Completion of the surgery debulking template.
+[Source: MSK Gyn Surgery REDCap database]
+yesno, Required
+1	Yes
+0	No
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+281	surgery_residual_disease	Size of residual disease, in cm.
+Taken from debulking section of Operative Report if available or from findings in op note, follow-up note, etc. [Source: MSK Gyn Surgery REDCap database]
+text (number, Min: 0), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+282	surgery_comments	Surgery comments (free text).
+[Source: MSK Gyn Surgery REDCap database]
+text
+
+283	surgeries_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Treatments(treatments)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+284	treatment_administration_route
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn]
+Treatment administration route.
+[Source: APR_ROUTE in IDB.ANTINEOPLASTIC_PT_RX]
+text, Required
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+285	treatment_setting	Treatment setting.
+[Source: MSK Gyn Surgery MS Access database]
+radio, Required
+1	Neoadjuvant
+2	Post-op
+3	Recurrent disease
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+286	treatment_indication_neoadjuvant
+Show the field ONLY if:
+[treatment_setting]="1"
+Indication for neoadjuvant treatment.
+[Source: MSK Gyn Surgery MS Access database]
+radio, Required
+1	VTE
+2	Extent of disease
+3	Age
+4	KPS
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+287	treatment_start_date	Treatment start date and time.
+[Source: APR_START_DT in IDB.ANTINEOPLASTIC_PT_RX]
+text (datetime_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+288	treatment_end_date	Treatment end date and time.
+[Source: APR_END_DT in IDB.ANTINEOPLASTIC_PT_RX]
+text (datetime_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+289	treatment_cycle	Treatment cycle.
+Number of treatment cycles, starting at 0 (for no treatment). New carboplatin dose starts a new cycle (e.g. day-1 carboplatin and weekly taxol at days 1, 8 and 15 are all part of one cycle). [Source: Cannot find matching field name in IDB.ANTINEOPLASTIC_PT_RX?]
+text (integer, Min: 0), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+290	treatment_location	Location of treatment.
+Outpatient order release location/inpatient last location. Pharmacy location for PHM and SMS prescriptions. Patient location for CPO orders and CP Prescriptions. [Source: APR_LOCATION in IDB.ANTINEOPLASTIC_PT_RX]
+text, Required
+Field Annotation: @DEFAULT = "Memorial Hospital"
+Edit field in Online Designer
+Edit branching logic in Online Designer
+291	treatment_drug_name	Name of generic drug prescription.
+Choose drug from list of NCCN-approved treatments for high-grade serous ovarian cancer (not including clinical trials). [Source: APR_DRUG_NAME in IDB.ANTINEOPLASTIC_PT_RX]
+text, Required
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+292	treatment_generic_name	Name of drug prescription based on ontologies.
+[Source: APR_GENERIC_NAME in IDB.ANTINEOPLASTIC_PT_RX]
+text, Required
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+293	treatment_drug_name_other
+Show the field ONLY if:
+[treatment_drug_name] = "8"
+Name of generic drug prescription (other).
+Other drug prescriptions may include non-approved medications via compassionate-use programs or clinical trials.
+text
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+294	treatment_dose_value	Dose of drug prescription.
+Total dose administered (where available). [Source: APR_TOTAL_GIVEN_DOSE in IDB.ANTINEOPLASTIC_PT_RX]
+text (number), Required
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+295	treatment_dose_unit	Unit of drug prescription.
+Medication prescribed dose unit of measurement (UOM). Most chemotherapies (e.g. paclitaxel) are calculated as mg/m^2 based on body surface area (BSA). Carboplatin is an exception, which is dosed based on area under the curve (AUC). [Source: APR_DOSE_UOM in IDB.ANTINEOPLASTIC_PT_RX]
+text, Required
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+296	treatment_dose_difference	Indicator of treatment dose differences.
+Indicator of dose increase, dose reduction or dose maintenance with respect to baseline. Baseline is considered to be cycle 1 of treatment.
+calc, Required
+Calculation: if(abs([treatment_dose_value] - [treatment_dose_value]) > 0, "Dose changed", "Dose maintained")
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+297	treatment_duration	Treatment duration.
+The duration of the order. [Source: APR_DURATION in IDB.ANTINEOPLASTIC_PT_RX]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+298	treatment_order_set	Treatment order set.
+[Source: APR_SET_NAME in IDB.ANTINEOPLASTIC_PT_RX]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+299	treatment_prescribed_dose	Treatment prescribed dose.
+[Source: APR_PRESCRIBED_DOSE in IDB.ANTINEOPLASTIC_PT_RX]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+300	treatment_dispense_count	Treatment dispense count.
+[Source: APR_DISPENSE_CNT in IDB.ANTINEOPLASTIC_PT_RX]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+301	treatment_quantity	Treatment quantity.
+[Source: APR_QTY in IDB.ANTINEOPLASTIC_PT_RX]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+302	treatment_status	Treatment status.
+This field captures if treatment is ongoing, if the patient has completed the prescribed course, or if the course was terminated early. [Source: Manual entry]
+radio, Required
+1	In progress
+2	Completion
+3	Termination
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+303	treatment_termination_indication
+Show the field ONLY if:
+[treatment_status]="3"
+Indication for treatment termination.
+[Source: Manual entry]
+dropdown, Required
+1	Finished prescribed treatment course
+2	Progressed through treatment
+3	Unable to tolerate treatment
+
+304	treatments_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Relapses(relapses)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+305	relapse_date
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn]
+Date of disease progression.
+[Source: Manual entry]
+text (date_dmy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+306	relapse_procedure	Relapse procedure(s).
+[Source: Manual entry]
+checkbox, Required
+1	relapse_procedure___1	New line of therapy
+2	relapse_procedure___2	Interval debulking surgery
+3	relapse_procedure___3	Biopsy
+4	relapse_procedure___4	No procedure
+
+307	relapses_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Specimens(specimens)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+308	specimen_ra_name
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn] Surgery date: [surgery_date][current-instance]
+Name of Research Assistant for specimen collection and specimen processing.
+[Source: Manual entry]
+dropdown
+1	Jamie Lim
+Edit field in Online Designer
+Edit branching logic in Online Designer
+309	specimen_collection
+Section Header: Specimen collection
+Specimen collection.
+[Source: Manual entry]
+dropdown, Required
+1	Pre-surgical testing
+2	Debulking surgery
+3	Post-op visit
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+310	specimen_source	Specimen source.
+[Source: Manual entry]
+dropdown, Required
+1	MSK Weigelt Lab
+2	MSK Precision Pathology Biobanking Center
+Edit field in Online Designer
+Edit branching logic in Online Designer
+311	specimen_collection_date	Date of specimen collection.
+[Source: Manual entry or TBA_PROCUREMENT_DTE in DV.TISSUE_BANK_ACCESSION]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+312	specimen_collection_time	Time of specimen collection.
+[Source: Manual entry or TBA_RESECT_DT in DV.TISSUE_BANK_ACCESSION]
+text (time), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+313	specimen_id
+Section Header: Specimen identifiers
+Specimen identifier.	text (mrn_generic), Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+314	specimen_class
+Section Header: Specimen description
+Specimen class.	dropdown, Required
+1	Ascites
+2	Blood
+3	Tissue
+Edit field in Online Designer
+Edit branching logic in Online Designer
+315	specimen_subclass	Specimen subclass.	dropdown, Required
+1	Ascites
+2	Whole blood
+3	cfDNA
+4	PBMC
+5	FFPE
+6	TMA
+7	FF
+8	VF
+9	Single-cell suspension
+Edit field in Online Designer
+Edit branching logic in Online Designer
+316	specimen_treatment_status	Specimen treatment status.	radio, Required
+1	Treatment-naive
+2	Neoadjuvant-treated
+3	Recurrence
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+317	specimen_site	Anatomic location of biopsy site.
+Anatomic location of biopsy site annotated during intraoperative collection.
+dropdown, Required
+1	Ascites
+2	Right adnexa
+3	Left adnexa
+4	Pelvic peritoneum
+5	Infracolic omentum
+6	Bowel
+7	Right-upper quadrant
+8	Left-upper quadrant
+9	Bulky adenopathy
+10	Supradiaphragmatic node/pleura
+11	Endometrial biopsy
+12	Other
+Edit field in Online Designer
+Edit branching logic in Online Designer
+318	specimen_site_adnexa
+Show the field ONLY if:
+[specimen_site]="2" OR [specimen_site]="3"
+Organ in anatomic location (left or right adnexa).	dropdown
+1	Ovary
+2	Fallopian tube
+3	Ovary and fallopian tube
+Edit field in Online Designer
+Edit branching logic in Online Designer
+319	specimen_site_upper_quadrant
+Show the field ONLY if:
+[specimen_site]="7" OR [specimen_site]="8"
+Organ in anatomic location (right or left upper quadrant).	dropdown
+1	Diaphragm
+Edit field in Online Designer
+Edit branching logic in Online Designer
+320	specimen_site_comments
+Show the field ONLY if:
+[specimen_site]="12"
+Anatomic site comments.	dropdown
+1	Pelvic sidewall
+2	Anterior abdominal wall
+3	Left pararenal lymph node with colonic mesentery
+4	Left paracolic gutter nodule
+Edit field in Online Designer
+Edit branching logic in Online Designer
+321	specimen_intraoperative_biopsy
+Show the field ONLY if:
+[specimen_class] = "2"
+Tumor biopsy collected during intraoperative workflow.	yesno, Required
+1	Yes
+0	No
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+322	specimen_preoperative_imaging
+Show the field ONLY if:
+[specimen_class] = "2"
+Tumor lesion observed during preoperative imaging.	yesno, Required
+1	Yes
+0	No
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+323	specimen_malignant_status	Malignancy status of specimen.	radio, Required
+1	Tumor
+2	Normal
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+324	specimen_type	Specimen type.
+Putative primary tumor determined by best clinical judgement (e.g. size, presence of STIC).
+dropdown, Required
+1	Primary
+2	Metastasis
+3	Not applicable or heme
+4	Unspecified
+Edit field in Online Designer
+Edit branching logic in Online Designer
+325	specimen_subtype	Specimen subtype.	dropdown, Required
+1	Primary tumor
+2	Local recurrence
+3	Lymph node metastasis
+4	Distant organ metastasis
+5	Metastasis site unspecified
+Edit field in Online Designer
+Edit branching logic in Online Designer
+326	specimen_organ_metastasis
+Show the field ONLY if:
+[specimen_type]="2"
+Organ of metastatic site.	dropdown
+1	Bladder
+2	Brain
+3	Colon
+4	Intestine
+5	Liver
+6	Lymph nodes
+7	Skin
+8	Spleen
+Edit field in Online Designer
+Edit branching logic in Online Designer
+327	specimen_ischemia_time
+Show the field ONLY if:
+[specimen_class]="2"
+Ischemia time, in mins.	text (integer, Min: 0), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+328	specimen_size
+Show the field ONLY if:
+[specimen_class]="2"
+Biopsy size collected, in mm.	text (integer), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+329	specimen_volume
+Show the field ONLY if:
+[specimen_class]="0" or [specimen_class]="1"
+Blood or ascites volume collected, in ml.	text (integer), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+330	specimen_image	Specimen image.	file
+Edit field in Online Designer
+Edit branching logic in Online Designer
+331	specimen_processing_date
+Section Header: Specimen dissociation
+Date of specimen dissociation.	text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+332	specimen_processing_time	Time of specimen dissociation.	text (time), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+333	specimen_dissociation_temperature	Specimen dissociation temperature, in Celsius.	radio, Required
+1	6C
+2	37C
+3	N/A
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+334	specimen_dissociation_time	Specimen dissociation time, in mins.	radio, Required
+1	30'
+2	60'
+3	Overnight
+4	N/A
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+335	specimen_cell_count	Cell count.
+Measured using haemocytometer or flow cytometry.
+text (integer), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+336	specimen_cell_viability	Cell viability.
+Measured using haemocytometer, or FACS sorting using live/dead sort.
+text, Required
+
+337	specimens_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Specimens (IMF)(specimens_imf)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+338	specimen_imf_accession_id
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn] IMF specimen collection
+IMF accession identifier.
+[Source: IMF_ACCESSION_ID in NN.IMF_ACCESSION]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+339	specimen_imf_part_id	IMF part identifier.
+[Source: PRT_ID in NN.IMF_ACCESSION]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+340	specimen_imf_protocol_description	IMF protocol description.
+[Source: PROTOCOL_DSCRP in NN.IMF_ACCESSION]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+341	specimen_imf_part_seq_id	IMF part identifier.
+[Source: PT_SEQ_ID in NN.IMF_ACCESSION]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+342	specimen_imf_visit	IMF visit.
+[Source: VISIT in NN.IMF_ACCESSION]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+343	specimen_imf_notes	IMF notes.
+[Source: NOTES in NN.IMF_ACCESSION]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+344	specimen_imf_sample_received_id
+Section Header: IMF sample received
+IMF identifier for sample received.
+[Source: IMF_SAMPLE_RECEIVED_ID in NN.IMF_SAMPLE_RECEIVED]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+345	specimen_imf_tube_type	IMF tube type.
+[Source: TUBE_TYPE in NN.IMF_SAMPLE_RECEIVED]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+346	specimen_imf_tube_type_description	IMF tube type description.
+[Source: TUBE_TYPE_DSCRP in NN.IMF_SAMPLE_RECEIVED]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+347	specimen_imf_tube_number	IMF tube number.
+[Source: TUBE_NUM in NN.IMF_SAMPLE_RECEIVED]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+348	specimen_imf_collection_datetime	IMF collection date.
+[Source: COLLECTION_DATETIME in NN.IMF_SAMPLE_RECEIVED]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+349	specimen_imf_received_datetime	IMF reception date.
+[Source: RECEIVED_DATETIME in NN.IMF_SAMPLE_RECEIVED]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+350	aliquot_imf_received_by_user	Username of IMF staff who received the aliquot.
+[Source: RECEIVED_BY in NN.IMF_SAMPLE_RECEIVED]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+351	aliquot_imf_received_by_name	Name of IMF staff who received the specimen.
+[Source: RECEIVED_BY_DSCRP in NN.IMF_SAMPLE_RECEIVED]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+352	aliquot_imf_product_id
+Section Header: IMF product
+IMF product identifier.
+[Source: IMF_PRODUCT_ID in NN.IMF_PRODUCT]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+353	aliquot_imf_product_type	IMF product type.
+[Source: PRODUCT_TYPE in NN.IMF_PRODUCT]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+354	aliquot_imf_product_type_description	Description of IMF product type.
+[Source: PRODUCT_TYPE_DSCRP in NN.IMF_PRODUCT]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+355	aliquot_imf_total_volume	IMF total volume.
+[Source: TOTAL_VOL in NN.IMF_PRODUCT]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+356	aliquot_imf_total_volume_unit	IMF total volume units.
+[Source: TOTAL_VOL_UNIT in NN.IMF_PRODUCT]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+357	aliquot_imf_viable_cells	IMF viable cells.
+[Source: VIABLE_CELLS in NN.IMF_PRODUCT]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+358	aliquot_imf_viablility	IMF cell viability.
+[Source: VIABILITY in NN.IMF_PRODUCT]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+359	aliquot_imf_total_cell_number	IMF total cell number.
+[Source: TOTAL_CELLS_NUM in NN.IMF_PRODUCT]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+360	specimen_imf_total_viable_cells_original	IMF total number of viable cells (original).
+[Source: TOTAL_VIABLE_CELLS_ORIGINAL in NN.IMF_PRODUCT]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+361	specimen_imf_total_cell_number_original	IMF total cell number (original).
+[Source: TOTAL_CELLS_NUM_ORIGINAL in NN.IMF_PRODUCT]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+362	specimen_imf_product_dtl_id
+Section Header: IMF check-in
+IMF product identifier.
+[Source: IMF_PRODUCT_DTL_ID in NN.IMF_PRODUCT_DTL]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+363	aliquot_imf_checkin_date	IMF check-in date.
+[Source: CHECK_IN_TIME in NN.IMF_PRODUCT_DTL]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+364	aliquot_imf_checkin_person	IMF check-in person.
+[Source: CHECK_IN_PERSON in NN.IMF_PRODUCT_DTL]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+365	specimen_imf_cell_number	IMF cell number.
+[Source: CELLS_NUM in NN.IMF_PRODUCT_DTL]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+366	specimen_imf_volume	IMF volume.
+[Source: VOLUME in NN.IMF_PRODUCT_DTL]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+367	specimen_imf_volume_unit	IMF volume units.
+[Source: VOLUME_UNIT in NN.IMF_PRODUCT_DTL]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+368	specimen_imf_tank_slot_id	IMF tank slot identifier.
+[Source: IMF_TANK_SLOT_SEQ_ID in NN.IMF_PRODUCT_DTL]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+369	specimen_imf_vial_number	IMF vial number.
+[Source: VIAL_NUM in NN.IMF_PRODUCT_DTL]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+370	aliquot_imf_checkout_id
+Section Header: IMF check-out
+IMF check-out identifier.
+[Source: IMF_CHECK_OUT_ID in NN.IMF_CHECK_OUT]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+371	aliquot_imf_checkout_date	IMF check-out date.
+[Source: CHECK_OUT_TIME in NN.IMF_CHECK_OUT]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+372	aliquot_imf_checkout_person	IMF check-out person.
+[Source: CHECK_OUT_PERSON in NN.IMF_CHECK_OUT]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+373	aliquot_imf_checkout_volume	IMF check-out volume.
+[Source: CHECK_OUT_VOLUME in NN.IMF_CHECK_OUT]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+374	aliquot_imf_checkout_requester	IMF requester name.
+[Source: REQUESTER in NN.IMF_CHECK_OUT]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+375	aliquot_imf_checkout_purpose	IMF requester purpose.
+[Source: PURPOSE in NN.IMF_CHECK_OUT]
+text, Required
+
+376	specimens_imf_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Specimens (Lab Medicine)(specimens_lab_medicine)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+377	specimen_lab_medicine_id
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn]
+Buffy coat identifier.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+378	specimen_lab_medicine_accession_number	Accession number of laboratory test.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+379	specimen_lab_medicine_barcode	2D barcode of specimen.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+380	specimen_lab_medicine_irb	IRB number.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+381	specimen_lab_medicine_investigator_name	Investigator name.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+382	specimen_lab_medicine_collection_date	Date and time when the specimen was collected.	text (datetime_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+383	specimen_lab_medicine_status	Specimen status.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+384	specimen_lab_medicine_creation_date	Date and time of creation of specimen record.	text (datetime_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+385	specimen_lab_medicine_modification_date	Modification date and time of specimen record.	text (datetime_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+386	specimen_lab_medicine_davinci_process_date	DAVInCI process date.	text (date_mdy), Required
+
+387	specimens_lab_medicine_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Specimens (PPBC)(specimens_ppbc)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+388	specimen_ppbc_procurement_date
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn] PPBC tissue accession
+PPBC procurement date.
+[Source: TBA_PROCUREMENT_DTE in DV.TISSUE_BANK_ACCESSION]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+389	specimen_ppbc_resection_datetime	PPBC resection date.
+[Source: TBA_RESECT_DT in DV.TISSUE_BANK_ACCESSION]
+text (datetime_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+390	specimen_ppbc_accession_number	PPBC accession number for the specimen.
+[Source: TBA_ACCESSION_NUM in DV.TISSUE_BANK_ACCESSION]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+391	specimen_ppbc_part_number	PPBC part number for the specimen.
+[Source: TBA_PART_NUM in DV.TISSUE_BANK_ACCESSION]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+392	specimen_ppbc_subpart_number	PPBC subpart number for the specimen.
+[Source: TBA_SUB_PART_NUM in DV.TISSUE_BANK_ACCESSION]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+393	specimen_ppbc_class	PPBC accession number.
+[Source: TBD_SPECIMEN_TYPE_DESC in DV.TISSUE_BANK_ACCESSION]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+394	specimen_ppbc_site
+Section Header: PPBC tissue detail
+PPBC tumor site.
+[Source: TBA_SITE_DESC in DV.TISSUE_BANK_DETAIL]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+395	specimen_ppbc_subsite	PPBC tumor subsite.
+[Source: TBA_SUB_SITE_DESC in DV.TISSUE_BANK_DETAIL]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+396	specimen_ppbc_subsite2	PPBC alternative tumor subsite.
+[Source: TBA_SUB2_SITE_DESC in DV.TISSUE_BANK_DETAIL]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+397	specimen_ppbc_type	PPBC type.
+[Source: TBD_CATEGORY_DESC in DV.TISSUE_BANK_DETAIL]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+398	aliquot_ppbc_preservation	PPBC preservation method.
+[Source: TBD_QUALITY_DESC in DV.TISSUE_BANK_DETAIL]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+399	specimen_ppbc_reserved_request_id	PPBC reserved request identifier.
+[Source: TBD_RESERVED_REQUEST_ID in DV.TISSUE_BANK_DETAIL]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+400	aliquot_ppbc_distribution_datetime	PPBC distribution date.
+[Source: TBD_DISTRIBUTION_DT in DV.TISSUE_BANK_DETAIL]
+text (datetime_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+401	aliquot_ppbc_request_id	PPBC request identifier.
+[Source: TBD_REQUEST_ID in DV.TISSUE_BANK_DETAIL]
+text, Required
+
+402	specimens_ppbc_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Specimens (SCS)(specimens_scs)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+403	specimen_scs_site	SCS specimen site.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+404	specimen_scs_cell_count	SCS specimen cell count.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+405	specimen_scs_volume	SCS specimen volume.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+406	specimen_scs_viability	SCS specimen viability.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+407	specimen_scs_sorting		text, Required
+
+408	specimens_scs_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Aliquots(aliquots)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+409	specimen_id_fk
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn] Surgery date: [surgery_date][current-instance] Specimen collection date: [specimen_collection_date][current-instance] Specimen site: [specimen_site][current-instance] Specimen type: [specimen_type][current-instance]
+Specimen identifier (foreign key).
+Foreign key from "Specimens" table.
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+410	aliquot_id	Aliquot identifier.	text, Required
+Field Annotation: @BARCODE-APP
+Edit field in Online Designer
+Edit branching logic in Online Designer
+411	aliquot_igo_id	MSK IGO identifier for aliquot.
+Field automatically entered from MSK IGO LIMS. [NOT IMPLEMENTED YET]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+412	aliquot_barcode_id	Barcode identifier for aliquot.	text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+413	aliquot_isabl_id	Isabl identifier for aliquot.
+[Source: sample.system_id in Isabl]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+414	aliquot_flow_sorting
+Section Header: Aliquot sorting
+Flow sorting of aliquot.	dropdown, Required
+1	CD45+
+2	CD45-
+3	None
+Edit field in Online Designer
+Edit branching logic in Online Designer
+415	aliquot_flow_sorting_report	Report on flow sorting of aliquot.	file, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+416	aliquot_preservation
+Section Header: Aliquot preservation and storage
+Aliquot preservation.	dropdown, Required
+1	Frozen
+2	FFPE
+3	EDTA-Streck
+4	Fresh
+5	OCT
+6	Trizol
+7	DMSO-ViablyFrozen
+8	Other
+Edit field in Online Designer
+Edit branching logic in Online Designer
+417	aliquot_storage_location	Aliquot storage location.	dropdown, Required
+1	MSK IGO Zuckerman 3rd floor
+2	MSK Gyn Lab Schwartz 9th floor
+Edit field in Online Designer
+Edit branching logic in Online Designer
+418	aliquot_freezer_id
+Show the field ONLY if:
+[aliquot_storage_location] = "2"
+Freezer identifier.
+Drop-down list needs to be fixed.
+dropdown, Required
+1	Missing
+Edit field in Online Designer
+Edit branching logic in Online Designer
+419	aliquot_storage_box_id
+Show the field ONLY if:
+[aliquot_storage_location] = "2"
+Storage box identifier.
+Drop-down list needs to be fixed.
+dropdown, Required
+1	SPECTRUM Box 1
+2	SPECTRUM Box 2
+3	SPECTRUM Box 3
+Edit field in Online Designer
+Edit branching logic in Online Designer
+420	aliquot_storage_box_location_row_id
+Show the field ONLY if:
+[aliquot_storage_location] = "2"
+Storage box location (row identifier).	radio, Required
+1	1
+2	2
+3	3
+4	4
+5	5
+6	6
+7	7
+8	8
+9	9
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+421	aliquot_storage_box_location_column_id
+Show the field ONLY if:
+[aliquot_storage_location] = "2"
+Storage box location (column identifier).	radio, Required
+1	1
+2	2
+3	3
+4	4
+5	5
+6	6
+7	7
+8	8
+9	9
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+422	aliquot_freeze_thaw_cycle
+Show the field ONLY if:
+[aliquot_storage_location] = "2"
+Number of freeze-thaw cycles.	text (integer, Min: 0), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+423	aliquot_sequencing_submission
+Section Header: Aliquot submission
+Aliquot submitted for sequencing?	yesno, Required
+1	Yes
+0	No
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+424	aliquot_sequencing_request
+Show the field ONLY if:
+[aliquot_sequencing_submission] = "1"
+Type of sequencing that the aliquot has been submitted for.	dropdown
+1	Single-cell DNA sequencing
+2	Bulk DNA sequencing
+3	Single-cell RNA sequencing
+4	Bulk RNA sequencing
+5	Cell-free DNA sequencing
+6	TCR sequencing
+7	MSK IMPACT sequencing
+
+Custom alignment: RH
+
+425	aliquots_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Sequencing (single-cell DNA)(sequencing_singlecell_dna)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+426	scdna_facility
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn] Surgery date: [surgery_date][current-instance] Specimen collection date: [specimen_collection_date][current-instance] Specimen type: [specimen_type][current-instance] Aliquot identifier: [aliquot_id][current-instance]
+Single-cell DNA sequencing facility.
+[Source: Manual entry]
+dropdown, Required
+1	MSK Integrated Genomics
+2	BC Cancer
+3	GSC
+Edit field in Online Designer
+Edit branching logic in Online Designer
+427	scdna_technology	Single-cell DNA sequencing technology.
+[Source: Manual entry]
+dropdown, Required
+1	DLP+
+2	10x Single Cell CNV
+Edit field in Online Designer
+Edit branching logic in Online Designer
+428	scdna_sample_spot_date
+Section Header: Library preparation
+Sample spot date for single-cell DNA sequencing.	text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+429	scdna_sample_prep_date	Sample preparation date for single-cell DNA sequencing.	text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+430	scdna_library_prep_kit	Library preparation kit.	dropdown, Required
+1	DLP+
+2	Nextera DNA Library Preparation Kit
+Edit field in Online Designer
+Edit branching logic in Online Designer
+431	scdna_presoak_time	Presoak time, in hours.	text (number), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+432	scdna_stain	Stain.	dropdown, Required
+1	CFSE live/dead
+Edit field in Online Designer
+Edit branching logic in Online Designer
+433	scdna_protease_concentration	Protease concentration, in uL.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+434	scdna_library_prep_lysis_buffer	Lysis buffer.	dropdown, Required
+1	Viagen Direct
+Edit field in Online Designer
+Edit branching logic in Online Designer
+435	scdna_library_prep_lysis_time	Lysis time, in hours.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+436	scdna_library_prep_pcr_cycles	Number of PCR cycles.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+437	scdna_tag	Tag amount, in nL.	text (number), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+438	scdna_sequencing_submission_date
+Section Header: Sequencing
+Sample submission date for single-cell DNA sequencing.	text (date_mdy)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+439	scdna_sequencer_model	Sequencer model for single-cell DNA sequencing.	dropdown, Required
+1	Illumina HiSeq 2000
+2	Illumina HiSeq 2500
+3	Illumina HiSeq X
+4	Illumina NextSeq 500
+Edit field in Online Designer
+Edit branching logic in Online Designer
+440	scdna_sequencing_kit	Sequencing kit for single-cell DNA sequencing.
+Drop-down list needs to be fixed.
+dropdown
+1	Missing
+Edit field in Online Designer
+Edit branching logic in Online Designer
+441	scdna_sequencing_status	Status of sequencing run.
+Field automatically queried from IGO LIMS. [AUTOMATION NOT IMPLEMENTED YET]
+dropdown
+1	Pending
+2	Running
+3	Complete
+Edit field in Online Designer
+Edit branching logic in Online Designer
+442	scdna_accession_number	Accession number for single-cell DNA sequencing.	text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+443	scdna_file_path
+Section Header: File paths
+File path to single-cell DNA sequencing files.
+List of full paths to FASTQ files (one file path per row).
+notes, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+444	scdna_cell_metadata	QC report for individual cells.	file
+
+445	sequencing_singlecell_dna_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Sequencing (bulk DNA)(sequencing_bulk_dna)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+446	bulkdna_facility
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn] Surgery date: [surgery_date][current-instance] Specimen collection date: [specimen_collection_date][current-instance] Specimen type: [specimen_type][current-instance] Aliquot identifier: [aliquot_id][current-instance]
+Bulk DNA sequencing facility.	dropdown, Required
+1	MSK Integrated Genomics
+2	BC Cancer
+3	GSC
+Edit field in Online Designer
+Edit branching logic in Online Designer
+447	bulkdna_sequencing_sample_prep_date
+Section Header: Library preparation
+Sample preparation date for bulk DNA sequencing.	text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+448	bulkdna_sequencing_submission_date
+Section Header: Sequencing
+Sample submission date for bulk DNA sequencing.	text (date_dmy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+449	bulkdna_sequencer_model	Sequencer model for bulk DNA sequencing.	dropdown, Required
+1	Illumina HiSeq 2000
+2	Illumina HiSeq 2500
+3	Illumina HiSeq X
+4	Illumina NextSeq 500
+Edit field in Online Designer
+Edit branching logic in Online Designer
+450	bulkdna_sequencing_kit	Sequencing kit for bulk DNA sequencing.
+Drop-down list needs to be fixed.
+dropdown
+1	Missing
+Edit field in Online Designer
+Edit branching logic in Online Designer
+451	bulkdna_sequencing_status	Status of sequencing run.
+Field automatically queried from IGO LIMS. [AUTOMATION NOT IMPLEMENTED YET]
+dropdown
+1	Pending
+2	Running
+3	Complete
+Edit field in Online Designer
+Edit branching logic in Online Designer
+452	bulkdna_accession_number	Accession number for bulk DNA sequencing.	text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+453	bulkdna_file_path
+Section Header: File paths
+File path to sequencing files.
+List of full paths to FASTQ files (one file path per row).
+notes, Required
+
+454	sequencing_bulk_dna_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Sequencing (cfDNA)(sequencing_cfdna)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+455	cfdna_sample_prep_date
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn] Specimen collection date: [specimen_collection_date][current-instance] Specimen type: [specimen_type][current-instance] Aliquot identifier: [aliquot_id][current-instance]
+Sample preparation date for cell-free DNA sequencing.	text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+456	cfdna_accession_number	Accession number for cell-free DNA sequencing.
+The accession number can be found on the Clinical Report from Laboratory Medicine, which is available on Darwin (EMR Docs>Clinical Laboratory Report).
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+457	cfdna_total_yield	Total yield of cell-free DNA sample.
+The total yield can be found on the Clinical Report from Laboratory Medicine, which is available on Darwin (EMR Docs>Clinical Laboratory Report).
+text (number), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+458	cfdna_technology	cfDNA sequencing technology.
+[Source: Manual entry]
+dropdown, Required
+1	Low-pass, bulk whole-genome sequencing
+2	MSK ACCESS
+3	Targeted SV assay
+4	ddPCR
+Edit field in Online Designer
+Edit branching logic in Online Designer
+459	cfdna_fragment_size_selection
+Section Header: Library preparation
+In vitro selection for fragment size.
+[Source: Manual entry]
+yesno, Required
+1	Yes
+0	No
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+460	cfdna_fragment_size_selection_kit
+Show the field ONLY if:
+[cfdna_fragment_size_selection] = "1"
+Kit for fragment size selection.
+[Source: Manual entry]
+dropdown, Required
+1	Pippin Prep
+Edit field in Online Designer
+Edit branching logic in Online Designer
+461	cfdna_sequencing_submission_date
+Section Header: Sequencing
+Sample submission date for cfDNA sequencing.	text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+462	cfdna_sequencer_model	Sequencer model for cfDNA sequencing.	dropdown, Required
+1	Illumina HiSeq 2000
+2	Illumina HiSeq 2500
+3	Illumina HiSeq X
+4	Illumina NextSeq 500
+Edit field in Online Designer
+Edit branching logic in Online Designer
+463	cfdna_sequencing_status	Status of sequencing run.
+Field automatically queried from IGO LIMS. [AUTOMATION NOT IMPLEMENTED YET]
+dropdown
+1	Pending
+2	Running
+3	Complete
+Edit field in Online Designer
+Edit branching logic in Online Designer
+464	cfdna_file_path	File path to cell-free DNA sequencing files.
+List of full paths to FASTQ files (one file path per row).
+notes, Required
+
+465	sequencing_cfdna_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Sequencing (single-cell RNA)(sequencing_singlecell_rna)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+466	scrna_technology
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn] Surgery date: [surgery_date][current-instance] Specimen collection date: [specimen_collection_date][current-instance] Specimen type: [specimen_type][current-instance] Aliquot identifier: [aliquot_id][current-instance]
+Single-cell RNA sequencing technology.
+[Source: Manual entry]
+dropdown, Required
+1	10x Single Cell Gene Expression
+
+Field Annotation: @DEFAULT="10x Single Cell Gene Expression"
+Edit field in Online Designer
+Edit branching logic in Online Designer
+467	scrna_sample_prep_date
+Section Header: Library preparation
+Sample preparation date for single-cell RNA sequencing.	text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+468	scrna_library_prep_kit	Library preparation kit.	dropdown, Required
+1	Clontech SMARTer Ultra Low Input RNA Kit
+Edit field in Online Designer
+Edit branching logic in Online Designer
+469	scrna_sequencing_kit
+Show the field ONLY if:
+[scrna_technology]="0"
+10x sequencing kit.	dropdown, Required
+1	10x 3' gene expression
+2	10x 5' gene expression
+3	10x TCR
+4	10x BCR
+Edit field in Online Designer
+Edit branching logic in Online Designer
+470	sequencing_kit_version
+Show the field ONLY if:
+[scrna_technology]="0"
+10x sequencing kit version.	dropdown, Required
+1	v1
+2	v2
+3	v3
+Edit field in Online Designer
+Edit branching logic in Online Designer
+471	scrna_average_size	Average size, in bp.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+472	scrna_igo_recommendation	IGO recommendation.	dropdown, Required
+1	Pass
+2	Fail
+Edit field in Online Designer
+Edit branching logic in Online Designer
+473	scrna_igo_comments	IGO comments.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+474	scrna_sequencing_submission_date
+Section Header: Sequencing
+Sample submission date for single-cell RNA sequencing.	text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+475	scrna_sequencer_model	Sequencer model for single-cell RNA sequencing.	dropdown, Required
+1	Illumina HiSeq 2000
+2	Illumina HiSeq 2500
+3	Illumina HiSeq X
+4	Illumina NextSeq 500
+Edit field in Online Designer
+Edit branching logic in Online Designer
+476	scrna_sequencing_status	Status of sequencing run.
+Field automatically queried from IGO LIMS. [AUTOMATION NOT IMPLEMENTED YET]
+dropdown
+1	Pending
+2	Running
+3	Complete
+Edit field in Online Designer
+Edit branching logic in Online Designer
+477	scrna_accession_number	Accession number for single-cell RNA sequencing.	text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+478	scrna_file_path
+Section Header: File paths
+File path to single-cell RNA sequencing files.
+Full path to FASTQ file.
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+479	scrna_cell_metadata	QC report for individual cells.	file, Required
+
+480	sequencing_singlecell_rna_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Sequencing (bulk RNA)(sequencing_bulk_rna)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+481	bulkrna_sample_prep_date
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn] Surgery date: [surgery_date][current-instance] Specimen collection date: [specimen_collection_date][current-instance] Specimen type: [specimen_type][current-instance] Aliquot identifier: [aliquot_id][current-instance]
+Sample preparation date for bulk RNA sequencing.	text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+482	bulkrna_file_path
+Section Header: File paths
+File path to bulk RNA sequencing files.
+List of full paths to FASTQ files (one file path per row).
+notes
+
+483	sequencing_bulk_rna_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Sequencing (single-cell ATAC)(sequencing_singlecell_atac)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+484	scatac_sample_prep_date
+Section Header: Name: [patient_first_name][current-instance] [patient_last_name][current-instance] MRN: [patient_mrn][current-instance] Surgery date: [surgery_date][current-instance] Specimen collection date: [specimen_collection_date][current-instance] Specimen type: [specimen_type][current-instance] Aliquot identifier: [aliquot_id][current-instance]
+Sample preparation date for single-cell ATAC sequencing.	text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+485	scatac_file_path
+Section Header: File paths
+File path to single-cell ATAC sequencing files.
+List of full paths to FASTQ files (one file path per row).
+notes, Required
+
+486	sequencing_singlecell_atac_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Sequencing (single-cell TCR)(sequencing_singlecell_tcr)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+487	tcr_sample_prep_date
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn] Specimen collection date: [specimen_collection_date][current-instance] Specimen type: [specimen_type][current-instance]
+Sample preparation date for TCR sequencing.	text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+488	tcr_file_path
+Section Header: File paths
+File path to TCR sequencing files.
+List of full paths to FASTQ files (one file path per row).
+notes, Required
+
+489	sequencing_singlecell_tcr_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Sequencing (MSK IMPACT)(sequencing_msk_impact)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+490	impact_sample_prep_date
+Section Header: Name: [patient_first_name] [patient_last_name] MRN: [patient_mrn] Surgery date: [surgery_date][current-instance] Specimen collection date: [specimen_collection_date][current-instance] Specimen type: [specimen_type][current-instance] Aliquot identifier: [aliquot_id][current-instance]
+Sample preparation date for MSK IMPACT.
+[Source: PRPT_PROCEDURE_DTE in DV.PATHOLOGY_DMP_RESULTS_XML]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+491	impact_sequencing_submission_date
+Section Header: Sequencing
+Sample submission date for MSK IMPACT DNA sequencing.	text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+492	impact_sequencing_status	Status of sequencing run.	dropdown
+1	Pending
+2	Running
+3	Complete
+Edit field in Online Designer
+Edit branching logic in Online Designer
+493	impact_accession_number	Accession number for MSK IMPACT.
+[Source: PDRX_ACCESSION_NO in DV.PATHOLOGY_DMP_RESULTS_XML]
+text, Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+494	impact_dmp_patient_id	DMP patient identifier for MSK IMPACT.
+[Source: PDRX_DMP_PATIENT_ID in DV.PATHOLOGY_DMP_RESULTS_XML]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+495	impact_dmp_sample_id	DMP sample identifier for MSK IMPACT.
+[Source: PDRX_DMP_SAMPLE_ID in DV.PATHOLOGY_DMP_RESULTS_XML]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+496	impact_dmp_mirror_id	Mirror/anonymized DMP sample identifier for MSK IMPACT.
+[Source: PDRX_PATH_RPT_ID in DV.PATHOLOGY_DMP_RESULTS_XML]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+497	impact_gene_panel	Gene panel.
+[Source: PDWS_DESCRIPTION in DV.PATHOLOGY_DMP_WEBSVC_SETTINGS]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+498	impact_tumor_type_name	Name of tumor type for MSK IMPACT.
+[Source: TUMOR_TYPE_NAME in DV.PATHOLOGY_DMP_RESULTS_XML]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+499	impact_tumor_type_code	Code of tumor type for MSK IMPACT.
+[Source: TUMOR_TYPE_CODE in DV.PATHOLOGY_DMP_RESULTS_XML]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+500	impact_primary_site	Primary site for MSK IMPACT.
+[Source: PRIMARY_SITE in DV.PATHOLOGY_DMP_RESULTS_XML]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+501	impact_metastasis_site	Metastasis site for MSK IMPACT.
+[Source: METASTASIS_SITE in DV.PATHOLOGY_DMP_RESULTS_XML]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+502	impact_part_description	Part description for MSK IMPACT.
+[Source: PART_DESCRIPTION in DV.PATHOLOGY_DMP_RESULTS_XML]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+503	impact_dmp_report_date
+Section Header: DMP report
+DMP report date for MSK IMPACT.
+[Source: PRPT_REPORT_DTE in DV.PATHOLOGY_DMP_RESULTS_XML]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+504	impact_dmp_report	Identified DMP report on MSK IMPACT.
+[Source: PRPT_REPORT in DV.PATHOLOGY_REPORT_V]
+notes, Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+505	impact_dmp_report_deidentified	De-identified DMP report on MSK IMPACT.
+[Source: PRPT_DEID_REPORT in DV.PATHOLOGY_REPORT_V]
+notes, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+506	impact_file_path
+Section Header: File paths
+File path to MSK-IMPACT sequencing files.
+Path to BAM file.
+text, Required
+
+507	sequencing_msk_impact_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Pathology (H&E)(pathology_he)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+508	he_pathologist_name
+Section Header: Image acquisition
+Name of pathologist.	dropdown, Required
+1	Robert Soslow
+Edit field in Online Designer
+Edit branching logic in Online Designer
+509	he_pathology_acquisition_date	Acquisition date.
+Date of collection/procedure/outside report. This field includes all accession numbers with archived clinical paraffin blocks available in MSK Pathology. [Source: PRPT_PROCEDURE_DTE in DV.PATHOLOGY_REPORT_V]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+510	he_pathology_acquisition_time	Acquisition time.	text (time), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+511	he_pathology_acquisition_location	Acquisition location.	dropdown, Required
+1	Memorial Hospital
+2	Other
+Edit field in Online Designer
+Edit branching logic in Online Designer
+512	he_pathology_accession_number	Accession number of pathology report.
+This field includes all accession numbers with archived clinical paraffin blocks available in MSK Pathology. [Source: PRPT_ACCESSION_NO in DV.PATHOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+513	he_pathology_section_type	Pathology section type.
+[Source: Manual entry]
+radio, Required
+1	Frozen section
+2	Paraffin-embedded section
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+514	he_pathology_staining_dye	List of dyes used for pathology staining.
+[Source: Manual entry]
+checkbox, Required
+1	he_pathology_staining_dye___1	Haematoxylin
+2	he_pathology_staining_dye___2	Eosin
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+515	he_pathology_slide_id
+Section Header: Image scanning
+Identifier of scanned pathology slide.
+Identifier used in the MSKCC whole-slide viewer (https://slides.mskcc.org).
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+516	he_pathology_scan_device	Scanning device.
+[Source: Manual entry]
+dropdown, Required
+1	Aperio
+2	Hamamatsu NDPI
+3	Hamamatsu VMS
+4	Phillips
+Edit field in Online Designer
+Edit branching logic in Online Designer
+517	he_pathology_scan_resolution	Field magnification.
+Scan resolution expressed as field magnification (e.g. "20x" is entered as "20"). [Source: Manual entry]
+text (number, Min: 0), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+518	he_pathology_tumor_stage
+Section Header: Pathology stage and grade
+Pathological stage of tumor.
+Pathological stage of tumor, using the TNM Staging System (https://www.cancer.gov/about-cancer/diagnosis-staging/staging). [Source: Manual entry]
+dropdown, Required
+1	TX
+2	T0
+3	T1
+4	T2
+5	T3
+6	T4
+7	NX
+8	N0
+9	N1
+10	N2
+11	N3
+12	MX
+13	M0
+14	M1
+Edit field in Online Designer
+Edit branching logic in Online Designer
+519	he_pathology_tumor_grade	Pathological tumor grade.
+Pathological grade of tumor (https://www.cancer.gov/about-cancer/diagnosis-staging/prognosis/tumor-grade-fact-sheet). [Source: Manual entry]
+dropdown, Required
+1	1
+2	2
+3	3
+4	4
+Edit field in Online Designer
+Edit branching logic in Online Designer
+520	he_pathology_stic_presence	Presence of STIC (serous tubal intraepithelial carcinoma).
+[Source: Manual entry]
+dropdown, Required
+1	Yes
+2	No
+3	N/A
+Edit field in Online Designer
+Edit branching logic in Online Designer
+521	he_pathology_stic_location	Location of STIC (serous tubal intraepithelial carcinoma).
+[Source: Manual entry]
+dropdown, Required
+1	Ipsilateral
+2	Contralateral
+3	Bilateral
+4	N/A
+Edit field in Online Designer
+Edit branching logic in Online Designer
+522	he_pathology_fimbrial_ball	Fimbrial ball.
+[Source: Manual entry]
+dropdown, Required
+1	Yes
+2	No
+3	N/A
+Edit field in Online Designer
+Edit branching logic in Online Designer
+523	he_pathology_til_score	Tumor-infiltrating lymphocyte score.
+[Source: Manual entry]
+dropdown, Required
+1	High
+2	Low
+3	N/A
+Edit field in Online Designer
+Edit branching logic in Online Designer
+524	he_pathology_set_architecture	SET Architecture.
+[Source: Manual entry]
+dropdown, Required
+1	Yes
+2	No
+3	N/A
+Edit field in Online Designer
+Edit branching logic in Online Designer
+525	he_pathology_extensive_micropapillary_architecture	Extensive micropapillary architecture.
+[Source: Manual entry]
+dropdown, Required
+1	Yes
+2	No
+3	N/A
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+526	he_pathology_nodular_metastatic_pattern	Nodular metastatic pattern.
+[Source: Manual entry]
+dropdown, Required
+1	Yes
+2	No
+3	N/A
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+527	he_pathology_chemotherapy_response_score	Chemotherapy response score.
+[Source: Manual entry]
+dropdown, Required
+1	1
+2	2
+3	3
+4	4
+5	N/A
+Edit field in Online Designer
+Edit branching logic in Online Designer
+528	he_pathology_mitotic_index	Mitotic index.
+[Source: Manual entry]
+dropdown, Required
+1	High
+2	Low
+3	N/A
+Edit field in Online Designer
+Edit branching logic in Online Designer
+529	he_pathology_report_date
+Section Header: Slide review
+Date of pathology report.
+[Source: PRPT_REPORT_DTE in DV.PATHOLOGY_REPORT_V]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+530	he_pathology_report_type	Type of pathology report.
+[Source: PRPT_REPORT_TYPE in DV.PATHOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+531	he_pathology_report_description	Description of pathology report.
+[Source: PRPT_REPORT_TYPE_DESC in DV.PATHOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+532	he_pathology_order_name	Physician who ordered the pathology report.
+[Source: PRPT_ORD_DR_NAME in DV.PATHOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+533	he_pathology_order_service	Code of service who ordered the pathology report.
+[Source: PRPT_ORD_DR_SVC in DV.PATHOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+534	he_pathology_order_service_name	Name of service who ordered the pathology report.
+[Source: PRPT_ORD_DR_SVC_DESC in DV.PATHOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+535	he_pathology_report	Identified pathology report (free text).
+[Source: PRPT_REPORT in DV.PATHOLOGY_REPORT_V]
+notes, Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+536	he_pathology_report_deidentified	De-identified pathology report (free text).
+[Source: Manual entry or DV.PATHOLOGY_REPORT_V]
+notes, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+537	he_pathology_file_path
+Section Header: File paths
+File path to H&E pathology images (up to 6 images per case).
+List of full paths to SVS or TIFF files (one file path per row).
+notes, Required
+
+538	pathology_he_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Pathology (mp-IF)(pathology_mpif)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+539	mpif_pathology_acquisition_date
+Section Header: Image acquisition
+mp-IF acquisition date.
+[Source: Manual entry]
+text (date_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+540	mpif_pathology_acquisition_time	mp-IF acquisition time.
+[Source: Manual entry]
+text (time), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+541	mpif_pathology_acquisition_location	mp-IF acquisition location.
+[Source: Manual entry]
+dropdown, Required
+1	MSK Hollmann Lab
+2	Other
+Edit field in Online Designer
+Edit branching logic in Online Designer
+542	mpif_pathology_probes	mp-IF probes.
+Select all probes that apply. [Source: Manual entry]
+checkbox, Required
+1	mpif_pathology_probes___1	MUM1L1
+2	mpif_pathology_probes___2	RBP1
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+543	mpif_pathology_device_model	Device model for multiplexed IF.
+[Source: Manual entry]
+radio, Required
+1	Multi-parameter IHC (PerkinElmer Vectra)
+2	Akoya CODEX
+Edit field in Online Designer
+Edit branching logic in Online Designer
+544	mpif_pathology_device_channels	Number of channels.
+[Source: Manual entry]
+radio, Required
+8	8
+24	24
+
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+545	mpif_pathology_comments	mp-IF comments (free text).
+[Source: Manual entry]
+text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+546	mpif_pathology_file_path
+Section Header: File paths
+File path to mp-IF pathology images.	text
+
+547	pathology_mpif_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Radiology (CT scans)(radiology_ct_scans)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+548	ct_radiologist_name
+Section Header: Scan acquisition
+Name of radiologist reading CT scan.
+[Source: RRPT_SIGNED_BY in DV.RADIOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+549	ct_accession_number	Accession number of CT scan.
+[Source: RRPT_ACCESSION_NO in DV.RADIOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+550	ct_acquisition_date	CT scan acquisition date and time.
+[Source: RRPT_PERFORMED_DT in DV.RADIOLOGY_REPORT_V]
+text (datetime_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+551	ct_acquisition_location	CT scan acquisition location.
+[Source: RRPT_ORDER_LOCATION in DV.RADIOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+552	ct_order_group	Order group of CT scan.
+The order group distinguishes between internal CT scans ("CT") and external CT scans read at MSK ("Submitted Films").
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+553	ct_region	Anatomical region of CT scan.
+[Source: RRPT_PROCEDURE_NAME in DV.RADIOLOGY_REPORT_V]
+text, Required
+Custom alignment: RH
+Edit field in Online Designer
+Edit branching logic in Online Designer
+554	ct_contrast_agent
+Section Header: Scan contrast agent
+Contrast agents used for CT scan.	checkbox, Required
+1	ct_contrast_agent___1	Isovue (IV)
+2	ct_contrast_agent___2	Omnipaque (IV)
+3	ct_contrast_agent___3	Oral
+Edit field in Online Designer
+Edit branching logic in Online Designer
+555	ct_contrast_agent_dose	Dose of contrast agent used for CT scan, in cc.	text (number, Min: 0), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+556	ct_tube_voltage
+Section Header: Scan settings
+CT tube voltage, in kVp.	text (number)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+557	ct_tube_current	CT tube current, in mA.	text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+558	ct_scan_report
+Section Header: Scan review
+Full identified CT scan report.
+[Source: RRPT_REPORT_TXT in DV.RADIOLOGY_REPORT_V]
+notes, Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+559	ct_scan_report_deidentified	Full de-identified CT scan report.
+[Source: RRPT_REPORT_TXT in DV.RADIOLOGY_REPORT_V]
+notes, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+560	ct_scan_impression	CT scan impression.
+CT scan impression parsed from the full report. [Source: DV.REGEXSTR('(?i)IMPRESSION:[\w\W]*(?=DICTATED BY:)' ,RRPT_REPORT_TXT) AS RRPT_IMPRESSION in DV.RADIOLOGY_REPORT_V]
+notes, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+561	ct_scan_deid	CT scan DeID.
+[Source: RRPT_RPT_ID in DV.RADIOLOGY_REPORT_V]
+text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+562	ct_recist_score	Treatment response using RECIST score (if applicable).	dropdown
+1	Stable disease
+2	Disease progression
+3	Partial response
+4	Complete response
+Edit field in Online Designer
+Edit branching logic in Online Designer
+563	ct_file_path
+Section Header: File paths
+CT scan file paths.
+List of full paths to DICOM files (one file path per row).
+notes
+
+564	radiology_ct_scans_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Radiology (MRI scans)(radiology_mri_scans)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+565	mri_radiologist_name
+Section Header: Scan acquisition
+Name of mp-MRI radiologist.
+Radiologist Name parsed from the full report. [Source: REPLACE(DV.REGEXSTR('(?i)Electronically\W*Signed\W*By\W*:? ?[^\r\n\(]*',RRPT_REPORT_TXT), DV.REGEXSTR('(?i)Electronically\W*Signed\W*By\W*:? ?', RRPT_REPORT_TXT), '') in DV.RADIOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+566	mri_accession_number	Accession number of mp-MRI scan.
+[Source: RRPT_ACCESSION_NO in DV.RADIOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+567	mri_acquisition_date	Acquisition date and time of mp-MRI.
+[Source: RRPT_PERFORMED_DT in DV.RADIOLOGY_REPORT_V]
+text (datetime_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+568	mri_acquisition_location	Acquisition location of mp-MRI scan.
+[Source: RRPT_ORDER_LOCATION in DV.RADIOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+569	mri_order_group	Order group of mp-MRI scan.
+The order group distinguishes between internal MRI scans ("MR") and external MRI scans read at MSK ("Submitted Films").
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+570	mri_region	Anatomical region of MRI scan.
+[Source: RRPT_PROCEDURE_NAME in DV.RADIOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+571	mri_slice_thickness
+Section Header: Scan settings
+mp-MRI slice thickness.	text (number), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+572	mri_pulse_sequence	mp-MRI pulse sequence.	text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+573	mri_tube_voltage	mp-MRI tube voltage, in kVp.	text (number), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+574	mri_tube_current	mp-MRI tube current, in mA.	text (number), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+575	mri_inversion_time	mp-MRI inversion time.	text (number), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+576	mri_echo_time	mp-MRI echo time.	text (number), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+577	mri_scan_report
+Section Header: Report
+Full identified MRI scan report.
+[Source: RRPT_REPORT_TXT in DV.RADIOLOGY_REPORT_V]
+notes, Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+578	mri_scan_report_deidentified	Full de-identified MRI scan report.
+[Source: RRPT_REPORT_TXT in DV.RADIOLOGY_REPORT_V]
+notes, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+579	mri_scan_impression	MRI Scan Impression
+MRI scan impression parsed from the full report. [Source: DV.REGEXSTR('(?i)IMPRESSION:[\w\W]*(?=DICTATED BY:)' ,RRPT_REPORT_TXT) AS RRPT_IMPRESSION in DV.RADIOLOGY_REPORT_V]
+notes
+Edit field in Online Designer
+Edit branching logic in Online Designer
+580	mri_birads_text	BI-RADS Text
+BI-RADS text parsed from the full report. [Source: dv.regExStr('(?i)(?< =(B)*I)( )*(-)*(RAD)(S)*( )*(:)*( )*.*', RRPT_REPORT_TXT) in DV.RADIOLOGY_REPORT_V]
+text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+581	mri_birads_score	BI-RADS Score
+BI-RADS score parsed from the full report. [Source: REPLACE(DV.regExStr('BI-RADS(\s|\s\s)([0-6]|zero|one|two|three|four|five|six)',RRPT_REPORT_TXT), 'BI-RADS', '') in DV.RADIOLOGY_REPORT_V]
+text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+582	mri_scan_deid	MRI Scan DEID
+[Source: RRPT_RPT_ID in DV.RADIOLOGY_REPORT_V]
+text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+583	mri_file_path
+Section Header: File paths
+MRI scan file path.
+List of full paths to DICOM files (one file path per row).
+notes
+
+584	radiology_mri_scans_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete
+Instrument:Radiology (PET scans)(radiology_pet_scans)
+Edit field in Online Designer
+Edit branching logic in Online Designer
+585	pet_radiologist_name
+Section Header: Scan acquisition
+Name of PET radiologist.
+[Source: RRPT_SIGNED_BY in DV.RADIOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+586	pet_accession_number	Accession number of PET scan.
+[Source: RRPT_ACCESSION_NO in DV.RADIOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+587	pet_acquisition_date	Acquisition date and time of PET.
+[Source: RRPT_PERFORMED_DT in DV.RADIOLOGY_REPORT_V]
+text (datetime_mdy), Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+588	pet_acquisition_location	Acquisition location of PET scan.
+[Source: RRPT_ORDER_LOCATION in DV.RADIOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+589	pet_order_group	Order group of PET scan.
+The order group distinguishes between internal PET scans ("PET") and external PET scans read at MSK ("Submitted Films").
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+590	pet_region	Anatomical region of PET scan.
+[Source: RRPT_PROCEDURE_NAME in DV.RADIOLOGY_REPORT_V]
+text, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+591	pet_scan_report
+Section Header: Report
+Full identified PET scan report.
+[Source: RRPT_REPORT_TXT in DV.RADIOLOGY_REPORT_V]
+notes, Required, Identifier
+Edit field in Online Designer
+Edit branching logic in Online Designer
+592	pet_scan_report_deidentified	Full de-identified PET scan report.
+[Source: RRPT_REPORT_TXT in DV.RADIOLOGY_REPORT_V]
+notes, Required
+Edit field in Online Designer
+Edit branching logic in Online Designer
+593	pet_scan_impression	PET Scan Impression
+PET scan impression parsed from the full report. [Source: DV.REGEXSTR('(?i)IMPRESSION:[\w\W]*(?=DICTATED BY:)' ,RRPT_REPORT_TXT) AS RRPT_IMPRESSION in DV.RADIOLOGY_REPORT_V]
+notes
+Edit field in Online Designer
+Edit branching logic in Online Designer
+594	pet_scan_deid	PET Scan DEID
+[Source: RRPT_RPT_ID in DV.RADIOLOGY_REPORT_V]
+text
+Edit field in Online Designer
+Edit branching logic in Online Designer
+595	pet_file_path
+Section Header: File paths
+PET scan file path.
+List of full paths to DICOM files (one file path per row).
+notes
+
+596	radiology_pet_scans_complete
+Section Header: Form Status
+Complete?	dropdown
+0	Incomplete
+1	Unverified
+2	Complete

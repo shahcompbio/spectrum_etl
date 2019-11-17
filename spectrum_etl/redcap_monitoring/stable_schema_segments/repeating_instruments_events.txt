@@ -1,0 +1,29 @@
+event_name,form_name,custom_form_label
+patient_consent_arm_1,consents,[patient_consent_date] [patient_consent_irb]
+patient_consent_arm_1,diagnoses,[diagnosis_date]
+patient_consent_arm_1,laboratory_tests,[laboratory_test_date] [laboratory_test_name]
+patient_consent_arm_1,measures,[measure_date] [measure_height] cm, [measure_weight] kg
+patient_consent_arm_1,radiology_ct_scans,[ct_acquisition_date] [ct_region]
+patient_consent_arm_1,radiology_mri_scans,[mri_acquisition_date] [mri_region]
+patient_consent_arm_1,radiology_pet_scans,[pet_acquisition_date] [pet_region]
+blood_collection_arm_1,aliquots,
+blood_collection_arm_1,sequencing_bulk_dna,
+blood_collection_arm_1,sequencing_cfdna,
+blood_collection_arm_1,specimens,[specimen_imf_collection_datetime] [aliquot_imf_product_type]
+blood_collection_arm_1,specimens_imf,[specimen_imf_collection_datetime] [aliquot_imf_product_type]
+blood_collection_arm_1,specimens_lab_medicine,[specimen_lab_medicine_test_date]
+tissue_collection_arm_1,aliquots,
+tissue_collection_arm_1,pathology_he,[he_pathology_acquisition_date] [he_pathology_report_description]
+tissue_collection_arm_1,pathology_mpif,[mpif_pathology_acquisition_date]
+tissue_collection_arm_1,sequencing_msk_impact,[impact_dmp_sample_id] [impact_primary_site]
+tissue_collection_arm_1,sequencing_singlecell_dna,
+tissue_collection_arm_1,sequencing_singlecell_rna,[scrna_sequencing_submission_date]
+tissue_collection_arm_1,sequencing_singlecell_tcr,
+tissue_collection_arm_1,specimens,[specimen_collection_date] [specimen_site]
+tissue_collection_arm_1,specimens_ppbc,[specimen_ppbc_procurement_date] [aliquot_ppbc_preservation] ([specimen_ppbc_site])
+tissue_collection_arm_1,specimens_scs,
+tissue_collection_arm_1,surgeries,[surgery_date] [surgery_type]
+treatment_arm_1,treatments,[treatment_start_date] [treatment_drug_name] [treatment_dose_value] [treatment_dose_unit]
+recurrence_arm_1,aliquots,
+recurrence_arm_1,relapses,[relapse_date]
+recurrence_arm_1,specimens,[specimen_collection_date] [specimen_site]

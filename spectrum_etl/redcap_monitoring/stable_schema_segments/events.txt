@@ -1,0 +1,7 @@
+event_name,arm_num,day_offset,offset_min,offset_max,unique_event_name,custom_event_label
+"Patient consent",1,0,0,0,patient_consent_arm_1,patient_consent
+"Blood collection",1,7,0,0,blood_collection_arm_1,blood_collection
+"Laboratory test",1,7,0,0,laboratory_test_arm_1,laboratory_test
+"Tissue collection",1,14,7,7,tissue_collection_arm_1,tissue_collection
+Treatment,1,28,0,0,treatment_arm_1,treatment
+Recurrence,1,365,0,0,recurrence_arm_1,recurrence

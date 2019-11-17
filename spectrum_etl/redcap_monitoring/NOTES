@@ -2,6 +2,6 @@ This package is used for monitoring REDCap schema changes. Automatic monitoring 
 
 Unlike SQL dumps that are easy to diff, REDCap's CDISC ODM XML format that contains schema meta-data is difficult to diff because elements in the XML can be written out of order with each write.
 
-In order to make it easy to diff contents of the schema, segments of the schema are extracted from REDCap in json format using the API and then diff'd.
+In order to make it easy to diff contents of the schema, segments of the schema are extracted from REDCap in csv format using the API and then diff'd.
 
-Monitoring is conducted by having a stable copy of the schema segments saved in the repo and then comparing the schema segments from the test, development and production instance against this stable copy. As changes are detected, a change control process is lauched to implement these changes in downstream systems and the stable copy in the repo is updated with the changes.  
+Monitoring is conducted by having a stable copy of the schema segments saved in the repo and then comparing the schema segments from the test, development and production instance against this stable copy. As changes are detected, a change control process is lauched to implement these changes in downstream systems and the stable copy in the repo is updated with the changes.
