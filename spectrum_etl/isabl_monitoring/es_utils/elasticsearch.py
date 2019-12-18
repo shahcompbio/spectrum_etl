@@ -40,19 +40,35 @@ class ElasticsearchClient():
         self.es = es
 
     # TODO: add settings
-    def create_index(self, index):
+    def create_index(self, index, mapping=None):
 
-        self.es.indices.create(
-            index=index,
-            body={**self.__DEFAULT_SETTINGS, **self.__DEFAULT_MAPPING},
-	include_type_name=True
-        )
+        if mapping:
+            self.es.indices.create(
+                index=index,
+                body={**self.__DEFAULT_SETTINGS, **mapping},
+                include_type_name=True
+            )
+        else:
+            self.es.indices.create(
+                index=index,
+                body={**self.__DEFAULT_SETTINGS, **self.__DEFAULT_MAPPING},
+                include_type_name=True
+            )
 
     def is_index_exists(self, index):
         return self.es.indices.exists(index)
 
+    def is_record_exists(self, index, doc_id):
+        return self.es.exists(index=index, id=doc_id)
+
     # ###############################
     # LOADING METHODS
+
+    def create_record_with_id(self, index, doc_id, doc):
+        self.es.create(index=index, id=doc_id, body=doc)
+
+    def update_record_by_id(self, index, doc_id, doc):
+        self.es.update(index=index, id=doc_id, body=doc)
 
     def load_record(self, index, record):
         if not self.is_index_exists(index):
