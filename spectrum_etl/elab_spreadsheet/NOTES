@@ -10,14 +10,25 @@ todo: The actual copy-paste step is vulnerable to human error. To eliminate chan
 Github Commands:
 
 # to download a local copy of the repo
-git clone https://github.com/shahcompbio/spectrum_etl.git
+$ git clone https://github.com/shahcompbio/spectrum_etl.git
 
 # to check for what changes you made
-git status
+$ git status
 
 # to pull changes from github
-git pull
+$ git pull
 
 # to push local changes up to github
-git commit -m "message" <list of file paths>
-git push
+$ git commit -m "message" <list of file paths>
+$ git push
+
+
+virtual environment:
+
+$ virtualenv -p python3.6 venv
+
+$ pip install virtualenv
+
+$ source venv/bin/activate
+
+$ deactivate
