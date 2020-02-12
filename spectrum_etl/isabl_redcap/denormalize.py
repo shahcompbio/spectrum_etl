@@ -3,10 +3,11 @@ import spectrum_etl.isabl_redcap.denormalize_columns as columns
 import pprint
 import json
 
+
 pp = pprint.PrettyPrinter(width=80, compact=True, indent=2)
 
 
-def get_data(patient_id, instrument, columns, all_data):
+def get_instrument_data(patient_id, instrument, columns, all_data):
     df = all_data.loc[(all_data['patient_id'] == patient_id) & (all_data['redcap_repeat_instrument'] == instrument)]
     instrument_data = {}
 
@@ -23,13 +24,13 @@ def get_patient_redcap_json(patient_id, csv_path):
     data = {}
 
     # patient info
-    patients_data = get_data(patient_id, '', columns.patients, all_data)
+    patients_data = get_instrument_data(patient_id, '', columns.patients, all_data)
 
     # consent info for patient
-    consents_data = get_data(patient_id, 'consents', columns.consents, all_data)
+    consents_data = get_instrument_data(patient_id, 'consents', columns.consents, all_data)
 
     # sequencing bulk dna info for patient
-    seq_bulk_dna_data = get_data(patient_id, 'sequencing_bulk_dna', columns.sequencing_bulk_dna, all_data)
+    seq_bulk_dna_data = get_instrument_data(patient_id, 'sequencing_bulk_dna', columns.sequencing_bulk_dna, all_data)
 
     data['patient']                        = {}
     data['patient']                        = patients_data
