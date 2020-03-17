@@ -1,0 +1,7 @@
+This is an experimental package for the integration of genomic data and pathology data from eLabInventory and REDCap respectively. This task is critical for the multi-modal integration of this data as required by downstream analyses. It is expected that this exercise will reveal many inconsistencies in the data that make the joining of the tables from the two databases challenging. It is proposed that these challenges will be addressed by performing data transformations in order to make it possible to ultimately perform the table joins. In addition, the joined data will be saved in a json format that will allow users to execute sql queries on the data using Apache Drill.
+
+Input: Elab metadata and REDCap metadata access via REST API
+
+Process: Perform any necessary transformations and join tables using pandas
+
+Output: json data formatted for Apache Drill queries.
