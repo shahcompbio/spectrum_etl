@@ -20,13 +20,13 @@ def response():
     # import requests
     # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
 
-
+@pytest.mark.skip(reason="no implementation")
 def test_content(response):
     """Sample pytest test function with the pytest fixture as an argument."""
     # from bs4 import BeautifulSoup
     # assert 'GitHub' in BeautifulSoup(response.content).title.string
 
-
+@pytest.mark.skip(reason="no implementation")
 def test_command_line_interface():
     """Test the CLI."""
     runner = CliRunner()
