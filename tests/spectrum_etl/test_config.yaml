@@ -1,0 +1,8 @@
+redcap_token_list:
+  - development: development_redcap_token_1234
+  - test: test_redcap_token_1234
+  - production: production_redcap_token_1234
+
+redcap_api_url: https://test.url/api/
+
+elab_api_token: test_elab_token_1234

@@ -1,0 +1,13 @@
+# copy-paste this template into a config.yaml before using
+
+# list of tokens keyed by REDCap instance name
+redcap_token_list:
+  - development: <PUT_TOKEN_HERE>
+  - test: <PUT_TOKEN_HERE>
+  - production: <PUT_TOKEN_HERE>
+
+# REDCap API URL
+redcap_api_url: <PUT_REDCAP_URL_HERE>
+
+# eLab API Token
+elab_api_token: <PUT_TOKEN_HERE>
