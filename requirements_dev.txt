@@ -18,3 +18,4 @@ pycurl==7.43.0
 pandas==0.24.2
 
 elasticsearch==7.1.0
+apache-airflow==1.10.6
