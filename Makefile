@@ -84,5 +84,18 @@ dist: clean ## builds source and wheel package
 	python setup.py bdist_wheel
 	ls -l dist
 
-install: clean ## install the package to the active Python's site-packages
-	python setup.py install
+install: clean ## install the package to the active Python's site-packages (https://gist.github.com/vidakDK/de86d751751b355ed3b26d69ecdbdb99)
+	pip install --upgrade pip
+	pip uninstall pycurl
+	brew install curl-openssl
+	echo 'export PATH="/usr/local/opt/openssl/bin:$PATH"' >> ~/.bash_profile
+	echo 'export PATH="/usr/local/opt/curl-openssl/bin:$PATH"' ~/.bash_profile
+	source ~/.bash_profile
+	export PYCURL_SSL_LIBRARY=openssl
+	export LDFLAGS="-L/usr/local/opt/curl-openssl/lib"
+	export CPPFLAGS="-I/usr/local/opt/curl-openssl/include"
+	pip install --no-cache-dir --compile --ignore-installed --install-option="--with-openssl" --install-option="--openssl-dir=/usr/local/opt/openssl" pycurl
+
+
+run:
+	python -m spectrum_etl.data_integration.integrate
