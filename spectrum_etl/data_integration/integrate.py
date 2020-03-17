@@ -15,9 +15,9 @@ class Integration(object):
     '''
 
     def __init__(self):
-        self.extract_scrna_table()
+        self.extract_hne_table()
 
-    def extract_scrna_table(self):
+    def extract_hne_table(self):
         '''
         Extract GYN Pathology table from REDCap.
         '''
