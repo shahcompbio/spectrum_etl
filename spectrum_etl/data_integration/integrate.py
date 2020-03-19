@@ -5,6 +5,7 @@ Created on March 16, 2020
 '''
 from spectrum_etl.config import default_config
 import pprint
+import requests
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -16,6 +17,7 @@ class Integration(object):
 
     def __init__(self):
         self.extract_hne_table()
+        self.extract_scrna_table()
 
     def clean_json(self, json_str):
         '''
@@ -28,6 +30,50 @@ class Integration(object):
         json_str = json_str.replace('\n', '')
 
         return json_str
+
+
+    def extract_scrna_table(self):
+        '''
+        Extract SCRNA table from elab.
+        '''
+
+        headers = {'Authorization': default_config.get_elab_api_token(), "Host": default_config.get_elab_host_url()}
+
+        # get sample count
+        response = requests.get(default_config.get_elab_api_url()+'samples?$records=1', headers=headers)
+        total_records = response.json()['totalRecords']
+
+        # get all sample meta meta data
+        page = 0
+        samples = []
+        while len(samples) != total_records:
+            response = requests.get(default_config.get_elab_api_url() + 'samples?$page='+str(page), headers=headers)
+            samples += response.json()['data']
+            page += 1
+
+        assert len(samples) == total_records
+
+        # get all sample meta data
+        sample_data = []
+        for sample in samples:
+            sampleid = sample["sampleID"]
+            response = requests.get(default_config.get_elab_api_url()+'samples/{sampleid}/meta'.format(sampleid=sampleid), headers=headers)
+            sample_meta = response.json()
+
+            data = {}
+
+            for meta in sample_meta['data']:
+                if 'value' in meta.keys():
+                    data[meta['key']] = meta['value']
+                else:
+                    data[meta['key']] = 'NONE'
+
+            sample_data.append(data)
+
+            break  # just collect 1 since it takes time to collect all
+
+        pp.pprint(sample_data)
+
 
 
     def extract_hne_table(self):
@@ -119,7 +165,7 @@ class Integration(object):
         }
 
         ch = pycurl.Curl()
-        ch.setopt(ch.URL, 'https://redcap.mskcc.org/api/')
+        ch.setopt(ch.URL, default_config.get_redcap_api_url())
         ch.setopt(ch.HTTPPOST, list(data.items()))
         ch.perform()
         ch.close()
