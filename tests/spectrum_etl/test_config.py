@@ -22,5 +22,7 @@ def test_get_elab_config():
 
     config = Config(config_file='tests/spectrum_etl/test_config.yaml')
     assert config.get_elab_api_token() == 'test_elab_token_1234'
+    assert config.get_elab_api_url() == 'https://another_test.url/api/'
+
 
 

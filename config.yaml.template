@@ -11,3 +11,6 @@ redcap_api_url: <PUT_REDCAP_URL_HERE>
 
 # eLab API Token
 elab_api_token: <PUT_TOKEN_HERE>
+
+# eLab API URL
+elab_api_url: <PUT_ELAB_URL_HERE>

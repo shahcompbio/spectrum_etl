@@ -87,6 +87,19 @@ class Config():
         sys.exit(1)
 
 
+    def get_elab_api_url(self):
+        '''
+
+        :return: string token from config file
+        '''
+        for doc in self._get_config():
+            for key, value in doc.items():
+                if key == 'elab_api_url': return value
+
+        print("Error: elab url not found in " + self._config_file)
+        sys.exit(1)
+
+
 
 
 # an instance that reads from the defaul config.yaml file

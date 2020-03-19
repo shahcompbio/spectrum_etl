@@ -6,3 +6,5 @@ redcap_token_list:
 redcap_api_url: https://test.url/api/
 
 elab_api_token: test_elab_token_1234
+
+elab_api_url: https://another_test.url/api/
