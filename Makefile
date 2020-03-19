@@ -95,6 +95,8 @@ install: clean ## install the package to the active Python's site-packages (http
 	export LDFLAGS="-L/usr/local/opt/curl-openssl/lib"
 	export CPPFLAGS="-I/usr/local/opt/curl-openssl/include"
 	pip install --no-cache-dir --compile --ignore-installed --install-option="--with-openssl" --install-option="--openssl-dir=/usr/local/opt/openssl" pycurl
+	pip install -r requirements_dev.txt
+	python setup.py install
 
 
 run:
