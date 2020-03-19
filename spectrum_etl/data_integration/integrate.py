@@ -17,7 +17,7 @@ class Integration(object):
 
     def __init__(self):
         self.extract_hne_table()
-        # self.extract_scrna_table()
+        self.extract_scrna_table()
 
     def clean_json(self, json_str):
         '''
