@@ -14,7 +14,6 @@ pytest-runner==4.2
 six==1.12.0
 openpyxl==2.6.2
 
-# pycurl  # comes in from Makefile install
 pandas==0.24.2
 
 elasticsearch==7.1.0
