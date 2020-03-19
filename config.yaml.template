@@ -14,3 +14,6 @@ elab_api_token: <PUT_TOKEN_HERE>
 
 # eLab API URL
 elab_api_url: <PUT_ELAB_URL_HERE>
+
+# eLab host URL
+elab_host_url: <PUT_ELAB_HOST_HERE>

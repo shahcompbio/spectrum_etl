@@ -96,7 +96,20 @@ class Config():
             for key, value in doc.items():
                 if key == 'elab_api_url': return value
 
-        print("Error: elab url not found in " + self._config_file)
+        print("Error: elab API url not found in " + self._config_file)
+        sys.exit(1)
+
+
+    def get_elab_host_url(self):
+        '''
+
+        :return: string token from config file
+        '''
+        for doc in self._get_config():
+            for key, value in doc.items():
+                if key == 'elab_host_url': return value
+
+        print("Error: elab host url not found in " + self._config_file)
         sys.exit(1)
 
 
