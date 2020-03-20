@@ -6,6 +6,7 @@ Created on March 16, 2020
 from spectrum_etl.config import default_config
 import pprint
 import requests
+import pandas as pd
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -32,7 +33,7 @@ class Integration(object):
         return json_str
 
 
-    def extract_scrna_table(self, samples3=None):
+    def extract_scrna_table(self, samples=None):
         '''
         Extract SCRNA table from elab.
         '''
@@ -40,29 +41,29 @@ class Integration(object):
         headers = {'Authorization': default_config.get_elab_api_token(), "Host": default_config.get_elab_host_url()}
 
         # get sample count
-        response = requests.get(default_config.get_elab_api_url()+'samples?$records=1', headers=headers)
+        response = requests.get(default_config.get_elab_api_url()+'sampleSeries?$records=1', headers=headers)
         total_records = response.json()['totalRecords']
 
         # get all sample meta meta data
         page = 0
         samples = []
         while len(samples) != total_records:
-            response = requests.get(default_config.get_elab_api_url() + 'samples?$page='+str(page), headers=headers)
+            response = requests.get(default_config.get_elab_api_url() + 'sampleSeries?$page='+str(page), headers=headers)
             samples += response.json()['data']
             page += 1
 
         sample_subset = []
         pt_id_list = ["SPECTRUM-OV-002", "SPECTRUM-OV-003", "SPECTRUM-OV-004", "SPECTRUM-OV-006", "SPECTRUM-OV-007"]
         for i in range(0, len(pt_id_list)):
-            filtered_pt_id_list = next(item for item in samples if item['name'] == pt_id_list[i] and item["sampleType"]["name"] == "Tissue")
+            filtered_pt_id_list = next(item for item in samples if item['name'] == pt_id_list[i])
             sample_subset.append(filtered_pt_id_list)
 
         assert len(samples) == total_records
 
         # get all sample meta data
-        sample_data = []
+        elab_sample_data = []
         for sample in sample_subset:
-            sampleid = sample["sampleID"]
+            sampleid = sample["sampleIDs"]
             response = requests.get(default_config.get_elab_api_url()+'samples/{sampleid}/meta'.format(sampleid=sampleid), headers=headers)
             sample_meta = response.json()
 
@@ -74,11 +75,11 @@ class Integration(object):
                 else:
                     data[meta['key']] = 'NONE'
 
-            sample_data.append(data)
+            elab_sample_data.append(data)
 
             # break  # just collect 1 since it takes time to collect all
 
-        pp.pprint(sample_data)
+        pp.pprint(elab_sample_data)
 
 
     def extract_hne_table(self):
@@ -170,6 +171,19 @@ class Integration(object):
 
         pp.pprint(response.json())
 
+class Transformation(object):
+    '''
+    This is an experimental class for the transformation of genomic data and pathology data from eLabInventory
+    and REDCap into a dataframe.
+    '''
+
+    def __init__(self):
+        self.create_eLab_dataframe()
+
+    def create_eLab_dataframe(self):
+        elab_dataframe = pd.DataFrame(Integration.extract_scrna_table)
+        print(elab_dataframe)
 
 if __name__ == '__main__':
     Integration()
+    #Transformation()
