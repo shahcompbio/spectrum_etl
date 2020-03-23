@@ -63,19 +63,20 @@ class Integration(object):
         # get all sample meta data
         elab_sample_data = []
         for sample in sample_subset:
-            sampleid = sample["sampleIDs"]
-            response = requests.get(default_config.get_elab_api_url()+'samples/{sampleid}/meta'.format(sampleid=sampleid), headers=headers)
-            sample_meta = response.json()
+            sampleids = sample["sampleIDs"]
+            for sampleid in sampleids:
+                response = requests.get(default_config.get_elab_api_url()+'samples/{sampleid}/meta'.format(sampleid=sampleid), headers=headers)
+                sample_meta = response.json()
 
-            data = {}
+                data = {}
 
-            for meta in sample_meta['data']:
-                if 'value' in meta.keys():
-                    data[meta['key']] = meta['value']
-                else:
-                    data[meta['key']] = 'NONE'
+                for meta in sample_meta['data']:
+                    if 'value' in meta.keys():
+                        data[meta['key']] = meta['value']
+                    else:
+                        data[meta['key']] = 'NONE'
 
-            elab_sample_data.append(data)
+                elab_sample_data.append(data)
 
             # break  # just collect 1 since it takes time to collect all
 
