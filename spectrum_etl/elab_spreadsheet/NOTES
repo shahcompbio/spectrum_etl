@@ -32,3 +32,6 @@ $ pip install virtualenv
 $ source venv/bin/activate
 
 $ deactivate
+
+@todos
+Write API code to filter all samples that have storage_only and scrna_date_of_submission specified and set scrna_date_of_submission to empty field.
