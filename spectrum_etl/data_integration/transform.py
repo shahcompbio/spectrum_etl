@@ -20,6 +20,10 @@ class Transformation(object):
         eldf = Elab_DataFrame('filtered_elab_sample_data')
         rcdf = RedCap_DataFrame('hne_metadata')
         final_df = eldf.merge(rcdf)
+        pd.set_option('display.max_rows', None)
+        pd.set_option('display.max_columns', None)
+        pd.set_option('display.width', None)
+        pd.set_option('display.max_colwidth', -1)
         print(final_df)
 
 class DataFrame:
@@ -45,13 +49,9 @@ class DataFrame:
                                     'Peritoneum': 'Pelvic Peritoneum'}})
         self.df_blank = df_blank
 
-    def set_index(self, pt_id, specimen_site):
-        df = self.df_blank
-        indexed_df = df.set_index([pt_id, specimen_site]).sort_values(by=[pt_id, specimen_site], ascending='false')
-        self.indexed_df = indexed_df
-
     def merge(self, other_df):
-        final_df = pd.merge(self.indexed_df, other_df.indexed_df, how='left', left_on=['gyn_pathology_specimen_site'], right_on=['Specimen Site'])
+        merged_df = pd.merge(self.df_blank, other_df.df_blank, how='left', left_on=['Patient ID', 'Specimen Site'], right_on=['patient_id', 'gyn_pathology_specimen_site'])
+        final_df = merged_df.set_index(["Patient ID", "Specimen Site"])
         return final_df
 
 class Elab_DataFrame(DataFrame):
@@ -62,13 +62,9 @@ class Elab_DataFrame(DataFrame):
     def __init__(self, file_name):
         DataFrame.__init__(self, file_name)
         self.site_transform()
-        self.set_index()
 
     def site_transform(self, specimen_site="Specimen Site", site_details="Site Details"):
         DataFrame.site_transform(self, specimen_site, site_details)
-
-    def set_index(self, pt_id="Patient ID", specimen_site="Specimen Site"):
-        DataFrame.set_index(self, pt_id, specimen_site)
 
 class RedCap_DataFrame(DataFrame):
     '''
@@ -79,7 +75,6 @@ class RedCap_DataFrame(DataFrame):
         DataFrame.__init__(self, file_name)
         self.format_redcap_dataframe()
         self.site_transform()
-        self.set_index()
 
     def format_column_header(self, header):
         self.dataframe[header] = self.dataframe[header].str.title()
@@ -93,6 +88,3 @@ class RedCap_DataFrame(DataFrame):
 
     def site_transform(self, specimen_site="gyn_pathology_specimen_site", site_details="gyn_pathology_specimen_subsite"):
         DataFrame.site_transform(self, specimen_site, site_details)
-
-    def set_index(self, pt_id="patient_id", specimen_site="gyn_pathology_specimen_site"):
-        DataFrame.set_index(self, pt_id, specimen_site)
