@@ -2,7 +2,7 @@ This procedure must be followed for every change made to the elab spreadsheets.
 
 1. Make one change to eLab sample template
 
-2. Test entire eLab sample template, especially if field change is related to conditional trigger field(s" or conditional section(s"
+2. Test entire eLab sample template, especially if field change is related to conditional trigger fields" or conditional sections"
 
 3. Make corresponding change to eLab sample spreadsheet.
 
@@ -12,26 +12,41 @@ This procedure must be followed for every change made to the elab spreadsheets.
 
 3.1. Cycle through opening and closing spreadsheet while making a change to test Workbook_open event.
 
-3.2. Ensure that default values are provided for all fields. Being explicit can help avoid accidental omissions.
+3.2. Apply default values to fields, where applicable. Being explicit can help avoid accidental omissions.
 
-3.3. Make sure all fields in eLab template are set to be required. This aligns with point 2 above.
+3.3. Make fields required in eLab template, where applicable. This aligns with point 2 above.
 
 3.4. Ensure order of field names in elab sample definition matches order of field names in corresponding Excel columns.
 
 3.5. Test the following functions
-    1. Check header alignment between excel spreadsheet headers and elab schema headers (get elab schema headers by going to Inventory -> Sample List -> Import -> <select tissue type> -> copy-paste from "Select Fields to Import" list Into excel column, then compare to excel headers transposed into an adjacent column.
-    2. Open workbook, expand all columns, Save, close, open workbook again and verify that all hidden columns are hidden.
-    3. Baseline expand-shrink test. Empty all cells. Expand all columns. Verify expansion. Shrink all columns. Verify shrinking. Expand all columns again. Verify expansion.
-    4. Step through conditional sections in elab schema and verify corresponding show/hide functionality in spreadsheet for each schema conditional.
+    1. Field Alignment Test -
+       Tools->Protection->Unprotect Workbook.
+       Check header alignment between excel spreadsheet headers and elab schema headers (get elab schema headers by going to Inventory -> Sample List -> Import -> <select tissue type> -> copy-paste from "Select Fields to Import" list Into excel column, then compare to excel headers transposed into an adjacent column.
+       Tools->Protection->Protect Workbook.
+
+    2. Open-Close Test -
+       Open workbook, expand all columns, Save, close, open workbook again and verify that all hidden columns are hidden.
+
+    3. Baseline expand-shrink test -
+       Empty all cells. Expand all columns. Verify expansion. Shrink all columns. Verify shrinking. Expand all columns again. Verify expansion.
+
+    4. Conditionals Test -
+       Step through conditional sections in elab schema and verify corresponding show/hide functionality in spreadsheet for each schema conditional.
+
         4.1. Set conditional column to empty
+
         4.2. Expand out all columns. Verify hidden columns being tested are all visible. Verify section boundaries by equating column counts to elab field counts for the section being tested.
+
         4.3. Shrink all columns. Verify hidden columns are hidden
-        4.4. Set visibility condition field to trigger value. Verify all hidden columns show with right number and sequence of fields
+
+        4.4. Follow conditionals in elab template and set visibility condition field to trigger value. Verify all hidden columns show with right number and sequence of fields
+
         4.5. Set visibility condition field to non-trigger values. Verify that hidden columns remain hidden
-    - "Expand Columns and Copy Paste Data" - verify expansion of all conditional columns. Verify proper bounding rectangle.
-    - Check if section headers match elab section headers
-    - Check if controlled vocabulary matches elab controlled vocabulary
-    - Check macro comments
+
+            - "Expand Columns and Copy Paste Data" - verify expansion of all conditional columns. Verify proper bounding rectangle.
+            - Check if section headers match elab section headers
+            - Check if controlled vocabulary matches elab controlled vocabulary
+            - Check macro comments
 
 4. commit changes
 
