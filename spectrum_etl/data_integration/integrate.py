@@ -6,7 +6,8 @@ Created on March 16, 2020
 from spectrum_etl.config import default_config
 import pprint
 import requests
-import pandas as pd
+import json
+from spectrum_etl.data_integration.transform import Transformation
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -17,8 +18,8 @@ class Integration(object):
     '''
 
     def __init__(self):
-        #self.extract_hne_table()
-        self.extract_scrna_table()
+         self.extract_hne_table()
+         self.extract_scrna_table()
 
     def clean_json(self, json_str):
         '''
@@ -52,35 +53,51 @@ class Integration(object):
             samples += response.json()['data']
             page += 1
 
-        sample_subset = []
-        pt_id_list = ["SPECTRUM-OV-002", "SPECTRUM-OV-003", "SPECTRUM-OV-004", "SPECTRUM-OV-006", "SPECTRUM-OV-007"]
-        for i in range(0, len(pt_id_list)):
-            filtered_pt_id_list = next(item for item in samples if item['name'] == pt_id_list[i])
-            sample_subset.append(filtered_pt_id_list)
-
         assert len(samples) == total_records
+
+        # filter by patient subset
+        patient_subset = []
+        pt_id_list = ["SPECTRUM-OV-002", "SPECTRUM-OV-003", "SPECTRUM-OV-007", "SPECTRUM-OV-008", "SPECTRUM-OV-009"]
+        for sample in samples:
+            if sample['name'] in pt_id_list:
+                patient_subset.append(sample)
 
         # get all sample meta data
         elab_sample_data = []
-        for sample in sample_subset:
-            sampleids = sample["sampleIDs"]
+        filtered_elab_sample_data = []
+
+        for patient in patient_subset:
+            sampleids = patient["sampleIDs"]
+
             for sampleid in sampleids:
-                response = requests.get(default_config.get_elab_api_url()+'samples/{sampleid}/meta'.format(sampleid=sampleid), headers=headers)
-                sample_meta = response.json()
+                response = requests.get(default_config.get_elab_api_url()+'samples/{sampleid}'.format(sampleid=sampleid), headers=headers)
 
-                data = {}
+                # filter sample meta data by Tissue samples only
+                if response.json()["sampleType"]["name"] == "Tissue":
+                    response = requests.get(default_config.get_elab_api_url() + 'samples/{sampleid}/meta'.format(sampleid=sampleid),headers=headers)
+                    sample_meta = response.json()
 
-                for meta in sample_meta['data']:
-                    if 'value' in meta.keys():
-                        data[meta['key']] = meta['value']
-                    else:
-                        data[meta['key']] = 'NONE'
+                    data = {}
 
-                elab_sample_data.append(data)
+                    # remove all meta data fields without values
+                    for meta in sample_meta['data']:
+                        if ('value' in meta.keys()) and (meta['value'] != ""):
+                            data[meta['key']] = meta['value']
 
-            # break  # just collect 1 since it takes time to collect all
+                    elab_sample_data.append(data)
 
-        pp.pprint(elab_sample_data)
+        # filter sample meta data for patients/sites we have scRNA seq data
+        for sample_metadata in elab_sample_data:
+            if 'QC Checks' in sample_metadata.keys():
+                if (sample_metadata['Excluded'] == "No") and ((sample_metadata['QC Checks'] == "Passed Library QC,Passed cDNA QC") or (sample_metadata['QC Checks'] == "Passed Library QC, Passed cDNA QC")):
+                    filtered_elab_sample_data.append(sample_metadata)
+
+        # break  # just collect 1 since it takes time to collect all
+
+        with open("filtered_elab_sample_data", 'w') as outfile:
+            json.dump(filtered_elab_sample_data, outfile)
+
+        # pp.pprint(filtered_elab_sample_data)
 
 
     def extract_hne_table(self):
@@ -95,12 +112,12 @@ class Integration(object):
             #'records[0]': 'SPECTRUM-OV-001',
             'records[1]': 'SPECTRUM-OV-002',
             'records[2]': 'SPECTRUM-OV-003',
-            'records[3]': 'SPECTRUM-OV-004',
+            #'records[3]': 'SPECTRUM-OV-004',
             #'records[4]': 'SPECTRUM-OV-005',
-            'records[5]': 'SPECTRUM-OV-006',
+            #'records[5]': 'SPECTRUM-OV-006',
             'records[6]': 'SPECTRUM-OV-007',
-            #'records[7]': 'SPECTRUM-OV-008',
-            #'records[8]': 'SPECTRUM-OV-009',
+            'records[7]': 'SPECTRUM-OV-008',
+            'records[8]': 'SPECTRUM-OV-009',
             #'records[9]': 'SPECTRUM-OV-010',
             #'records[10]': 'SPECTRUM-OV-011',
             #'records[11]': 'SPECTRUM-OV-012',
@@ -169,22 +186,23 @@ class Integration(object):
         }
 
         response = requests.post(url=default_config.get_redcap_api_url(), data=data)
+        path_metadata = response.json()
 
-        pp.pprint(response.json())
+        # filter metadata for samples with values
+        hne_metadata = []
+        for meta in path_metadata:
+            filtered_meta = {}
+            for k, v in meta.items():
+                if v != "":
+                    filtered_meta[k] = v
+            hne_metadata.append(filtered_meta)
 
-class Transformation(object):
-    '''
-    This is an experimental class for the transformation of genomic data and pathology data from eLabInventory
-    and REDCap into a dataframe.
-    '''
+        # export filtered metadata as a json file
+        with open("hne_metadata", 'w') as outfile:
+            json.dump(hne_metadata, outfile)
 
-    def __init__(self):
-        self.create_eLab_dataframe()
-
-    def create_eLab_dataframe(self):
-        elab_dataframe = pd.DataFrame(Integration.extract_scrna_table)
-        print(elab_dataframe)
+        # pp.pprint(hne_metadata)
 
 if __name__ == '__main__':
-    Integration()
-    #Transformation()
+    #Integration()
+    Transformation()
