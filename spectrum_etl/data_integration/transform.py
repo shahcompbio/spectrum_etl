@@ -17,13 +17,13 @@ class Transformation(object):
     '''
 
     def __init__(self):
-        eldf = Elab_DataFrame('filtered_elab_sample_data')
-        rcdf = RedCap_DataFrame('hne_metadata')
-        final_df = eldf.merge(rcdf)
         pd.set_option('display.max_rows', None)
         pd.set_option('display.max_columns', None)
         pd.set_option('display.width', None)
         pd.set_option('display.max_colwidth', -1)
+        eldf = Elab_DataFrame('filtered_elab_sample_data')
+        rcdf = RedCap_DataFrame('hne_metadata')
+        final_df = eldf.merge(rcdf)
         print(final_df)
 
 class DataFrame:
@@ -44,14 +44,13 @@ class DataFrame:
         df = self.dataframe
         df_blank = df.replace(np.nan, '', regex=True)
         df_blank.loc[df_blank[site_details] != "", specimen_site] = df_blank[site_details]
-        df_blank = df.replace({'gyn_pathology_specimen_site':
-                                   {'Omentum': 'Infracolic Omentum',
-                                    'Peritoneum': 'Pelvic Peritoneum'}})
         self.df_blank = df_blank
 
     def merge(self, other_df):
         merged_df = pd.merge(self.df_blank, other_df.df_blank, how='left', left_on=['Patient ID', 'Specimen Site'], right_on=['patient_id', 'gyn_pathology_specimen_site'])
-        final_df = merged_df.set_index(["Patient ID", "Specimen Site"])
+        final_df = merged_df.set_index(["Patient ID", "Specimen Site"]).sort_values(['Patient ID', 'Specimen Site'], ascending=True)
+        # upon merge, Specimen Site pulls from the elab version, so the detailed from redcap specimen site does not merge
+        # how do we transfer redcaps specimen site to the merged table as well?
         return final_df
 
 class Elab_DataFrame(DataFrame):
@@ -87,4 +86,7 @@ class RedCap_DataFrame(DataFrame):
         self.format_column_header('gyn_pathology_specimen_subsite')
 
     def site_transform(self, specimen_site="gyn_pathology_specimen_site", site_details="gyn_pathology_specimen_subsite"):
+        self.dataframe = self.dataframe.replace({'gyn_pathology_specimen_site':
+                                   {'Omentum': 'Infracolic Omentum',
+                                    'Peritoneum': 'Pelvic Peritoneum'}})
         DataFrame.site_transform(self, specimen_site, site_details)
