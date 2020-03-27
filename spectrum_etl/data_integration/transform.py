@@ -17,12 +17,10 @@ class Transformation(object):
     '''
 
     def __init__(self):
-        rcdf = RedCap_DataFrame('hne_metadata')
         eldf = Elab_DataFrame('filtered_elab_sample_data')
-        print(rcdf.indexed_df)
-        print(eldf.indexed_df)
-        #resulting_df = rcdf.merge(eldf)
-        #resulting_df = eldf.merge(rcdf)
+        rcdf = RedCap_DataFrame('hne_metadata')
+        final_df = eldf.merge(rcdf)
+        print(final_df)
 
 class DataFrame:
     '''
@@ -42,6 +40,9 @@ class DataFrame:
         df = self.dataframe
         df_blank = df.replace(np.nan, '', regex=True)
         df_blank.loc[df_blank[site_details] != "", specimen_site] = df_blank[site_details]
+        df_blank = df.replace({'gyn_pathology_specimen_site':
+                                   {'Omentum': 'Infracolic Omentum',
+                                    'Peritoneum': 'Pelvic Peritoneum'}})
         self.df_blank = df_blank
 
     def set_index(self, pt_id, specimen_site):
@@ -50,8 +51,8 @@ class DataFrame:
         self.indexed_df = indexed_df
 
     def merge(self, other_df):
-
-
+        final_df = pd.merge(self.indexed_df, other_df.indexed_df, how='left', left_on=['gyn_pathology_specimen_site'], right_on=['Specimen Site'])
+        return final_df
 
 class Elab_DataFrame(DataFrame):
     '''
@@ -67,8 +68,7 @@ class Elab_DataFrame(DataFrame):
         DataFrame.site_transform(self, specimen_site, site_details)
 
     def set_index(self, pt_id="Patient ID", specimen_site="Specimen Site"):
-        return DataFrame.set_index(self, pt_id, specimen_site)
-
+        DataFrame.set_index(self, pt_id, specimen_site)
 
 class RedCap_DataFrame(DataFrame):
     '''
