@@ -5,3 +5,86 @@ Input: Elab metadata and REDCap metadata access via REST API
 Process: Perform any necessary transformations and join tables using pandas
 
 Output: json data formatted for Apache Drill queries.
+
+
+
+Apache Drill installation instructions:
+
+pre-requisites -
+Java 8
+
+https://drill.apache.org/docs/installing-drill-on-linux-and-mac-os-x/
+- add drill to ~/bash_profile
+- sudo chown -R pashaa:9696963 /opt/apache-drill-1.17.0
+
+- $ drill-embedded
+Apache Drill 1.17.0
+"Two things are infinite: the universe and Drill; and I'm not sure about the universe."
+
+ahahahaha!
+
+apache drill> SELECT * FROM dfs.`/Users/pashaa/dev/shahcompbio/spectrum_etl/drill_sample2.json` LIMIT 5;
+
+# flatten data and list all patient ids
+apache drill> SELECT t.flatdata.`Patient ID` as `patient id`, t.flatdata.`Specimen Site` as `specimen site` FROM (select flatten(data) AS flatdata FROM dfs.`/Users/pashaa/dev/shahcompbio/spectrum_etl/output_for_drill.json`) t;
++-----------------+--------------------------------------------------+
+|   patient id    |                  specimen site                   |
++-----------------+--------------------------------------------------+
+| SPECTRUM-OV-002 | Infracolic Omentum                               |
+| SPECTRUM-OV-002 | Right Ovary                                      |
+| SPECTRUM-OV-002 | Right Ovary                                      |
+| SPECTRUM-OV-003 | Ascites                                          |
+| SPECTRUM-OV-003 | Infracolic Omentum                               |
+| SPECTRUM-OV-003 | Left Adnexa                                      |
+| SPECTRUM-OV-003 | Left Upper Quadrant                              |
+| SPECTRUM-OV-003 | Pelvic Peritoneum                                |
+| ...                                                                |
+| SPECTRUM-OV-009 | Right Upper Quadrant                             |
+| SPECTRUM-OV-009 | Right Upper Quadrant                             |
++-----------------+--------------------------------------------------+
+
+
+
+# flatten data and list all patient ids for which we have a specimen site = 'Infracolic Omentum'
+apache drill> SELECT `Patient ID` FROM dfs.`/Users/pashaa/dev/shahcompbio/spectrum_etl/output_for_drill_flattened.json` where `Specimen Site` = 'Infracolic Omentum';
++-----------------+
+|   Patient ID    |
++-----------------+
+| SPECTRUM-OV-002 |
+| SPECTRUM-OV-003 |
+| SPECTRUM-OV-007 |
+| SPECTRUM-OV-007 |
+| SPECTRUM-OV-008 |
+| SPECTRUM-OV-008 |
+| SPECTRUM-OV-009 |
+| SPECTRUM-OV-009 |
++-----------------+
+
+# flatten data and list patient ids and number of specimen sites for all patients that have sample site = 'Infracolic Omentum'
+apache drill> SELECT `Patient ID`, count(`Specimen Site`) as `Specimen Site Count` FROM dfs.`/Users/pashaa/dev/shahcompbio/spectrum_etl/output_for_drill_flattened.json` where `Specimen Site` = 'Infracolic Omentum'  GROUP BY `Patient ID`;
++-----------------+---------------------+
+|   Patient ID    | Specimen Site Count |
++-----------------+---------------------+
+| SPECTRUM-OV-002 | 1                   |
+| SPECTRUM-OV-003 | 1                   |
+| SPECTRUM-OV-007 | 2                   |
+| SPECTRUM-OV-008 | 2                   |
+| SPECTRUM-OV-009 | 2                   |
++-----------------+---------------------+
+
+# flatten data and get number of records that have a specimen site and group by patient id
+apache drill> SELECT `Patient ID`, count(`Specimen Site`) as `Specimen Site Count` FROM dfs.`/Users/pashaa/dev/shahcompbio/spectrum_etl/output_for_drill_flattened.json` GROUP BY `Patient ID`;
++-----------------+---------------------+
+|   Patient ID    | Specimen Site Count |
++-----------------+---------------------+
+| SPECTRUM-OV-002 | 3                   |
+| SPECTRUM-OV-003 | 7                   |
+| SPECTRUM-OV-007 | 13                  |
+| SPECTRUM-OV-008 | 6                   |
+| SPECTRUM-OV-009 | 15                  |
++-----------------+---------------------+
+
+apache drill> !quit
+
+
+SELECT * FROM dfs.`/Users/pashaa/dev/shahcompbio/spectrum_etl/output_for_drill.json` LIMIT 5;
