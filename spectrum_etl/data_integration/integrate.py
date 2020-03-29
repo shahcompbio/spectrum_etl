@@ -205,4 +205,5 @@ class Integration(object):
 
 if __name__ == '__main__':
     #Integration()
-    Transformation()
+    transform = Transformation()
+    transform.transform()
