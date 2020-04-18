@@ -3,11 +3,22 @@ Created on March 16, 2020
 
 @author: pashaa@mskcc.org
 '''
+
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import absolute_import
+
 from spectrum_etl.config import default_config
 import pprint
 import requests
 import json
 from spectrum_etl.data_integration.transform import Transformation
+import codecs
+import json
+import logging
+import logging.config
+import sys
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -18,7 +29,7 @@ class Integration(object):
     '''
 
     def __init__(self):
-         self.extract_hne_table()
+         #self.extract_hne_table()
          self.extract_scrna_table()
 
     def clean_json(self, json_str):
@@ -66,8 +77,8 @@ class Integration(object):
         for sample in samples:
             if sample['name'] in pt_id_list:
                 patient_subset.append(sample)
-                
-        pp.pprint("attempting to get data for "+str(len(patient_subset))+" patients...")
+
+        logger.info("attempting to get data for "+str(len(patient_subset))+" patients...")
 
         # get all sample meta data
         elab_sample_data = []
@@ -76,7 +87,7 @@ class Integration(object):
         for patient in patient_subset:
             sampleids = patient["sampleIDs"]
 
-            pp.pprint("getting data for patient "+patient['name'])
+            logger.info("getting data for patient "+patient['name'])
 
             for sampleid in sampleids:
                 response = requests.get(default_config.get_elab_api_url()+'samples/{sampleid}'.format(sampleid=sampleid), headers=headers)
@@ -155,6 +166,22 @@ class Integration(object):
 
 
 if __name__ == '__main__':
-    #Integration()
-    transform = Transformation()
-    transform.transform()
+    # create an initial logger. It will only log to console and it will disabled
+    # when we read the logging configuration from the config file.
+    # This logger can be useful when we need early logging. E.g. we may want to log
+    # the location of the JSON file (e.g. if we get it from a CLI argument).
+    logging.basicConfig(level="INFO")
+    logger = logging.getLogger()
+    logger.info("This is the logger configured by `logging.basicConfig()`.")
+
+    # Load the configuration.
+    config_file = "config_logging.json"
+    with codecs.open(config_file, "r", encoding="utf-8") as fd:
+        config = json.load(fd)
+
+    # Set up proper logging. This one disables the previously configured loggers.
+    logging.config.dictConfig(config["logging"])
+
+    Integration()
+    #transform = Transformation()
+    #transform.transform()
