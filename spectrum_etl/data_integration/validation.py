@@ -25,7 +25,7 @@ pt_id = ['SPECTRUM-OV-001',
          'SPECTRUM-OV-019',
          'SPECTRUM-OV-020',]
 
-sites = ['Ascites',
+specimen_sites = ['Ascites',
          'Bowel',
          'Infracolic Omentum',
          'Left Adnexa',
@@ -35,20 +35,20 @@ sites = ['Ascites',
          'Right Adnexa',
          'Right Upper Quadrant']
 
-class is_pt_id_valid():
-    if pt_id is None: return False
+def is_pt_id_valid(patient_id):
+    if patient_id is None: return False
 
     for id in range(len(pt_id)):
-        if pt_id[id] == pt_id:
+        if pt_id[id] == patient_id:
             return True
 
     return False
 
-class is_specimen_site_valid():
+def is_specimen_site_valid(specimen_site):
     if specimen_site is None: return False
 
-    for site in range(len(specimen_site)):
-        if specimen_site[site] == specimen_site:
+    for site in range(len(specimen_sites)):
+        if specimen_sites[site] == specimen_site:
             return True
 
     return False
