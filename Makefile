@@ -90,5 +90,11 @@ install: clean ## install the package to the active Python's site-packages (http
 	python setup.py install
 
 
-run:
+run_integration:
 	python -m spectrum_etl.data_integration.integrate
+
+run_transformation:
+	python -m spectrum_etl.data_integration.transform
+
+run_visualization:
+	python -m spectrum_etl.data_integration.visualization
