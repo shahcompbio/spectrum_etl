@@ -57,10 +57,17 @@ class Integration(object):
 
         # filter by patient subset
         patient_subset = []
-        pt_id_list = ["SPECTRUM-OV-002", "SPECTRUM-OV-003", "SPECTRUM-OV-007", "SPECTRUM-OV-008", "SPECTRUM-OV-009"]
+
+        pt_id_list = []
+        for ii in range(1,73):  # patients 1 to 72
+            id = 'SPECTRUM-OV-0' + str("{:02d}".format(ii))
+            pt_id_list.append(id)
+
         for sample in samples:
             if sample['name'] in pt_id_list:
                 patient_subset.append(sample)
+                
+        pp.pprint("attempting to get data for "+str(len(patient_subset))+" patients...")
 
         # get all sample meta data
         elab_sample_data = []
@@ -68,6 +75,8 @@ class Integration(object):
 
         for patient in patient_subset:
             sampleids = patient["sampleIDs"]
+
+            pp.pprint("getting data for patient "+patient['name'])
 
             for sampleid in sampleids:
                 response = requests.get(default_config.get_elab_api_url()+'samples/{sampleid}'.format(sampleid=sampleid), headers=headers)
