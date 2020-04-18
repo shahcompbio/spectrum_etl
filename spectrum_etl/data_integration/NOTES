@@ -14,8 +14,9 @@ pre-requisites -
 Java 8
 
 https://drill.apache.org/docs/installing-drill-on-linux-and-mac-os-x/
-- add drill to ~/bash_profile
-- sudo chown -R pashaa:9696963 /opt/apache-drill-1.17.0
+- add drill to ~/.bash_profile
+- source ~/.bash_profile
+- sudo chown -R <user>:<group> /opt/apache-drill-1.17.0
 
 - $ drill-embedded
 Apache Drill 1.17.0
