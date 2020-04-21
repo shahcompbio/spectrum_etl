@@ -12,13 +12,10 @@ from __future__ import absolute_import
 from spectrum_etl.config import default_config
 import pprint
 import requests
-import json
-from spectrum_etl.data_integration.transform import Transformation
 import codecs
 import json
-import logging
 import logging.config
-import sys
+import os
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -43,6 +40,10 @@ class Integration(object):
         json_str = json_str.replace('\n', '')
 
         return json_str
+
+
+    def __print_jq_error(self, filename):
+        pp.pprint("Unable to format file " + filename + " as jq was not found. Try 'brew install jq' first")
 
 
     def extract_scrna_table(self, samples=None):
@@ -117,6 +118,12 @@ class Integration(object):
         with open("filtered_elab_sample_data", 'w') as outfile:
             json.dump(filtered_elab_sample_data, outfile)
 
+        # format the json data to make it legible
+        if os.system('which jq') == 0:
+            os.system('cat ' + outfile.name + ' | jq > ' + outfile.name + '.json')
+        else:
+            self.__print_jq_error(outfile.name)
+
         # pp.pprint(filtered_elab_sample_data)
 
 
@@ -162,6 +169,12 @@ class Integration(object):
         # export filtered metadata as a json file
         with open("hne_metadata", 'w') as outfile:
             json.dump(hne_metadata, outfile)
+
+        # format the json data to make it legible
+        if os.system('which jq') == 0:
+            os.system('cat '+outfile.name+' | jq > '+outfile.name+'.json')
+        else:
+            self.__print_jq_error(outfile.name)
 
 
 
