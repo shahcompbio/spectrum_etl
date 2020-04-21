@@ -89,7 +89,6 @@ install: clean ## install the package to the active Python's site-packages (http
 	pip install -r requirements_dev.txt
 	python setup.py install
 
-
 run_integration:
 	python -m spectrum_etl.data_integration.integrate
 

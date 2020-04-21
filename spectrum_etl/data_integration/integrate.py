@@ -1,7 +1,7 @@
 '''
 Created on March 16, 2020
 
-@author: pashaa@mskcc.org
+@authors: limj@mskcc.org; pashaa@mskcc.org
 '''
 
 from __future__ import division
@@ -105,7 +105,7 @@ class Integration(object):
         # filter sample meta data for patients/sites we have scRNA seq data
         for sample_metadata in elab_sample_data:
             if 'QC Checks' in sample_metadata.keys():
-                if (sample_metadata['Excluded'] == "No") and ((sample_metadata['QC Checks'] == "Passed Library QC,Passed cDNA QC") or (sample_metadata['QC Checks'] == "Passed Library QC, Passed cDNA QC")):
+                if sample_metadata['Excluded'] == "No":
                     filtered_elab_sample_data.append(sample_metadata)
 
         # break  # just collect 1 since it takes time to collect all
@@ -183,5 +183,3 @@ if __name__ == '__main__':
     logging.config.dictConfig(config["logging"])
 
     Integration()
-    #transform = Transformation()
-    #transform.transform()

@@ -3,8 +3,9 @@ Created on March 27, 2020
 
 @author: limj@mskcc.org
 '''
+import sys
 
-pt_id = ['SPECTRUM-OV-001',
+validate_pt_id = ['SPECTRUM-OV-001',
          'SPECTRUM-OV-002',
          'SPECTRUM-OV-003',
          'SPECTRUM-OV-004',
@@ -25,7 +26,7 @@ pt_id = ['SPECTRUM-OV-001',
          'SPECTRUM-OV-019',
          'SPECTRUM-OV-020',]
 
-specimen_sites = ['Ascites',
+validate_specimen_sites = ['Ascites',
          'Bowel',
          'Infracolic Omentum',
          'Left Adnexa',
@@ -35,22 +36,14 @@ specimen_sites = ['Ascites',
          'Right Adnexa',
          'Right Upper Quadrant']
 
+# validate patient id from elab data frame
 def is_pt_id_valid(patient_id):
-    if patient_id is None: return False
+    if patient_id not in validate_pt_id:
+        print("There is no metadata available for %s." % patient_id)
+        sys.exit(1)
 
-    for id in range(len(pt_id)):
-        if pt_id[id] == patient_id:
-            return True
-
-    return False
-
+# validate specimen site from elab data frame
 def is_specimen_site_valid(specimen_site):
-    if specimen_site is None: return False
-
-    for site in range(len(specimen_sites)):
-        if specimen_sites[site] == specimen_site:
-            return True
-
-    return False
-
-
+    if specimen_site not in validate_specimen_sites:
+        print("%s is not a site that was collected in our study." % specimen_site)
+        sys.exit(1)

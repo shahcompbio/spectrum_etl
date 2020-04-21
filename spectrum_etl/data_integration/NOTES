@@ -27,7 +27,7 @@ ahahahaha!
 apache drill> SELECT * FROM dfs.`/Users/pashaa/dev/shahcompbio/spectrum_etl/drill_sample2.json` LIMIT 5;
 
 # flatten data and list all patient ids
-apache drill> SELECT t.flatdata.`Patient ID` as `patient id`, t.flatdata.`Specimen Site` as `specimen site` FROM (select flatten(data) AS flatdata FROM dfs.`/Users/pashaa/dev/shahcompbio/spectrum_etl/output_for_drill.json`) t;
+apache drill> SELECT t.flatdata.`Patient ID` as `patient id`, t.flatdata.`Specimen Site` as `specimen site` FROM (select flatten(data) AS flatdata FROM dfs.`/Users/limj/Desktop/Rockerfeller_University/Intro_to_Programming/Assignments/JamieLim_FinalProject/project_code/spectrum_etl/output_for_drill.json`) t;
 +-----------------+--------------------------------------------------+
 |   patient id    |                  specimen site                   |
 +-----------------+--------------------------------------------------+
@@ -47,7 +47,7 @@ apache drill> SELECT t.flatdata.`Patient ID` as `patient id`, t.flatdata.`Specim
 
 
 # flatten data and list all patient ids for which we have a specimen site = 'Infracolic Omentum'
-apache drill> SELECT `Patient ID` FROM dfs.`/Users/pashaa/dev/shahcompbio/spectrum_etl/output_for_drill_flattened.json` where `Specimen Site` = 'Infracolic Omentum';
+apache drill> SELECT t.flatdata.`Patient ID` as `Patient ID` FROM (select flatten(data) AS flatdata FROM dfs.`/Users/limj/Desktop/Rockerfeller_University/Intro_to_Programming/Assignments/JamieLim_FinalProject/project_code/spectrum_etl/output_for_drill.json`) t where t.flatdata.`Specimen Site` = 'Infracolic Omentum';
 +-----------------+
 |   Patient ID    |
 +-----------------+
@@ -62,7 +62,7 @@ apache drill> SELECT `Patient ID` FROM dfs.`/Users/pashaa/dev/shahcompbio/spectr
 +-----------------+
 
 # flatten data and list patient ids and number of specimen sites for all patients that have sample site = 'Infracolic Omentum'
-apache drill> SELECT `Patient ID`, count(`Specimen Site`) as `Specimen Site Count` FROM dfs.`/Users/pashaa/dev/shahcompbio/spectrum_etl/output_for_drill_flattened.json` where `Specimen Site` = 'Infracolic Omentum'  GROUP BY `Patient ID`;
+apache drill> SELECT t.flatdata.`Patient ID` as `Patient ID`, count(t.flatdata.`Specimen Site`) as `Specimen Site Count` FROM (select flatten(data) AS flatdata FROM dfs.`/Users/limj/Desktop/Rockerfeller_University/Intro_to_Programming/Assignments/JamieLim_FinalProject/project_code/spectrum_etl/output_for_drill.json`) t where t.flatdata.`Specimen Site` = 'Infracolic Omentum'  GROUP BY `Patient ID`;
 +-----------------+---------------------+
 |   Patient ID    | Specimen Site Count |
 +-----------------+---------------------+
@@ -74,7 +74,7 @@ apache drill> SELECT `Patient ID`, count(`Specimen Site`) as `Specimen Site Coun
 +-----------------+---------------------+
 
 # flatten data and get number of records that have a specimen site and group by patient id
-apache drill> SELECT `Patient ID`, count(`Specimen Site`) as `Specimen Site Count` FROM dfs.`/Users/pashaa/dev/shahcompbio/spectrum_etl/output_for_drill_flattened.json` GROUP BY `Patient ID`;
+apache drill> SELECT t.flatdata.`Patient ID` as `Patient ID`, count(t.flatdata.`Specimen Site`) as `Specimen Site Count` FROM (select flatten(data) AS flatdata FROM dfs.`/Users/limj/Desktop/Rockerfeller_University/Intro_to_Programming/Assignments/JamieLim_FinalProject/project_code/spectrum_etl/output_for_drill.json`) t GROUP BY `Patient ID`;
 +-----------------+---------------------+
 |   Patient ID    | Specimen Site Count |
 +-----------------+---------------------+

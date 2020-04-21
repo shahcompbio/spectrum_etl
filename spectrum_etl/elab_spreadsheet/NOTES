@@ -35,3 +35,5 @@ $ deactivate
 
 @todos
 Write API code to filter all samples that have storage_only and scrna_date_of_submission specified and set scrna_date_of_submission to empty field.
+Write code to transform QC check input format (remove spaces between library and cDNA QC)
+Set up blood metadata table in elab, remove code from integrate.py for filtering tissue samples, so we can pull both tissue and blood metadata
