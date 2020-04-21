@@ -15,7 +15,6 @@ import requests
 import codecs
 import json
 import logging.config
-import os
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -40,10 +39,6 @@ class Integration(object):
         json_str = json_str.replace('\n', '')
 
         return json_str
-
-
-    def __print_jq_error(self, filename):
-        pp.pprint("Unable to format file " + filename + " as jq was not found. Try 'brew install jq' first")
 
 
     def extract_scrna_table(self, samples=None):
@@ -116,13 +111,10 @@ class Integration(object):
         # break  # just collect 1 since it takes time to collect all
 
         with open("filtered_elab_sample_data", 'w') as outfile:
-            json.dump(filtered_elab_sample_data, outfile)
+            jstr = json.dumps(filtered_elab_sample_data, sort_keys=True,
+                  indent=2, separators=(',', ': '))
+            outfile.write(jstr)
 
-        # format the json data to make it legible
-        if os.system('which jq') == 0:
-            os.system('cat ' + outfile.name + ' | jq > ' + outfile.name + '.json')
-        else:
-            self.__print_jq_error(outfile.name)
 
         # pp.pprint(filtered_elab_sample_data)
 
@@ -168,14 +160,9 @@ class Integration(object):
 
         # export filtered metadata as a json file
         with open("hne_metadata", 'w') as outfile:
-            json.dump(hne_metadata, outfile)
-
-        # format the json data to make it legible
-        if os.system('which jq') == 0:
-            os.system('cat '+outfile.name+' | jq > '+outfile.name+'.json')
-        else:
-            self.__print_jq_error(outfile.name)
-
+            jstr = json.dumps(hne_metadata, sort_keys=True,
+                              indent=2, separators=(',', ': '))
+            outfile.write(jstr)
 
 
 if __name__ == '__main__':
