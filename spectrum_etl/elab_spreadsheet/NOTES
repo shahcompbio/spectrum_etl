@@ -33,7 +33,12 @@ $ source venv/bin/activate
 
 $ deactivate
 
-@todos
+@ potential todos
 Write API code to filter all samples that have storage_only and scrna_date_of_submission specified and set scrna_date_of_submission to empty field.
 Write code to transform QC check input format (remove spaces between library and cDNA QC)
 Set up blood metadata table in elab, remove code from integrate.py for filtering tissue samples, so we can pull both tissue and blood metadata
+
+@todos Jamie 5/4/20
+- Edit primary site column to include primary/mets for each case. Make adnexa primary for all cases
+- Add "S" in transformation for surgery # to match downstream processes and Redcap entries
+- Add column in transformation step for supersite - convert RA and LA --> Adnexa, etc.

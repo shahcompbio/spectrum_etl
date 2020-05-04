@@ -36,7 +36,7 @@ validate_sequencing_info = ['Sorting Method',
 
 # validate patient id from elab data
 def is_pt_id_valid(patient_id):
-    if patient_id != re.compile(r"\b\d{3}[A-Z]{2,3}_CD45[P|N]\b"):
+    if patient_id != re.compile(r"\bSPECTRUM-OV-\d{3}\Z") or re.compile(r"\bSPECTRUM-OV-\d{2}\d-\d\b"):
         print("Please ensure patient ID (%s) is in proper format." % patient_id)
         sys.exit(1)
 
@@ -45,6 +45,11 @@ def is_mrn_valid(mrn, patient_id):
     if mrn == NULL or mrn != re.compile(r"\b\d{8}\b"):
         print("Please add/edit the MRN for %s." % patient_id)
         sys.exit(1)
+
+# validate surgery ID number to match with patient ID
+def is_surgery_id_valid(surgery_id, patient_id):
+    if patient_id == (re.compile(r"\bSPECTRUM-OV-\d{2}\d-\d\b") and surgery_id != 1) or (patient_id == re.compile(r"\bSPECTRUM-OV-\d{3}\Z") and surgery_id != 0):
+        print("Please check ensure surgery ID is accurate for %s." % patient_id)
 
 # validate excluded status, ensure exclusion details and diagnosis are valid, if necessary, from elab data
 def is_patient_excluded(excluded, patient_id, final_pathology, specify_diagnosis, reason_for_exclusion):
@@ -112,7 +117,7 @@ def is_scRNA_IGO_Submission_ID_valid(scrna_igo_sub_id, patient_id):
 
 # validate scRNA REX ID
 def is_scRNA_REX_ID(scrna_rex_id, patient_id, qc_checks):
-    if scrna_rex_id != re.compile(r"\b\d{3}[A-Z]{2,3}_CD45[P|N]\b"):
+    if scrna_rex_id != re.compile(r"\b\d{3}[A-Z]{2,3}_CD45[P|N]\b") or re.compile(r"\b\d{2}\d-\d[A-Z]{2,3}_CD45[P|N]\b"):
         print("Please ensure scRNA REX ID is in proper format for %s." % patient_id)
         sys.exit(1)
 
