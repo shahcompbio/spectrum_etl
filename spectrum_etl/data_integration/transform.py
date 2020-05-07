@@ -3,10 +3,13 @@ Created on March 26, 2020
 
 @author: limj@mskcc.org
 '''
+import codecs
+import logging
 import pprint
 import pandas as pd
 import json
 import numpy as np
+import sys
 from spectrum_etl.data_integration import validation
 
 pp = pprint.PrettyPrinter(indent=4)
@@ -79,7 +82,9 @@ class Elab_DataFrame(DataFrame):
         list_of_specimen_sites = self.dataframe['Specimen Site'].to_list()
 
         for patient_id in list_of_patient_ids:
-            validation.is_pt_id_valid(patient_id)
+            if not validation.is_pt_id_valid(patient_id):
+                logger.error("Invalid patient id: "+patient_id)
+                sys.exit(1)
 
         for specimen_site in list_of_specimen_sites:
             validation.is_specimen_site_valid(specimen_site)
@@ -119,5 +124,21 @@ class RedCap_DataFrame(DataFrame):
 
 
 if __name__ == '__main__':
+    # create an initial logger. It will only log to console and it will disabled
+    # when we read the logging configuration from the config file.
+    # This logger can be useful when we need early logging. E.g. we may want to log
+    # the location of the JSON file (e.g. if we get it from a CLI argument).
+    logging.basicConfig(level="INFO")
+    logger = logging.getLogger()
+    logger.info("This is the logger configured by `logging.basicConfig()`.")
+
+    # Load the configuration.
+    config_file = "config_logging.json"
+    with codecs.open(config_file, "r", encoding="utf-8") as fd:
+        config = json.load(fd)
+
+    # Set up proper logging. This one disables the previously configured loggers.
+    logging.config.dictConfig(config["logging"])
+
     transform = Transformation("filtered_elab_sample_data", "hne_metadata")
     transform.transform()

@@ -36,13 +36,15 @@ validate_sequencing_info = ['Sorting Method',
 
 # validate patient id from elab data
 def is_pt_id_valid(patient_id):
-    if patient_id != re.compile(r"\bSPECTRUM-OV-\d{3}\Z") or re.compile(r"\bSPECTRUM-OV-\d{2}\d-\d\b"):
-        print("Please ensure patient ID (%s) is in proper format." % patient_id)
-        sys.exit(1)
+    pattern = re.compile("^SPECTRUM-OV-\d{3}(-\d+)?$")
+
+    if pattern.match(patient_id):
+        return True
+    return False
 
 # validate MRN from elab data
 def is_mrn_valid(mrn, patient_id):
-    if mrn == NULL or mrn != re.compile(r"\b\d{8}\b"):
+    if mrn == None or mrn != re.compile(r"\b\d{8}\b"):
         print("Please add/edit the MRN for %s." % patient_id)
         sys.exit(1)
 
@@ -55,20 +57,20 @@ def is_surgery_id_valid(surgery_id, patient_id):
 def is_patient_excluded(excluded, patient_id, final_pathology, specify_diagnosis, reason_for_exclusion):
     if excluded == "No":
         if final_pathology != re.compile(r"HGSC"):
-        print("Please ensure final pathology of %s is HGSC." % patient_id)
+            print("Please ensure final pathology of %s is HGSC." % patient_id)
     else:
         if final_pathology == "NULL" or reason_for_exclusion == "NULL":
             print("Please input final pathology and/or reason for exclusion for %s." % patient_id)
             sys.exit(1)
 
     if final_pathology == "Other":
-        if specify_diagnosis == NULL:
+        if specify_diagnosis == None:
             print("Please input diagnosis for %s." % patient_id)
             sys.exit(1)
 
 # validate specimen site, ensure site details are valid, if necessary, from elab data
 def is_specimen_site_valid(specimen_site, patient_id, site_details):
-    if specimen_site == NULL:
+    if specimen_site == None:
         print("Please add a specimen site for %s." % patient_id)
     else:
         if specimen_site not in validate_specimen_sites:
@@ -76,7 +78,7 @@ def is_specimen_site_valid(specimen_site, patient_id, site_details):
             sys.exit(1)
 
     if specimen_site == "Other":
-        if site_details == NULL:
+        if site_details == None:
             print("Please input site details for %s." % patient_id)
             sys.exit(1)
 
@@ -86,8 +88,8 @@ def is_downstream_submission_valid(downstream_submission, patient_id):
         for seq_info in validate_sequencing_info:
             if seq_info != "NULL":
                 print("Please remove all sorting and sequencing info from %s." % patient_id)
-        if storage_populations == "NULL":
-            print("Please indicate storage populations as CD45+, CD45-, or unsorted for %s." % patient_id)
+        # if storage_populations == "NULL":
+        #     print("Please indicate storage populations as CD45+, CD45-, or unsorted for %s." % patient_id)
             sys.exit(1)
 
 # validate submitted populations, initial submission QC and REX Sample ID
@@ -95,12 +97,12 @@ def is_submitted_populations_valid(submitted_populations, patient_id):
     if submitted_populations != "CD45+" and submitted_populations != "CD45-":
         print("Please input submitted populations for %s." % patient_id)
     else:
-        if initial_submission_QC == "Pass" and submitted_populations == "CD45+":
-            if scRNA_rex_sample_id != re.compile(r"CD45P"):
-                print("Please edit scRNA REX Sample ID (%s) to match submitted population." % scrna_rex_sample_id)
-        elif initial_submission_QC == "Pass" and submitted_populations == "CD45-":
-            if scRNA_rex_sample_id != re.compile(r"CD45N"):
-                print("Please edit scRNA REX Sample ID (%s) to match submitted population." % scRNA_rex_sample_id)
+        # if initial_submission_QC == "Pass" and submitted_populations == "CD45+":
+        #     if scRNA_rex_sample_id != re.compile(r"CD45P"):
+        #         print("Please edit scRNA REX Sample ID (%s) to match submitted population." % scrna_rex_sample_id)
+        # elif initial_submission_QC == "Pass" and submitted_populations == "CD45-":
+        #     if scRNA_rex_sample_id != re.compile(r"CD45N"):
+        #         print("Please edit scRNA REX Sample ID (%s) to match submitted population." % scRNA_rex_sample_id)
                 sys.exit(1)
 
 # validate scRNA IGO ID
