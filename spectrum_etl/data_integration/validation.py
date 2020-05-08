@@ -123,7 +123,7 @@ def is_scRNA_REX_ID(scrna_rex_id, patient_id, qc_checks):
         print("Please ensure scRNA REX ID is in proper format for %s." % patient_id)
         sys.exit(1)
 
-    if scrna_rex_id != "NULL" and qc_checks == "NULL":
+    if scrna_rex_id != None and qc_checks == None:
         print("Please ensure input for QC Checks are valid for %s." % patient_id)
         sys.exit(1)
 

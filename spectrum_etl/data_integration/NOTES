@@ -1,1 +1,10 @@
 - incorporate Ignacio's R script into integration process by invoking R script from python
+
+todo Jamie 050420
+- Add "S" in transformation for surgery # to match downstream processes and Redcap entries
+- Add column in transformation step for supersite - convert RA and LA --> Adnexa, etc.
+
+todo Jamie 050820
+- edit code to look up key/values in dict json file
+- edit regex functions (\b, ^, *) and test file (return true/false, create patterns)
+- define re.compile outside of function and pattern match in function
