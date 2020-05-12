@@ -37,6 +37,10 @@ validate_sequencing_info = ['Sorting Method',
                             'scRNA REX Submission Form',
                             'QC Checks']
 
+validate_qc_check = ['Passed cDNA QC',
+                      'Passed cDNA QC, Passed Library QC',
+                      'Failed cDNA QC']
+
 # validate patient id from elab data
 def is_pt_id_valid(patient_id):
     pattern = re.compile("^SPECTRUM-OV-\d{3}(-\d+)?$")
@@ -117,14 +121,23 @@ def is_specimen_site_valid(specimen_site, patient_id, site_details):
     return False
 
 # validate downstream submission field if sample is stored
-def is_downstream_submission_valid(downstream_submission, patient_id):
+def is_downstream_submission_valid(downstream_submission, storage_populations, patient_id):
+    returnVal = True
     if downstream_submission == "Storage Only":
+        if storage_populations == "CD45+" or storage_populations == "CD45-" or storage_populations == "Unsorted":
+             pass
+        else:
+             returnVal = False
+             logger.error("Please indicate storage populations as CD45+, CD45-, or Unsorted for %s." % patient_id)
+
         for seq_info in validate_sequencing_info:
             if seq_info != "":
-                print("Please remove all sorting and sequencing info from %s." % patient_id)
-        # if storage_populations == "":
-        #     print("Please indicate storage populations as CD45+, CD45-, or unsorted for %s." % patient_id)
-            sys.exit(1)
+                returnVal = False
+                logger.error("Please remove all sorting and sequencing info from %s." % patient_id)
+
+    if returnVal is True:
+        return True
+    return False
 
 # validate submitted populations, initial submission QC and REX Sample ID
 def is_submitted_populations_valid(submitted_populations, patient_id):
@@ -158,7 +171,7 @@ def is_scrna_igo_sub_id_valid(scrna_igo_sub_id):
         #sys.exit(1)
 
 # validate scRNA REX ID
-def is_scRNA_REX_ID_valid(scrna_rex_id, patient_id, qc_checks):
+def is_scrna_rex_id_valid(scrna_rex_id):
     pattern = re.compile(r"^\d{3}(-\d+)?[A-Z]{2,3}_CD45[P|N]$")
 
     if pattern.match(scrna_rex_id):
@@ -168,16 +181,17 @@ def is_scRNA_REX_ID_valid(scrna_rex_id, patient_id, qc_checks):
         #sys.exit(1)
 
 # validate QC Checks with scRNA REX ID
-def is_QC_checks_valid(qc_checks):
-    if scrna_rex_id != None and qc_checks == None:
-        return False
-    return True
+def is_qc_checks_valid(scrna_rex_id, qc_checks):
+    for qc_check in validate_qc_check:
+        if scrna_rex_id != "" and qc_checks != qc_check:
+            return False
+        return True
         #print("Please ensure input for QC Checks are valid for %s." % patient_id)
         #sys.exit(1)
 
 # validate DLP REX ID
-def is_DLP_REX_ID(dlp_rex_id, patient_id):
-    pattern = re.compile(r"^\d{3}[A-Z]{2,3}_DLP$")
+def is_dlp_rex_id_valid(dlp_rex_id):
+    pattern = re.compile(r"^\d{3}(-\d+)?[A-Z]{2,3}_DLP$")
 
     if pattern.match(dlp_rex_id):
         return True
@@ -186,7 +200,7 @@ def is_DLP_REX_ID(dlp_rex_id, patient_id):
         #sys.exit(1)
 
 # validate tissue type for WGS bulk tumour
-def is_WGS_tissue_type_valid(tissue_type, patient_id):
+def is_wgs_tissue_type_valid(tissue_type):
     if tissue_type == "Frozen Tissue":
         return True
     return False
@@ -194,7 +208,7 @@ def is_WGS_tissue_type_valid(tissue_type, patient_id):
         #sys.exit(1)
 
 # validate PPBC accession # for frozen/FFPE
-def is_PPBC_acc_num_valid(ppbc_acc_num, patient_id):
+def is_ppbc_acc_num_valid(ppbc_acc_num):
     pattern = re.compile(r"^S\d{2}-\d{5}$")
 
     if pattern.match(ppbc_acc_num):
@@ -204,7 +218,7 @@ def is_PPBC_acc_num_valid(ppbc_acc_num, patient_id):
         #sys.exit(1)
 
 # validate PPBC bank # for frozen/FFPE
-def is_ppbc_bank_num_valid(ppbc_bank_num, patient_id):
+def is_ppbc_bank_num_valid(ppbc_bank_num):
     pattern = re.compile(r"^TS-\d{5}$")
 
     if pattern.match(ppbc_bank_num):
@@ -214,7 +228,7 @@ def is_ppbc_bank_num_valid(ppbc_bank_num, patient_id):
         #sys.exit(1)
 
 # validate WGS IGO ID
-def is_WGS_IGO_ID_valid(wgs_igo_id, patient_id):
+def is_wgs_igo_id_valid(wgs_igo_id):
     pattern = re.compile(r"^[A-Z]{1,2}$")
 
     if pattern.match(wgs_igo_id):
@@ -224,7 +238,7 @@ def is_WGS_IGO_ID_valid(wgs_igo_id, patient_id):
         #sys.exit(1)
 
 # validate WGS IGO Submission ID
-def is_WGS_IGO_Submission_ID_valid(wgs_igo_sub_id, patient_id):
+def is_wgs_igo_submission_id_valid(wgs_igo_sub_id):
     pattern = re.compile(r"^IGO-\d{6}$")
 
     if pattern.match(wgs_igo_sub_id):
@@ -234,8 +248,8 @@ def is_WGS_IGO_Submission_ID_valid(wgs_igo_sub_id, patient_id):
         #sys.exit(1)
 
 # validate WGS REX ID
-def is_WGS_REX_ID(wgs_rex_id, patient_id):
-    pattern = re.compile(r"^\d{3}[A-Z]{2,3}_T$")
+def is_wgs_rex_id_valid(wgs_rex_id):
+    pattern = re.compile(r"^\d{3}(-\d+)?[A-Z]{2,3}_T$")
 
     if pattern.match(wgs_rex_id):
         return True
@@ -244,7 +258,7 @@ def is_WGS_REX_ID(wgs_rex_id, patient_id):
         #sys.exit(1)
 
 # validate tissue type for IF
-def is_IF_tissue_type_valid(tissue_type, patient_id):
+def is_if_tissue_type_valid(tissue_type):
     if tissue_type == "FFPE Block":
         return True
     return False
