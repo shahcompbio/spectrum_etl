@@ -78,16 +78,45 @@ class Elab_DataFrame(DataFrame):
 
     # pull patient id and specimen site from data frame and run validation code
     def __validate(self):
-        list_of_patient_ids = self.dataframe['Patient ID'].to_list()
-        list_of_specimen_sites = self.dataframe['Specimen Site'].to_list()
+        for row in self.dataframe.iterrows():
+            list_metadata = row['Patient ID'].to_list()
 
-        for patient_id in list_of_patient_ids:
-            if not validation.is_pt_id_valid(patient_id):
-                logger.error("Invalid patient id: "+patient_id)
+        #list_of_patient_ids = self.dataframe['Patient ID'].to_list()
+
+
+            for patient_id in list_metadata:
+                if not validation.is_pt_id_valid(patient_id):
+                    logger.error("Invalid Patient ID: "+patient_id)
+                    sys.exit(1)
+
+        for mrn in list_of_mrns:
+            if not validation.is_mrn_valid(mrn):
+                logger.error("Invalid MRN: "+mrn)
                 sys.exit(1)
 
+        for surgery_id in list_of_surgery_ids:
+            if not validation.is_surgery_id_valid(surgery_id, patient_id):
+                logger.error("Please ensure surgery ID is valid for %s." % patient_id)
+                sys.exit(1)
+
+        for excluded in list_of_excl_status:
+            if not validation.is_patient_excluded(excluded, final_pathology, specify_diagnosis, reason_for_exclusion, patient_id):
+                sys.exit(1)
+
+
         for specimen_site in list_of_specimen_sites:
-            validation.is_specimen_site_valid(specimen_site)
+            validation.is_specimen_site_valid(specimen_site, patient_id)
+
+        for scrna_igo_id in list_of_scrna_igo_ids:
+            if not validation.is_scrna_igo_id_valid(scrna_igo_id):
+                logger.error("Please ensure scRNA IGO ID is in proper format for %s." % patient_id)
+                sys.exit(1)
+
+        for scrna_igo_sub_id in list_of_scrna_igo_sub_ids:
+            if not validation.is_scrna_igo_sub_id_valid(scrna_igo_sub_id):
+                logger.error("Please ensure scRNA IGO Submission ID is in proper format for %s." % patient_id)
+                sys.exit(1)
+
 
     # run site_transform from parent class
     def site_transform(self, specimen_site="Specimen Site", site_details="Site Details"):
