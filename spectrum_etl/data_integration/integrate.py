@@ -77,8 +77,8 @@ class Integration(object):
         logger.info("attempting to get data for "+str(len(patient_subset))+" patients...")
 
         # get all sample meta data
-        elab_sample_data = []
-        filtered_elab_sample_data = []
+        #elab_sample_data = []
+        elab_metadata = []
 
         for patient in patient_subset:
             sampleids = patient["sampleIDs"]
@@ -91,32 +91,32 @@ class Integration(object):
                 # filter sample meta data by Tissue samples only
                 if response.json()["sampleType"]["name"] == "Tissue":
                     response = requests.get(default_config.get_elab_api_url() + 'samples/{sampleid}/meta'.format(sampleid=sampleid),headers=headers)
-                    sample_meta = response.json()
+                    elab_metadata = response.json()
 
-                    data = {}
+                    # data = {}
 
                     # remove all meta data fields without values
-                    for meta in sample_meta['data']:
-                        if ('value' in meta.keys()) and (meta['value'] != ""):
-                            data[meta['key']] = meta['value']
-
-                    elab_sample_data.append(data)
+                    # for meta in sample_meta['data']:
+                    #     if ('value' in meta.keys()) and (meta['value'] != ""):
+                    #         data[meta['key']] = meta['value']
+                    #
+                    # elab_sample_data.append(data)
 
         # filter sample meta data for patients/sites we have scRNA seq data
-        for sample_metadata in elab_sample_data:
-            if 'QC Checks' in sample_metadata.keys():
-                if sample_metadata['Excluded'] == "No":
-                    filtered_elab_sample_data.append(sample_metadata)
+        # for sample_metadata in elab_sample_data:
+        #     if 'QC Checks' in sample_metadata.keys():
+        #         if sample_metadata['Excluded'] == "No":
+        #             filtered_elab_sample_data.append(sample_metadata)
 
         # break  # just collect 1 since it takes time to collect all
 
-        with open("filtered_elab_sample_data", 'w') as outfile:
-            jstr = json.dumps(filtered_elab_sample_data, sort_keys=True,
+        with open("elab_metadata", 'w') as outfile:
+            jstr = json.dumps(elab_metadata, sort_keys=True,
                   indent=2, separators=(',', ': '))
             outfile.write(jstr)
 
 
-        # pp.pprint(filtered_elab_sample_data)
+        # pp.pprint(elab_metadata)
 
 
     def extract_hne_table(self):
