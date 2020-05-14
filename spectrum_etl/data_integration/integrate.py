@@ -115,9 +115,7 @@ class Integration(object):
                   indent=2, separators=(',', ': '))
             outfile.write(jstr)
 
-
         # pp.pprint(elab_metadata)
-
 
     def extract_hne_table(self):
         '''
