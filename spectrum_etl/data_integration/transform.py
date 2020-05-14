@@ -78,45 +78,85 @@ class Elab_DataFrame(DataFrame):
 
     # pull patient id and specimen site from data frame and run validation code
     def __validate(self):
+        allPass = True
         for row in self.dataframe.iterrows():
-            list_metadata = row['Patient ID'].to_list()
+            if not validation.is_pt_id_valid(row):
+                logger.error("Invalid Patient ID: %s" % row["Patient ID"])
+                allPass = False
 
-        #list_of_patient_ids = self.dataframe['Patient ID'].to_list()
+            if not validation.is_mrn_valid(row):
+                logger.error("Invalid MRN (%s) for %s." % (row["MRN"], row["Patient ID"]))
+                allPass = False
 
+            if not validation.is_surgery_id_valid(row):
+                logger.error("Please ensure surgery ID is valid for %s." % row["Patient ID"])
+                allPass = False
 
-            for patient_id in list_metadata:
-                if not validation.is_pt_id_valid(patient_id):
-                    logger.error("Invalid Patient ID: "+patient_id)
-                    sys.exit(1)
+            if not validation.is_patient_excluded(row):
+                allPass = False
 
-        for mrn in list_of_mrns:
-            if not validation.is_mrn_valid(mrn):
-                logger.error("Invalid MRN: "+mrn)
-                sys.exit(1)
+            if not validation.is_specimen_site_valid(row):
+                allPass = False
 
-        for surgery_id in list_of_surgery_ids:
-            if not validation.is_surgery_id_valid(surgery_id, patient_id):
-                logger.error("Please ensure surgery ID is valid for %s." % patient_id)
-                sys.exit(1)
+            if not validation.is_downstream_submission_valid(row):
+                allPass = False
 
-        for excluded in list_of_excl_status:
-            if not validation.is_patient_excluded(excluded, final_pathology, specify_diagnosis, reason_for_exclusion, patient_id):
-                sys.exit(1)
+            if not validation.is_seq_info_valid(row):
+                allPass = False
 
+            if not validation.is_submitted_populations_valid(row):
+                allPass = False
 
-        for specimen_site in list_of_specimen_sites:
-            validation.is_specimen_site_valid(specimen_site, patient_id)
+            if not validation.is_scrna_igo_id_valid(row):
+                logger.error("Please ensure scRNA IGO ID is in proper format for %s." % row["Patient ID"])
+                allPass = False
 
-        for scrna_igo_id in list_of_scrna_igo_ids:
-            if not validation.is_scrna_igo_id_valid(scrna_igo_id):
-                logger.error("Please ensure scRNA IGO ID is in proper format for %s." % patient_id)
-                sys.exit(1)
+            if not validation.is_scrna_igo_sub_id_valid(row):
+                logger.error("Please ensure scRNA IGO Submission ID is in proper format for %s." % row["Patient ID"])
+                allPass = False
 
-        for scrna_igo_sub_id in list_of_scrna_igo_sub_ids:
-            if not validation.is_scrna_igo_sub_id_valid(scrna_igo_sub_id):
-                logger.error("Please ensure scRNA IGO Submission ID is in proper format for %s." % patient_id)
-                sys.exit(1)
+            if not validation.is_scrna_rex_id_valid(row):
+                logger.error("Please ensure scRNA REX ID is in proper format for %s." % row["Patient ID"])
+                allPass = False
 
+            if not validation.is_qc_checks_valid(row):
+                logger.error("Please ensure input for QC Checks are valid for %s." % row["Patient ID"])
+                allPass = False
+
+            if not validation.is_dlp_rex_id_valid(row):
+                logger.error("Please ensure DLP REX ID is in proper format for %s." % row["Patient ID"])
+                allPass = False
+
+            if not validation.is_wgs_tissue_type_valid(row):
+                logger.error("Please ensure WGS bulk tumour tissue type is accurate for %s." % row["Patient ID"])
+                allPass = False
+
+            if not validation.is_ppbc_acc_num_valid(row):
+                logger.error("Please ensure PPBC accession number is in proper format for %s." % row["Patient ID"])
+                allPass = False
+
+            if not validation.is_ppbc_bank_num_valid(row):
+                logger.error("Please ensure PPBC bank number is in proper format for %s." % row["Patient ID"])
+                allPass = False
+
+            if not validation.is_wgs_igo_id_valid(row):
+                logger.error("Please ensure WGS IGO ID is in proper format for %s." % row["Patient ID"])
+                allPass = False
+
+            if not validation.is_wgs_igo_submission_id_valid(row):
+                logger.error("Please ensure WGS IGO Submission ID is in proper format for %s." % row["Patient ID"])
+                allPass = False
+
+            if not validation.is_wgs_rex_id_valid(row):
+                logger.error("Please ensure WGS REX ID is in proper format for %s." % row["Patient ID"])
+                allPass = False
+
+            if not validation.is_if_tissue_type_valid(row):
+                logger.error("Please ensure IF tissue type is accurate for %s." % row["Patient ID"])
+                allPass = False
+
+        if allPass == False:
+            sys.exit(1)
 
     # run site_transform from parent class
     def site_transform(self, specimen_site="Specimen Site", site_details="Site Details"):
@@ -169,5 +209,5 @@ if __name__ == '__main__':
     # Set up proper logging. This one disables the previously configured loggers.
     logging.config.dictConfig(config["logging"])
 
-    transform = Transformation("filtered_elab_sample_data", "hne_metadata")
+    transform = Transformation("elab_metadata", "hne_metadata")
     transform.transform()
