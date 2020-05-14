@@ -9,257 +9,248 @@ import re
 import logging
 logger = logging.getLogger()
 
-validate_specimen_sites = ['Ascites',
-         'Bowel',
-         'Infracolic Omentum',
-         'Left Adnexa',
-         'Left Upper Quadrant',
-         'Other',
-         'Pelvic Peritoneum',
-         'Right Adnexa',
-         'Right Upper Quadrant']
+validate_specimen_site = [
+    'Ascites',
+    'Bowel',
+    'Infracolic Omentum',
+    'Left Adnexa',
+    'Left Upper Quadrant',
+    'Other',
+    'Pelvic Peritoneum',
+    'Right Adnexa',
+    'Right Upper Quadrant']
 
-validate_sequencing_info = ['Sorting Method',
-                            'Flow Instrument',
-                            'Flow Data Summary',
-                            'Flow Data fcs files',
-                            'Submitted Populations',
-                            'Sequencing Technique',
-                            'scRNA Date of Submission',
-                            'scRNA Sequencing Location',
-                            'Initial Submission QC',
-                            '# of Cells Captured',
-                            'scRNA IGO ID',
-                            'scRNA IGO Submission ID',
-                            'scRNA REX Sample ID',
-                            'scRNA Sample Status',
-                            'scRNA iLab Submission Form',
-                            'scRNA REX Submission Form',
-                            'QC Checks']
+seq_info_headers = [
+    'Sorting Method',
+    'Flow Instrument',
+    'Flow Data Summary',
+    'Flow Data fcs files',
+    'Submitted Populations',
+    'Sequencing Technique',
+    'scRNA Date of Submission',
+    'scRNA Sequencing Location',
+    'Initial Submission QC',
+    '# of Cells Captured',
+    'scRNA IGO ID',
+    'scRNA IGO Submission ID',
+    'scRNA REX Sample ID',
+    'scRNA Sample Status',
+    'scRNA iLab Submission Form',
+    'scRNA REX Submission Form',
+    'QC Checks']
 
-validate_qc_check = ['Passed cDNA QC',
-                      'Passed cDNA QC, Passed Library QC',
-                      'Failed cDNA QC']
+validate_qc_check = [
+    'Passed cDNA QC, Failed Library QC',
+    'Passed cDNA QC, Passed Library QC',
+    'Failed cDNA QC']
 
 # validate patient id from elab data
-def is_pt_id_valid(patient_id):
+def is_pt_id_valid(row):
     pattern = re.compile("^SPECTRUM-OV-\d{3}(-\d+)?$")
 
-    if pattern.match(patient_id):
+    if pattern.match(row["Patient ID"]):
         return True
     return False
 
 # validate MRN from elab data
-def is_mrn_valid(mrn):
+def is_mrn_valid(row):
     pattern = re.compile(r"^\d{8}$")
 
-    if pattern.match(mrn):
+    if pattern.match(row["MRN"]):
         return True
     return False
 
 # validate surgery ID number to match with patient ID
-def is_surgery_id_valid(surgery_id, patient_id):
-    pattern = re.compile(r"^SPECTRUM-OV-\d{3}-\d+$")
-    pattern2 = re.compile(r"^SPECTRUM-OV-\d{3}$")
+def is_surgery_id_valid(row):
+    patternPre = re.compile(r"^SPECTRUM-OV-\d{3}$")
+    patternPost = re.compile(r"^SPECTRUM-OV-\d{3}-\d+$")
 
-    returnVal = True
-    if pattern.match(patient_id):
-        if surgery_id != patient_id.split("-")[3]:
-            returnVal = False
-    elif pattern2.match(patient_id):
-        if surgery_id != "0":
-            returnVal = False
-    else:
-        returnVal = False
-
-    if returnVal is True:
-        return True
+    if patternPre.match(row["Patient ID"]):
+        if row["Surgery ID"] == "0":
+            return True
+    elif patternPost.match(row["Patient ID"]):
+        if row["Surgery ID"] == row["Patient ID"].split("-")[3]:
+            return True
     return False
 
 # validate excluded status, ensure exclusion details and diagnosis are valid, if necessary, from elab data
-def is_patient_excluded(excluded, final_pathology, specify_diagnosis, reason_for_exclusion, patient_id):
-    pattern = re.compile(r"HGSC")
+def is_patient_excluded(row):
+    pattern = re.compile(r"^.*HGSC.*$")
 
-    returnVal = True
-    if excluded == "No":
-        if not pattern.match(final_pathology):
-            returnVal = False
-            if returnVal is False:
-                logger.error("Please ensure final pathology of %s is HGSC." % patient_id)
+    if row["Excluded"] == "No":
+        if not pattern.match(row["Final Pathology"]):
+            logger.error("Please ensure final pathology of %s is HGSC." % row["Patient ID"])
+            return False
     else:
-        if final_pathology == "" or reason_for_exclusion == "":
-            returnVal = False
-            if returnVal is False:
-                logger.error("Please input final pathology and/or reason for exclusion for %s." % patient_id)
-        elif final_pathology == "Other" and specify_diagnosis == "":
-            returnVal = False
-            if returnVal is False:
-                logger.error("Please input diagnosis for %s." % patient_id)
-
-    if returnVal is True:
-        return True
-    return False
+        if row["Final Pathology"] == "" or row["Reason for Exclusion"] == "":
+            logger.error("Please input final pathology and/or reason for exclusion for %s." % row["Patient ID"])
+            return False
+        elif row["Final Pathology"] == "Other" and row["Specify Diagnosis"] == "":
+            logger.error("Please input diagnosis for %s." % row["Patient ID"])
+            return False
+    return True
 
 # validate specimen site, ensure site details are valid, if necessary, from elab data
-def is_specimen_site_valid(specimen_site, patient_id, site_details):
+def is_specimen_site_valid(row):
 
-    returnVal = True
-    if specimen_site == "":
-        returnVal = False
-        logger.error("Please add a specimen site for %s." % patient_id)
-    elif specimen_site not in validate_specimen_sites:
-        returnVal = False
-        logger.error("%s is not a site that was collected in our study." % specimen_site)
-    elif specimen_site == "Other" and site_details == "":
-        returnVal = False
-        logger.error("Please input site details for %s." % patient_id)
+    if row["Specimen Site"] == "":
+        logger.error("Please add a specimen site for %s." % row["Patient ID"])
+        return False
+    elif row["Specimen Site"] not in validate_specimen_site:
+        logger.error("%s is not a site that was collected in our study." % row["Specimen Site"])
+        return False
+    elif row["Specimen Site"] == "Other" and row["Site Details"] == "":
+        logger.error("Please input site details for %s." % row["Patient ID"])
+        return False
     else:
-        pass
-
-    if returnVal is True:
         return True
-    return False
 
 # validate downstream submission field if sample is stored
-def is_downstream_submission_valid(downstream_submission, storage_populations, patient_id):
-    returnVal = True
-    if downstream_submission == "Storage Only":
-        if storage_populations == "CD45+" or storage_populations == "CD45-" or storage_populations == "Unsorted":
-             pass
+def is_downstream_submission_valid(row):
+    if row["Downstream Submission"] == "Storage Only":
+        if row["Storage Populations"] == "CD45+" or row["Storage Populations"] == "CD45-" or row["Storage Populations"] == "Unsorted":
+             return True
         else:
-             returnVal = False
-             logger.error("Please indicate storage populations as CD45+, CD45-, or Unsorted for %s." % patient_id)
+             logger.error("Please indicate storage populations as CD45+, CD45-, or Unsorted for %s." % row["Patient ID"])
+             return False
 
-        for seq_info in validate_sequencing_info:
-            if seq_info != "":
-                returnVal = False
-                logger.error("Please remove all sorting and sequencing info from %s." % patient_id)
-
-    if returnVal is True:
-        return True
-    return False
+# validate to ensure that all scRNA fields are blank for storage only samples
+def is_seq_info_valid(row):
+    if row["Downstream Submission"] == "Storage Only":
+        for seq_info in seq_info_headers:
+            if row[seq_info] != "":
+                logger.error("Please remove all sorting and sequencing info from %s." % row["Patient ID"])
+                return False
+            return True
+    return True
 
 # validate submitted populations, initial submission QC and REX Sample ID
-def is_submitted_populations_valid(submitted_populations, patient_id):
-    if submitted_populations != "CD45+" and submitted_populations != "CD45-":
-        print("Please input submitted populations for %s." % patient_id)
+def is_submitted_populations_valid(row):
+    pattern = re.compile(r"^.*CD45P$")
+    pattern2 = re.compile(r"^.*CD45N$")
+
+    if row["Submitted Populations"] == "CD45+":
+        if row["Initial Submission QC"] == "Pass" and not pattern.match(row["scRNA REX Sample ID"]):
+            logger.error("Please edit scRNA REX Sample ID (%s) to match submitted population (%s)." % (
+                row["scRNA REX Sample ID"], row["Submitted Populations"]))
+            return False
+    elif row["Submitted Populations"] == "CD45-":
+        if row["Initial Submission QC"] == "Pass" and not pattern2.match(row["scRNA REX Sample ID"]):
+            logger.error("Please edit scRNA REX Sample ID (%s) to match submitted population (%s)." % (
+                row["scRNA REX Sample ID"], row["Submitted Populations"]))
+            return False
     else:
-        # if initial_submission_QC == "Pass" and submitted_populations == "CD45+":
-        #     if scRNA_rex_sample_id != re.compile(r"CD45P"):
-        #         print("Please edit scRNA REX Sample ID (%s) to match submitted population." % scrna_rex_sample_id)
-        # elif initial_submission_QC == "Pass" and submitted_populations == "CD45-":
-        #     if scRNA_rex_sample_id != re.compile(r"CD45N"):
-        #         print("Please edit scRNA REX Sample ID (%s) to match submitted population." % scRNA_rex_sample_id)
-                sys.exit(1)
+        logger.error("Please input submitted populations for %s." % row["Patient ID"])
+        return False
+    return True
 
 # validate scRNA IGO ID
-def is_scrna_igo_id_valid(scrna_igo_id):
+def is_scrna_igo_id_valid(row):
     pattern = re.compile(r"^[A-Z]{1,2}$")
 
-    if pattern.match(scrna_igo_id):
+    if pattern.match(row["scRNA IGO ID"]):
         return True
     return False
 
 # validate scRNA IGO Submission ID
-def is_scrna_igo_sub_id_valid(scrna_igo_sub_id):
+def is_scrna_igo_sub_id_valid(row):
     pattern = re.compile(r"^IGO-\d{6}$")
 
-    if pattern.match(scrna_igo_sub_id):
+    if pattern.match(row["scRNA IGO Submission ID"]):
         return True
     return False
         #print("Please ensure scRNA IGO Submission ID is in proper format for %s." % patient_id)
         #sys.exit(1)
 
 # validate scRNA REX ID
-def is_scrna_rex_id_valid(scrna_rex_id):
+def is_scrna_rex_id_valid(row):
     pattern = re.compile(r"^\d{3}(-\d+)?[A-Z]{2,3}_CD45[P|N]$")
 
-    if pattern.match(scrna_rex_id):
+    if pattern.match(row["scRNA REX ID"]):
         return True
     return False
         #print("Please ensure scRNA REX ID is in proper format for %s." % patient_id)
         #sys.exit(1)
 
 # validate QC Checks with scRNA REX ID
-def is_qc_checks_valid(scrna_rex_id, qc_checks):
-    for qc_check in validate_qc_check:
-        if scrna_rex_id != "" and qc_checks != qc_check:
-            return False
+def is_qc_checks_valid(row):
+    if (row["scRNA REX ID"] != "") and (row["QC Checks"] in validate_qc_check):
         return True
-        #print("Please ensure input for QC Checks are valid for %s." % patient_id)
-        #sys.exit(1)
+    return False
+    #print("Please ensure input for QC Checks are valid for %s." % patient_id)
+    #sys.exit(1)
 
 # validate DLP REX ID
-def is_dlp_rex_id_valid(dlp_rex_id):
+def is_dlp_rex_id_valid(row):
     pattern = re.compile(r"^\d{3}(-\d+)?[A-Z]{2,3}_DLP$")
 
-    if pattern.match(dlp_rex_id):
+    if pattern.match(row["DLP REX ID"]):
         return True
     return False
         #print("Please ensure DLP REX ID is in proper format for %s." % patient_id)
         #sys.exit(1)
 
 # validate tissue type for WGS bulk tumour
-def is_wgs_tissue_type_valid(tissue_type):
-    if tissue_type == "Frozen Tissue":
+def is_wgs_tissue_type_valid(row):
+    if row["PPBC Downstream Submission"] == "WGS Bulk Tumour" and row["Tissue Type"] == "Frozen Tissue":
         return True
     return False
         #print("Please ensure WGS bulk tumour tissue type is accurate for %s." % patient_id)
         #sys.exit(1)
 
 # validate PPBC accession # for frozen/FFPE
-def is_ppbc_acc_num_valid(ppbc_acc_num):
+def is_ppbc_acc_num_valid(row):
     pattern = re.compile(r"^S\d{2}-\d{5}$")
 
-    if pattern.match(ppbc_acc_num):
+    if pattern.match(row["PPBC Accession #"]):
         return True
     return False
         #print("Please ensure PPBC accession number is in proper format for %s." % patient_id)
         #sys.exit(1)
 
 # validate PPBC bank # for frozen/FFPE
-def is_ppbc_bank_num_valid(ppbc_bank_num):
+def is_ppbc_bank_num_valid(row):
     pattern = re.compile(r"^TS-\d{5}$")
 
-    if pattern.match(ppbc_bank_num):
+    if pattern.match(row["PPBC Bank Number"]):
         return True
     return False
         #print("Please ensure PPBC bank number is in proper format for %s." % patient_id)
         #sys.exit(1)
 
 # validate WGS IGO ID
-def is_wgs_igo_id_valid(wgs_igo_id):
+def is_wgs_igo_id_valid(row):
     pattern = re.compile(r"^[A-Z]{1,2}$")
 
-    if pattern.match(wgs_igo_id):
+    if pattern.match(row["WGS IGO ID"]):
         return True
     return False
         #print("Please ensure WGS IGO ID is in proper format for %s." % patient_id)
         #sys.exit(1)
 
 # validate WGS IGO Submission ID
-def is_wgs_igo_submission_id_valid(wgs_igo_sub_id):
+def is_wgs_igo_submission_id_valid(row):
     pattern = re.compile(r"^IGO-\d{6}$")
 
-    if pattern.match(wgs_igo_sub_id):
+    if pattern.match(row["WGS IGO Submission ID"]):
         return True
     return False
         #print("Please ensure WGS IGO Submission ID is in proper format for %s." % patient_id)
         #sys.exit(1)
 
 # validate WGS REX ID
-def is_wgs_rex_id_valid(wgs_rex_id):
+def is_wgs_rex_id_valid(row):
     pattern = re.compile(r"^\d{3}(-\d+)?[A-Z]{2,3}_T$")
 
-    if pattern.match(wgs_rex_id):
+    if pattern.match(row["WGS REX ID"]):
         return True
     return False
         #print("Please ensure WGS REX ID is in proper format for %s." % patient_id)
         #sys.exit(1)
 
 # validate tissue type for IF
-def is_if_tissue_type_valid(tissue_type):
-    if tissue_type == "FFPE Block":
+def is_if_tissue_type_valid(row):
+    if row["PPBC Downstream Submission"] == "IF" and row["Tissue Type"] == "FFPE Block":
         return True
     return False
         #print("Please ensure IF tissue type is accurate for %s." % patient_id)
