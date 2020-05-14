@@ -159,8 +159,6 @@ def is_scrna_igo_sub_id_valid(row):
     if pattern.match(row["scRNA IGO Submission ID"]):
         return True
     return False
-        #print("Please ensure scRNA IGO Submission ID is in proper format for %s." % patient_id)
-        #sys.exit(1)
 
 # validate scRNA REX ID
 def is_scrna_rex_id_valid(row):
@@ -169,16 +167,12 @@ def is_scrna_rex_id_valid(row):
     if pattern.match(row["scRNA REX ID"]):
         return True
     return False
-        #print("Please ensure scRNA REX ID is in proper format for %s." % patient_id)
-        #sys.exit(1)
 
 # validate QC Checks with scRNA REX ID
 def is_qc_checks_valid(row):
     if (row["scRNA REX ID"] != "") and (row["QC Checks"] in validate_qc_check):
         return True
     return False
-    #print("Please ensure input for QC Checks are valid for %s." % patient_id)
-    #sys.exit(1)
 
 # validate DLP REX ID
 def is_dlp_rex_id_valid(row):
@@ -187,16 +181,12 @@ def is_dlp_rex_id_valid(row):
     if pattern.match(row["DLP REX ID"]):
         return True
     return False
-        #print("Please ensure DLP REX ID is in proper format for %s." % patient_id)
-        #sys.exit(1)
 
 # validate tissue type for WGS bulk tumour
 def is_wgs_tissue_type_valid(row):
     if row["PPBC Downstream Submission"] == "WGS Bulk Tumour" and row["Tissue Type"] == "Frozen Tissue":
         return True
     return False
-        #print("Please ensure WGS bulk tumour tissue type is accurate for %s." % patient_id)
-        #sys.exit(1)
 
 # validate PPBC accession # for frozen/FFPE
 def is_ppbc_acc_num_valid(row):
@@ -205,8 +195,6 @@ def is_ppbc_acc_num_valid(row):
     if pattern.match(row["PPBC Accession #"]):
         return True
     return False
-        #print("Please ensure PPBC accession number is in proper format for %s." % patient_id)
-        #sys.exit(1)
 
 # validate PPBC bank # for frozen/FFPE
 def is_ppbc_bank_num_valid(row):
@@ -215,8 +203,6 @@ def is_ppbc_bank_num_valid(row):
     if pattern.match(row["PPBC Bank Number"]):
         return True
     return False
-        #print("Please ensure PPBC bank number is in proper format for %s." % patient_id)
-        #sys.exit(1)
 
 # validate WGS IGO ID
 def is_wgs_igo_id_valid(row):
@@ -225,8 +211,6 @@ def is_wgs_igo_id_valid(row):
     if pattern.match(row["WGS IGO ID"]):
         return True
     return False
-        #print("Please ensure WGS IGO ID is in proper format for %s." % patient_id)
-        #sys.exit(1)
 
 # validate WGS IGO Submission ID
 def is_wgs_igo_submission_id_valid(row):
@@ -235,8 +219,6 @@ def is_wgs_igo_submission_id_valid(row):
     if pattern.match(row["WGS IGO Submission ID"]):
         return True
     return False
-        #print("Please ensure WGS IGO Submission ID is in proper format for %s." % patient_id)
-        #sys.exit(1)
 
 # validate WGS REX ID
 def is_wgs_rex_id_valid(row):
@@ -245,13 +227,9 @@ def is_wgs_rex_id_valid(row):
     if pattern.match(row["WGS REX ID"]):
         return True
     return False
-        #print("Please ensure WGS REX ID is in proper format for %s." % patient_id)
-        #sys.exit(1)
 
 # validate tissue type for IF
 def is_if_tissue_type_valid(row):
     if row["PPBC Downstream Submission"] == "IF" and row["Tissue Type"] == "FFPE Block":
         return True
     return False
-        #print("Please ensure IF tissue type is accurate for %s." % patient_id)
-        #sys.exit(1)
