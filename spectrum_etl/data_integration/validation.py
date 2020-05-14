@@ -50,6 +50,7 @@ def is_pt_id_valid(row):
 
     if pattern.match(row["Patient ID"]):
         return True
+    logger.error("Invalid Patient ID: %s" % row["Patient ID"])
     return False
 
 # validate MRN from elab data
@@ -58,6 +59,7 @@ def is_mrn_valid(row):
 
     if pattern.match(row["MRN"]):
         return True
+    logger.error("Invalid MRN (%s) for %s." % (row["MRN"], row["Patient ID"]))
     return False
 
 # validate surgery ID number to match with patient ID
@@ -71,6 +73,7 @@ def is_surgery_id_valid(row):
     elif patternPost.match(row["Patient ID"]):
         if row["Surgery ID"] == row["Patient ID"].split("-")[3]:
             return True
+    logger.error("Please ensure surgery ID is valid for %s." % row["Patient ID"])
     return False
 
 # validate excluded status, ensure exclusion details and diagnosis are valid, if necessary, from elab data
@@ -150,6 +153,7 @@ def is_scrna_igo_id_valid(row):
 
     if pattern.match(row["scRNA IGO ID"]):
         return True
+    logger.error("Please ensure scRNA IGO ID is in proper format for %s." % row["Patient ID"])
     return False
 
 # validate scRNA IGO Submission ID
@@ -158,6 +162,7 @@ def is_scrna_igo_sub_id_valid(row):
 
     if pattern.match(row["scRNA IGO Submission ID"]):
         return True
+    logger.error("Please ensure scRNA IGO Submission ID is in proper format for %s." % row["Patient ID"])
     return False
 
 # validate scRNA REX ID
@@ -166,12 +171,14 @@ def is_scrna_rex_id_valid(row):
 
     if pattern.match(row["scRNA REX ID"]):
         return True
+    logger.error("Please ensure scRNA REX ID is in proper format for %s." % row["Patient ID"])
     return False
 
 # validate QC Checks with scRNA REX ID
 def is_qc_checks_valid(row):
     if (row["scRNA REX ID"] != "") and (row["QC Checks"] in validate_qc_check):
         return True
+    logger.error("Please ensure input for QC Checks are valid for %s." % row["Patient ID"])
     return False
 
 # validate DLP REX ID
@@ -180,12 +187,14 @@ def is_dlp_rex_id_valid(row):
 
     if pattern.match(row["DLP REX ID"]):
         return True
+    logger.error("Please ensure DLP REX ID is in proper format for %s." % row["Patient ID"])
     return False
 
 # validate tissue type for WGS bulk tumour
 def is_wgs_tissue_type_valid(row):
     if row["PPBC Downstream Submission"] == "WGS Bulk Tumour" and row["Tissue Type"] == "Frozen Tissue":
         return True
+    logger.error("Please ensure WGS bulk tumour tissue type is accurate for %s." % row["Patient ID"])
     return False
 
 # validate PPBC accession # for frozen/FFPE
@@ -194,6 +203,7 @@ def is_ppbc_acc_num_valid(row):
 
     if pattern.match(row["PPBC Accession #"]):
         return True
+    logger.error("Please ensure PPBC accession number is in proper format for %s." % row["Patient ID"])
     return False
 
 # validate PPBC bank # for frozen/FFPE
@@ -202,6 +212,7 @@ def is_ppbc_bank_num_valid(row):
 
     if pattern.match(row["PPBC Bank Number"]):
         return True
+    logger.error("Please ensure PPBC bank number is in proper format for %s." % row["Patient ID"])
     return False
 
 # validate WGS IGO ID
@@ -210,6 +221,7 @@ def is_wgs_igo_id_valid(row):
 
     if pattern.match(row["WGS IGO ID"]):
         return True
+    logger.error("Please ensure WGS IGO ID is in proper format for %s." % row["Patient ID"])
     return False
 
 # validate WGS IGO Submission ID
@@ -218,6 +230,7 @@ def is_wgs_igo_submission_id_valid(row):
 
     if pattern.match(row["WGS IGO Submission ID"]):
         return True
+    logger.error("Please ensure WGS IGO Submission ID is in proper format for %s." % row["Patient ID"])
     return False
 
 # validate WGS REX ID
@@ -226,10 +239,12 @@ def is_wgs_rex_id_valid(row):
 
     if pattern.match(row["WGS REX ID"]):
         return True
+    logger.error("Please ensure WGS REX ID is in proper format for %s." % row["Patient ID"])
     return False
 
 # validate tissue type for IF
 def is_if_tissue_type_valid(row):
     if row["PPBC Downstream Submission"] == "IF" and row["Tissue Type"] == "FFPE Block":
         return True
+    logger.error("Please ensure IF tissue type is accurate for %s." % row["Patient ID"])
     return False

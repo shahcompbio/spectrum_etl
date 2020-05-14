@@ -81,15 +81,12 @@ class Elab_DataFrame(DataFrame):
         allPass = True
         for row in self.dataframe.iterrows():
             if not validation.is_pt_id_valid(row):
-                logger.error("Invalid Patient ID: %s" % row["Patient ID"])
                 allPass = False
 
             if not validation.is_mrn_valid(row):
-                logger.error("Invalid MRN (%s) for %s." % (row["MRN"], row["Patient ID"]))
                 allPass = False
 
             if not validation.is_surgery_id_valid(row):
-                logger.error("Please ensure surgery ID is valid for %s." % row["Patient ID"])
                 allPass = False
 
             if not validation.is_patient_excluded(row):
@@ -108,51 +105,39 @@ class Elab_DataFrame(DataFrame):
                 allPass = False
 
             if not validation.is_scrna_igo_id_valid(row):
-                logger.error("Please ensure scRNA IGO ID is in proper format for %s." % row["Patient ID"])
                 allPass = False
 
             if not validation.is_scrna_igo_sub_id_valid(row):
-                logger.error("Please ensure scRNA IGO Submission ID is in proper format for %s." % row["Patient ID"])
                 allPass = False
 
             if not validation.is_scrna_rex_id_valid(row):
-                logger.error("Please ensure scRNA REX ID is in proper format for %s." % row["Patient ID"])
                 allPass = False
 
             if not validation.is_qc_checks_valid(row):
-                logger.error("Please ensure input for QC Checks are valid for %s." % row["Patient ID"])
                 allPass = False
 
             if not validation.is_dlp_rex_id_valid(row):
-                logger.error("Please ensure DLP REX ID is in proper format for %s." % row["Patient ID"])
                 allPass = False
 
             if not validation.is_wgs_tissue_type_valid(row):
-                logger.error("Please ensure WGS bulk tumour tissue type is accurate for %s." % row["Patient ID"])
                 allPass = False
 
             if not validation.is_ppbc_acc_num_valid(row):
-                logger.error("Please ensure PPBC accession number is in proper format for %s." % row["Patient ID"])
                 allPass = False
 
             if not validation.is_ppbc_bank_num_valid(row):
-                logger.error("Please ensure PPBC bank number is in proper format for %s." % row["Patient ID"])
                 allPass = False
 
             if not validation.is_wgs_igo_id_valid(row):
-                logger.error("Please ensure WGS IGO ID is in proper format for %s." % row["Patient ID"])
                 allPass = False
 
             if not validation.is_wgs_igo_submission_id_valid(row):
-                logger.error("Please ensure WGS IGO Submission ID is in proper format for %s." % row["Patient ID"])
                 allPass = False
 
             if not validation.is_wgs_rex_id_valid(row):
-                logger.error("Please ensure WGS REX ID is in proper format for %s." % row["Patient ID"])
                 allPass = False
 
             if not validation.is_if_tissue_type_valid(row):
-                logger.error("Please ensure IF tissue type is accurate for %s." % row["Patient ID"])
                 allPass = False
 
         if allPass == False:
