@@ -28,7 +28,7 @@ todo Arfath 060120
 - (Arfath) Identify API call for adding keys to records
 - (Jamie) generate list of missing keys
 - Identify record that is missing () keys
-- Write code to pull record, check against master key list to see if all keys match. If key is absent in record, add key to record using api with empty value. If key is absent in master list, then remove key from record using api.
+- Write code to pull record, check against master key list to see if all keys match. If key is absent in record, add key to record using api with empty value. If key is absent in master list, then remove key from record using api if they have empty values. If values are present, throw an error and stop. 
     - test key update for 1 or 2 records
     - run against all records
 
