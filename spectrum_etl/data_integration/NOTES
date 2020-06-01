@@ -19,10 +19,11 @@ test validation script: pytest -s tests/spectrum_etl/data_integration/test_valid
 todo Jamie 052920
 - test validation for real elab data (run drill queries)
 - ensure inconsistency that Ignacio brought up is covered in validation code DONE
-- add filters after validation code has run to remove blank values and excluded patients, test filter code
+- add filters after validation code has run to remove blank values and excluded patients DONE
+    - test filter code
 - check to confirm all elab samples are pulled DONE
-- add PPBC only samples in elab
-- pull elab API metadata again
+- add PPBC only samples in elab DONE
+- pull elab API metadata again, after keys are consistent
 
 todo Arfath 060120
 - (Arfath) Identify API call for adding keys to records
