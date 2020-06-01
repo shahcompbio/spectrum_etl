@@ -24,6 +24,13 @@ todo Jamie 052920
 - add PPBC only samples in elab
 - pull elab API metadata again
 
+todo Arfath 060120
+- (Arfath) Identify API call for adding keys to records
+- Identify record that is missing () keys
+- Write code to pull record, check against master key list to see if all keys are present; if key is absent, add key using api with empty value
+    - test key update for 1 or 2 records
+    - run against all records
+
 * regarding pulling files from elab, users will have to obtain the file name via drill and use the API to pull necessary files
 
 potential merge conflicts:
