@@ -1,14 +1,32 @@
 - incorporate Ignacio's R script into integration process by invoking R script from python
+    - OBJECTIVE: a single code base for all users to eliminate duplication of effort to provide a view into integrated metadata using drill
 
 todo Jamie 050420
 - Add "S" in transformation for surgery # to match downstream processes and Redcap entries
 - Add column in transformation step for supersite - convert RA and LA --> Adnexa, etc.
 
 todo Jamie 050820
-- edit code to look up key/values in dict json file
-- edit regex functions (\b, ^, *) and test file (return true/false, create patterns)
-- define re.compile outside of function and pattern match in function
+- edit code to look up key/values in dict json file DONE
+- edit regex functions (\b, ^, *) and test file (return true/false, create patterns) DONE
+- define re.compile outside of function and pattern match in function DONE
 
 todo Jamie 051120
-- refactor validation script into integrate.py from transform.py
-- alter integrate code to remove filters from original API pull, add filters after validation script has run
+- refactor validation script into integrate.py from transform.py DONE
+- alter integrate code to remove filters from original API pull, add filters after validation script has run DONE
+
+test validation script: pytest -s tests/spectrum_etl/data_integration/test_validation.py
+
+todo Jamie 052920
+- test validation for real elab data (run drill queries)
+- ensure inconsistency that Ignacio brought up is covered in validation code DONE
+- add filters after validation code has run to remove blank values and excluded patients, test filter code
+- check to confirm all elab samples are pulled DONE
+- add PPBC only samples in elab
+- pull elab API metadata again
+
+* regarding pulling files from elab, users will have to obtain the file name via drill and use the API to pull necessary files
+
+potential merge conflicts:
+- do a git stash to stash away your changes
+- do git pull to pull in changes from github
+- do git stash pop to pop your changes back out
