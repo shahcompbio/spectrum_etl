@@ -41,7 +41,7 @@ class Integration(object):
         return json_str
 
 
-    def extract_scrna_table(self, samples=None):
+    def extract_scrna_table(self, sample_sets=None):
         '''
         Extract SCRNA table from elab.
         '''
@@ -54,13 +54,13 @@ class Integration(object):
 
         # get all sample meta meta data
         page = 0
-        samples = []
-        while len(samples) != total_records:
+        sample_sets = []
+        while len(sample_sets) != total_records:
             response = requests.get(default_config.get_elab_api_url() + 'sampleSeries?$page='+str(page), headers=headers)
-            samples += response.json()['data']
+            sample_sets += response.json()['data']
             page += 1
 
-        assert len(samples) == total_records
+        assert len(sample_sets) == total_records
 
         # filter by patient subset
         patient_subset = []
@@ -70,27 +70,27 @@ class Integration(object):
             id = 'SPECTRUM-OV-0' + str("{:02d}".format(ii))
             pt_id_list.append(id)
 
-        for sample in samples:
+        for sample in sample_sets:
             if sample['name'] in pt_id_list:
                 patient_subset.append(sample)
 
         logger.info("attempting to get data for "+str(len(patient_subset))+" patients...")
 
-        # get all sample meta data
+        # get all sample meta data for patient subset
         #elab_sample_data = []
         elab_metadata = []
 
         for patient in patient_subset:
-            sampleids = patient["sampleIDs"]
+            sample_ids = patient["sampleIDs"]
 
             logger.info("getting data for patient "+patient['name'])
 
-            for sampleid in sampleids:
-                response = requests.get(default_config.get_elab_api_url()+'samples/{sampleid}'.format(sampleid=sampleid), headers=headers)
+            for sample_id in sample_ids:
+                response = requests.get(default_config.get_elab_api_url()+'samples/{sampleid}'.format(sampleid=sample_id), headers=headers)
 
                 # filter sample meta data by Tissue samples only
                 if response.json()["sampleType"]["name"] == "Tissue":
-                    response = requests.get(default_config.get_elab_api_url() + 'samples/{sampleid}/meta'.format(sampleid=sampleid),headers=headers)
+                    response = requests.get(default_config.get_elab_api_url() + 'samples/{sampleid}/meta'.format(sampleid=sample_id),headers=headers)
                     elab_metadata = response.json()
 
                     # data = {}
