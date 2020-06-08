@@ -34,14 +34,14 @@ def test_is_mrn_valid():
     assert is_mrn_valid({"MRN":"abcdefgh", "Patient ID":"SPECTRUM_OV_001"}) == False
 
 def test_is_surgery_id_valid():
-    assert is_surgery_id_valid({"Patient ID":"SPECTRUM-OV-001", "Surgery ID":"0", }) == True
-    assert is_surgery_id_valid({"Patient ID":"SPECTRUM-OV-001-1", "Surgery ID":"1",}) == True
-    assert is_surgery_id_valid({"Patient ID":"SPECTRUM-OV-001-99", "Surgery ID":"99"}) == True
-    assert is_surgery_id_valid({"Patient ID":"SPECTRUM-OV-001-123", "Surgery ID":"123"}) == True
+    assert is_surgery_id_valid({"Patient ID":"SPECTRUM-OV-001", "Surgery #":"0", }) == True
+    assert is_surgery_id_valid({"Patient ID":"SPECTRUM-OV-001-1", "Surgery #":"1",}) == True
+    assert is_surgery_id_valid({"Patient ID":"SPECTRUM-OV-001-99", "Surgery #":"99"}) == True
+    assert is_surgery_id_valid({"Patient ID":"SPECTRUM-OV-001-123", "Surgery #":"123"}) == True
 
-    assert is_surgery_id_valid({"Patient ID":"SPECTRUM-OV-001-1", "Surgery ID":"0"}) == False
-    assert is_surgery_id_valid({"Patient ID":"SPECTRUM-OV-001-123", "Surgery ID":"1"}) == False
-    assert is_surgery_id_valid({"Patient ID":"SPECTRUM-OV-001", "Surgery ID":"1"}) == False
+    assert is_surgery_id_valid({"Patient ID":"SPECTRUM-OV-001-1", "Surgery #":"0"}) == False
+    assert is_surgery_id_valid({"Patient ID":"SPECTRUM-OV-001-123", "Surgery #":"1"}) == False
+    assert is_surgery_id_valid({"Patient ID":"SPECTRUM-OV-001", "Surgery #":"1"}) == False
 
 def test_is_patient_excluded():
     assert is_patient_excluded({"Excluded":"No",
@@ -224,53 +224,64 @@ def test_is_scrna_igo_sub_id_valid():
                                       "Patient ID":"SPECTRUM_OV_001"}) == False
 
 def test_is_scrna_rex_id_valid():
-    assert is_scrna_rex_id_valid({"scRNA REX ID":"001RA_CD45P",
+    assert is_scrna_rex_id_valid({"scRNA REX Sample ID":"001RA_CD45P",
                                   "Patient ID":"SPECTRUM_OV_001"}) == True
-    assert is_scrna_rex_id_valid({"scRNA REX ID":"001-1RA_CD45P",
+    assert is_scrna_rex_id_valid({"scRNA REX Sample ID":"001-1RA_CD45P",
                                   "Patient ID":"SPECTRUM_OV_001"}) == True
-    assert is_scrna_rex_id_valid({"scRNA REX ID":"001RA_CD45N",
+    assert is_scrna_rex_id_valid({"scRNA REX Sample ID":"001RA_CD45N",
                                   "Patient ID":"SPECTRUM_OV_001"}) == True
-    assert is_scrna_rex_id_valid({"scRNA REX ID":"001-1RA_CD45N",
+    assert is_scrna_rex_id_valid({"scRNA REX Sample ID":"001-1RA_CD45N",
                                   "Patient ID":"SPECTRUM_OV_001"}) == True
 
-    assert is_scrna_rex_id_valid({"scRNA REX ID":"001RA-CD45P",
+    assert is_scrna_rex_id_valid({"scRNA REX Sample ID":"001RA-CD45P",
                                   "Patient ID":"SPECTRUM_OV_001"}) == False
-    assert is_scrna_rex_id_valid({"scRNA REX ID":"12RA_CD45P",
+    assert is_scrna_rex_id_valid({"scRNA REX Sample ID":"12RA_CD45P",
                                   "Patient ID":"SPECTRUM_OV_001"}) == False
-    assert is_scrna_rex_id_valid({"scRNA REX ID":"001RA_CD45",
+    assert is_scrna_rex_id_valid({"scRNA REX Sample ID":"001RA_CD45",
                                   "Patient ID":"SPECTRUM_OV_001"}) == False
-    assert is_scrna_rex_id_valid({"scRNA REX ID":"001Omentum_CD45P",
+    assert is_scrna_rex_id_valid({"scRNA REX Sample ID":"001Omentum_CD45P",
                                   "Patient ID":"SPECTRUM_OV_001"}) == False
-    assert is_scrna_rex_id_valid({"scRNA REX ID":"001RACD45P",
+    assert is_scrna_rex_id_valid({"scRNA REX Sample ID":"001RACD45P",
                                   "Patient ID":"SPECTRUM_OV_001"}) == False
 
 def test_is_qc_checks_valid():
-    assert is_qc_checks_valid({"scRNA REX ID":"001RA_CD45P",
+    assert is_qc_checks_valid({"scRNA REX Sample ID":"001RA_CD45P",
                                "QC Checks":"Passed cDNA QC, Passed Library QC",
                                "Patient ID":"SPECTRUM_OV_001"}) == True
-    assert is_qc_checks_valid({"scRNA REX ID":"001RA_CD45P",
+    assert is_qc_checks_valid({"scRNA REX Sample ID":"001RA_CD45P",
                                "QC Checks":"Failed cDNA QC",
                                "Patient ID":"SPECTRUM_OV_001"}) == True
 
-    assert is_qc_checks_valid({"scRNA REX ID":"001RA_CD45P",
+    assert is_qc_checks_valid({"scRNA REX Sample ID":"001RA_CD45P",
                                "QC Checks":"Failed cDNA",
                                "Patient ID":"SPECTRUM_OV_001"}) == False
-    assert is_qc_checks_valid({"scRNA REX ID":"001RA_CD45P",
+    assert is_qc_checks_valid({"scRNA REX Sample ID":"001RA_CD45P",
                                "QC Checks":"",
                                "Patient ID":"SPECTRUM_OV_001"}) == False
 
 def test_is_dlp_rex_id_valid():
-    assert is_dlp_rex_id_valid({"DLP REX ID":"001RA_DLP",
+    assert is_dlp_rex_id_valid({"DLP REX Sample ID (IGO)":"001RA_DLP",
                                 "Patient ID":"SPECTRUM_OV_001"}) == True
-    assert is_dlp_rex_id_valid({"DLP REX ID":"001-1RA_DLP",
+    assert is_dlp_rex_id_valid({"DLP REX Sample ID (IGO)":"001-1RA_DLP",
                                 "Patient ID":"SPECTRUM_OV_001"}) == True
 
-    assert is_dlp_rex_id_valid({"DLP REX ID":"001RA_CD45P",
+    assert is_dlp_rex_id_valid({"DLP REX Sample ID (IGO)":"001RA_CD45P",
                                 "Patient ID":"SPECTRUM_OV_001"}) == False
-    assert is_dlp_rex_id_valid({"DLP REX ID":"001RA_T",
+    assert is_dlp_rex_id_valid({"DLP REX Sample ID (IGO)":"001RA_T",
                                 "Patient ID":"SPECTRUM_OV_001"}) == False
-    assert is_dlp_rex_id_valid({"DLP REX ID":"001RA-DLP",
+    assert is_dlp_rex_id_valid({"DLP REX Sample ID (IGO)":"001RA-DLP",
                                 "Patient ID":"SPECTRUM_OV_001"}) == False
+
+def test_is_bccrc_dlp_sample_id_valid():
+    assert is_bccrc_dlp_sample_id_valid({"BCCRC Sample ID":"SA1234RA", "Specimen Site": "Right Adnexa", "Patient ID":"SPECTRUM-OV-001"}) == True
+    assert is_bccrc_dlp_sample_id_valid({"BCCRC Sample ID": "SA1234LA", "Specimen Site": "Left Adnexa", "Patient ID":"SPECTRUM-OV-001"}) == True
+    assert is_bccrc_dlp_sample_id_valid({"BCCRC Sample ID": "SA1234IO", "Specimen Site": "Infracolic Omentum", "Patient ID":"SPECTRUM-OV-001"}) == True
+    assert is_bccrc_dlp_sample_id_valid({"BCCRC Sample ID": "SA1234BO", "Specimen Site": "Bowel", "Patient ID":"SPECTRUM-OV-001"}) == True
+    assert is_bccrc_dlp_sample_id_valid({"BCCRC Sample ID": "SA1234RUQ", "Specimen Site": "Right Upper Quadrant", "Patient ID":"SPECTRUM-OV-001"}) == True
+    assert is_bccrc_dlp_sample_id_valid({"BCCRC Sample ID": "SA1234LUQ", "Specimen Site": "Left Upper Quadrant", "Patient ID":"SPECTRUM-OV-001"}) == True
+
+    assert is_bccrc_dlp_sample_id_valid({"BCCRC Sample ID":"SA1234RA", "Specimen Site": "Left Adnexa", "Patient ID":"SPECTRUM-OV-001"}) == False
+    assert is_bccrc_dlp_sample_id_valid({"BCCRC Sample ID": "SA1234LA", "Specimen Site": "Right Adnexa", "Patient ID":"SPECTRUM-OV-001"}) == False
 
 def test_is_wgs_tissue_type_valid():
     assert is_wgs_tissue_type_valid({"PPBC Downstream Submission":"WGS Bulk Tumour",
@@ -334,12 +345,12 @@ def test_is_wgs_igo_submission_id_valid():
                                            "Patient ID":"SPECTRUM_OV_001"}) == False
 
 def test_is_wgs_rex_id_valid():
-    assert is_wgs_rex_id_valid({"WGS REX ID":"001RA_T", "Patient ID":"SPECTRUM_OV_001"}) == True
-    assert is_wgs_rex_id_valid({"WGS REX ID":"001-1RA_T", "Patient ID":"SPECTRUM_OV_001"}) == True
+    assert is_wgs_rex_id_valid({"WGS REX Sample ID":"001RA_T", "Patient ID":"SPECTRUM_OV_001"}) == True
+    assert is_wgs_rex_id_valid({"WGS REX Sample ID":"001-1RA_T", "Patient ID":"SPECTRUM_OV_001"}) == True
 
-    assert is_wgs_rex_id_valid({"WGS REX ID":"001RA_CD45P", "Patient ID":"SPECTRUM_OV_001"}) == False
-    assert is_wgs_rex_id_valid({"WGS REX ID":"001RA_DLP", "Patient ID":"SPECTRUM_OV_001"}) == False
-    assert is_wgs_rex_id_valid({"WGS REX ID":"001RA-T", "Patient ID":"SPECTRUM_OV_001"}) == False
+    assert is_wgs_rex_id_valid({"WGS REX Sample ID":"001RA_CD45P", "Patient ID":"SPECTRUM_OV_001"}) == False
+    assert is_wgs_rex_id_valid({"WGS REX Sample ID":"001RA_DLP", "Patient ID":"SPECTRUM_OV_001"}) == False
+    assert is_wgs_rex_id_valid({"WGS REX Sample ID":"001RA-T", "Patient ID":"SPECTRUM_OV_001"}) == False
 
 def test_is_if_tissue_type_valid():
     assert is_if_tissue_type_valid({"PPBC Downstream Submission":"IF",

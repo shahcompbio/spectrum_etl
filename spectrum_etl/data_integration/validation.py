@@ -68,12 +68,12 @@ def is_surgery_id_valid(row):
     patternPost = re.compile(r"^SPECTRUM-OV-\d{3}-\d+$")
 
     if patternPre.match(row["Patient ID"]):
-        if row["Surgery ID"] == "0":
+        if row["Surgery #"] == "0":
             return True
     elif patternPost.match(row["Patient ID"]):
-        if row["Surgery ID"] == row["Patient ID"].split("-")[3]:
+        if row["Surgery #"] == row["Patient ID"].split("-")[3]:
             return True
-    logger.error("Please ensure surgery ID is valid for %s." % row["Patient ID"])
+    logger.error("Please ensure surgery # is valid for %s." % row["Patient ID"])
     return False
 
 # validate excluded status, ensure exclusion details and diagnosis are valid, if necessary, from elab data
@@ -169,14 +169,14 @@ def is_scrna_igo_sub_id_valid(row):
 def is_scrna_rex_id_valid(row):
     pattern = re.compile(r"^\d{3}(-\d+)?[A-Z]{2,3}_CD45[P|N]$")
 
-    if pattern.match(row["scRNA REX ID"]):
+    if pattern.match(row["scRNA REX Sample ID"]):
         return True
-    logger.error("Please ensure scRNA REX ID is in proper format for %s." % row["Patient ID"])
+    logger.error("Please ensure scRNA REX Sample ID is in proper format for %s." % row["Patient ID"])
     return False
 
 # validate QC Checks with scRNA REX ID
 def is_qc_checks_valid(row):
-    if (row["scRNA REX ID"] != "") and (row["QC Checks"] in validate_qc_check):
+    if (row["scRNA REX Sample ID"] != "") and (row["QC Checks"] in validate_qc_check):
         return True
     logger.error("Please ensure input for QC Checks are valid for %s." % row["Patient ID"])
     return False
@@ -185,9 +185,30 @@ def is_qc_checks_valid(row):
 def is_dlp_rex_id_valid(row):
     pattern = re.compile(r"^\d{3}(-\d+)?[A-Z]{2,3}_DLP$")
 
-    if pattern.match(row["DLP REX ID"]):
+    if pattern.match(row["DLP REX Sample ID (IGO)"]):
         return True
     logger.error("Please ensure DLP REX ID is in proper format for %s." % row["Patient ID"])
+    return False
+
+# validate BCCRC DLP sample ID with specimen site
+def is_bccrc_dlp_sample_id_valid(row):
+    site_id = {
+        "Right Adnexa": re.compile(r"^SA\d{4}RA$"),
+        "Left Adnexa": re.compile(r"^SA\d{4}LA$"),
+        "Infracolic Omentum": re.compile(r"^SA\d{4}IO$"),
+        "Bowel": re.compile(r"^SA\d{4}BO$"),
+        "Pelvic Peritoneum": re.compile(r"^SA\d{4}PP$"),
+        "Right Upper Quadrant": re.compile(r"^SA\d{4}RUQ$"),
+        "Left Upper Quadrant": re.compile(r"^SA\d{4}LUQ$")
+    }
+
+    if (row["Specimen Site"] in site_id.keys()):
+        if (site_id[row["Specimen Site"]].match(row["BCCRC Sample ID"])):
+            return True
+        else:
+            logger.error("Please ensure BCCRC DLP Sample ID's site matches the Specimen Site for %s." % row["Patient ID"])
+            return False
+    logger.error("Please add %s to site_id validation." % row["Specimen Site"])
     return False
 
 # validate tissue type for WGS bulk tumour
@@ -237,9 +258,9 @@ def is_wgs_igo_submission_id_valid(row):
 def is_wgs_rex_id_valid(row):
     pattern = re.compile(r"^\d{3}(-\d+)?[A-Z]{2,3}_T$")
 
-    if pattern.match(row["WGS REX ID"]):
+    if pattern.match(row["WGS REX Sample ID"]):
         return True
-    logger.error("Please ensure WGS REX ID is in proper format for %s." % row["Patient ID"])
+    logger.error("Please ensure WGS REX Sample ID is in proper format for %s." % row["Patient ID"])
     return False
 
 # validate tissue type for IF

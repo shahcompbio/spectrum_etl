@@ -10,7 +10,6 @@ import pandas as pd
 import json
 import numpy as np
 import sys
-from spectrum_etl.data_integration import validation
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -73,75 +72,8 @@ class Elab_DataFrame(DataFrame):
 
     def __init__(self, file_name):
         super().__init__(file_name)
-        self.__validate()
         self.site_transform()
 
-    # pull patient id and specimen site from data frame and run validation code
-    def __validate(self):
-        allPass = True
-        for row in self.dataframe.iterrows():
-            if not validation.is_pt_id_valid(row):
-                allPass = False
-
-            if not validation.is_mrn_valid(row):
-                allPass = False
-
-            if not validation.is_surgery_id_valid(row):
-                allPass = False
-
-            if not validation.is_patient_excluded(row):
-                allPass = False
-
-            if not validation.is_specimen_site_valid(row):
-                allPass = False
-
-            if not validation.is_downstream_submission_valid(row):
-                allPass = False
-
-            if not validation.is_seq_info_valid(row):
-                allPass = False
-
-            if not validation.is_submitted_populations_valid(row):
-                allPass = False
-
-            if not validation.is_scrna_igo_id_valid(row):
-                allPass = False
-
-            if not validation.is_scrna_igo_sub_id_valid(row):
-                allPass = False
-
-            if not validation.is_scrna_rex_id_valid(row):
-                allPass = False
-
-            if not validation.is_qc_checks_valid(row):
-                allPass = False
-
-            if not validation.is_dlp_rex_id_valid(row):
-                allPass = False
-
-            if not validation.is_wgs_tissue_type_valid(row):
-                allPass = False
-
-            if not validation.is_ppbc_acc_num_valid(row):
-                allPass = False
-
-            if not validation.is_ppbc_bank_num_valid(row):
-                allPass = False
-
-            if not validation.is_wgs_igo_id_valid(row):
-                allPass = False
-
-            if not validation.is_wgs_igo_submission_id_valid(row):
-                allPass = False
-
-            if not validation.is_wgs_rex_id_valid(row):
-                allPass = False
-
-            if not validation.is_if_tissue_type_valid(row):
-                allPass = False
-
-        if allPass == False:
-            sys.exit(1)
 
     # run site_transform from parent class
     def site_transform(self, specimen_site="Specimen Site", site_details="Site Details"):
