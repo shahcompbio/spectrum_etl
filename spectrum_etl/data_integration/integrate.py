@@ -15,6 +15,8 @@ import requests
 import codecs
 import json
 import logging.config
+from spectrum_etl.data_integration import validation
+import sys
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -26,7 +28,9 @@ class Integration(object):
 
     def __init__(self):
          #self.extract_hne_table()
-         self.extract_scrna_table()
+         #self.extract_scrna_table()
+         self.__validate()
+         #self.filter()
 
     def clean_json(self, json_str):
         '''
@@ -78,6 +82,7 @@ class Integration(object):
 
         # get all sample meta data for patient subset
         #elab_sample_data = []
+
         elab_metadata = []
 
         for patient in patient_subset:
@@ -91,22 +96,18 @@ class Integration(object):
                 # filter sample meta data by Tissue samples only
                 if response.json()["sampleType"]["name"] == "Tissue":
                     response = requests.get(default_config.get_elab_api_url() + 'samples/{sampleid}/meta'.format(sampleid=sample_id),headers=headers)
-                    elab_metadata = response.json()
+                    all_elab_metadata = response.json()
 
-                    # data = {}
+                    # pull key value attributes only from elab API pull
+                    data = {}
 
-                    # remove all meta data fields without values
-                    # for meta in sample_meta['data']:
-                    #     if ('value' in meta.keys()) and (meta['value'] != ""):
-                    #         data[meta['key']] = meta['value']
-                    #
-                    # elab_sample_data.append(data)
+                    for meta in all_elab_metadata['data']:
+                        if 'value' not in meta.keys():
+                            data[meta['key']] = meta['files'][0]['name']
+                        else:
+                            data[meta['key']] = meta['value']
 
-        # filter sample meta data for patients/sites we have scRNA seq data
-        # for sample_metadata in elab_sample_data:
-        #     if 'QC Checks' in sample_metadata.keys():
-        #         if sample_metadata['Excluded'] == "No":
-        #             filtered_elab_sample_data.append(sample_metadata)
+                    elab_metadata.append(data)
 
         # break  # just collect 1 since it takes time to collect all
 
@@ -116,6 +117,113 @@ class Integration(object):
             outfile.write(jstr)
 
         # pp.pprint(elab_metadata)
+
+    # run validation code on API pull
+    def __validate(self):
+        with open("elab_metadata", "r") as read_file:
+            elab_metadata = json.load(read_file)
+
+        allPass = True
+        for row in elab_metadata:
+
+            if not validation.is_pt_id_valid(row):
+                allPass = False
+
+            if not validation.is_mrn_valid(row):
+                allPass = False
+
+            if not validation.is_surgery_id_valid(row):
+                allPass = False
+
+            if not validation.is_patient_excluded(row):
+                allPass = False
+
+            if not validation.is_specimen_site_valid(row):
+                allPass = False
+
+            if not validation.is_downstream_submission_valid(row):
+                allPass = False
+
+            if not validation.is_seq_info_valid(row):
+                allPass = False
+
+            if not validation.is_submitted_populations_valid(row):
+                allPass = False
+
+            if not validation.is_scrna_igo_id_valid(row):
+                allPass = False
+
+            if not validation.is_scrna_igo_sub_id_valid(row):
+                allPass = False
+
+            if not validation.is_scrna_rex_id_valid(row):
+                allPass = False
+
+            if not validation.is_qc_checks_valid(row):
+                allPass = False
+
+            if not validation.is_dlp_rex_id_valid(row):
+                allPass = False
+
+            if not validation.is_bccrc_dlp_sample_id_valid(row):
+                allPass = False
+
+            if not validation.is_wgs_tissue_type_valid(row):
+                allPass = False
+
+            if not validation.is_ppbc_acc_num_valid(row):
+                allPass = False
+
+            if not validation.is_ppbc_bank_num_valid(row):
+                allPass = False
+
+            if not validation.is_wgs_igo_id_valid(row):
+                allPass = False
+
+            if not validation.is_wgs_igo_submission_id_valid(row):
+                allPass = False
+
+            if not validation.is_wgs_rex_id_valid(row):
+                allPass = False
+
+            if not validation.is_if_tissue_type_valid(row):
+                allPass = False
+
+        if allPass == False:
+            sys.exit(1)
+
+    # filter out metadata fields with blanks and patients excluded from study
+    def filter(self):
+        with open("elab_metadata", "r") as read_file:
+            elab_metadata = json.load(read_file)
+
+        meta_noBlanks = []
+        meta_onStudy = []
+
+        for row in elab_metadata:
+
+            if elab_metadata[row.values()] != "":
+                elab_metadata[row['key']] = row['value']
+
+            meta_noBlanks.append(elab_metadata)
+
+            if meta_noBlanks[row["Excluded"]] == "No":
+                meta_onStudy.append(elab_metadata)
+
+    # remove all meta data fields without values
+    # for meta in sample_meta['data']:
+    #     if ('value' in meta.keys()) and (meta['value'] != ""):
+    #         data[meta['key']] = meta['value']
+    #
+    # elab_sample_data.append(data)
+
+    # filter sample meta data for patients/sites we have scRNA seq data
+    # for sample_metadata in elab_sample_data:
+    #     if 'QC Checks' in sample_metadata.keys():
+    #         if sample_metadata['Excluded'] == "No":
+    #             filtered_elab_sample_data.append(sample_metadata)
+
+    # break  # just collect 1 since it takes time to collect all
 
     def extract_hne_table(self):
         '''
