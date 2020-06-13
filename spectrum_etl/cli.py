@@ -3,7 +3,6 @@
 """Console script for spectrum_etl."""
 import sys
 import click
-from .edc.single_cell_suspension_workbook import SingleCellSuspensionWorkbook
 
 @click.command()
 def main(args=None):
@@ -11,7 +10,6 @@ def main(args=None):
     click.echo("Replace this message by putting your code into "
                "spectrum_etl.cli.main")
     click.echo("See click documentation at http://click.pocoo.org/")
-    SingleCellSuspensionWorkbook('tests/spectrum_etl/edc/single_cell_suspension.xlsx')
     return 0
 
 
