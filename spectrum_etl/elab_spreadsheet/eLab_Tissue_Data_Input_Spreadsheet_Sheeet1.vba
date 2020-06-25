@@ -1159,3 +1159,4 @@ Function Last(choice As Long, rng As Range)
     End Select
 End Function
 
+jamie
