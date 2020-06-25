@@ -39,5 +39,14 @@ Write API code to filter all samples that have storage_only and scrna_date_of_su
 Write code to transform QC check input format (remove spaces between library and cDNA QC)
 Set up blood metadata table in elab, remove code from integrate.py for filtering tissue samples, so we can pull both tissue and blood metadata
 
-@todos Jamie 5/4/20
-- Edit primary site column to include primary/mets for each case. Make adnexa primary for all cases
+062520 spreadsheet updates:
+- add "PPBC OCT Aliquot #" column (elab interface, macros and elab spreadsheet) DONE
+- remove "BCCRC Jira Ticket" column (elab interface, macros and elab spreadsheet) DONE
+- remove "BCCRC Sequencing ID" column" (elab interface, macros and elab spreadsheet) DONE
+- add "IHC" to "PPBC Downstream Submission Validation" DONE
+- add "thickness of curls (um)" column (elab interface, macros and elab spreadsheet) DONE
+to do:
+- change "IF" to "mpIF"
+- add "IHC" fields (IHC Info)
+
+
