@@ -39,20 +39,26 @@ Write API code to filter all samples that have storage_only and scrna_date_of_su
 Write code to transform QC check input format (remove spaces between library and cDNA QC)
 Set up blood metadata table in elab, remove code from integrate.py for filtering tissue samples, so we can pull both tissue and blood metadata
 
-062520 spreadsheet updates:
+062520 tissue spreadsheet updates:
 - add "PPBC OCT Aliquot #" column (UI, macros, excel) DONE
 - remove "BCCRC Jira Ticket" column (UI, macros, excel)DONE
 - remove "BCCRC Sequencing ID" column" (UI, macros, excel) DONE
 - add "IHC" to "PPBC Downstream Submission Validation" DONE
 - add "thickness of curls (um)" column (UI, macros, excel) DONE
-to do:
-- change "IF" to "mpIF"
-- add "IHC" fields (IHC Info)
 
 blood spreadsheet updates:
 - add "IMF Sample Status" (UI, excel) DONE
 - "LM Sequencing Info" - remove "Submission Status" column, add "QC Checks" column (Passed/Failed) (UI, macros, excel) DONE
 - Remove show/hide conditionals from "submission status" column (macros) DONE
 - Remove "Matched Tissue Submission" column (UI, macros, excel) DONE
+
+062920 blood spreadsheet updates
+- add fields for "IMF Sample Status" and show/hide conditionals (UI, excel, macros) DONE
+- add blood data to spreadsheet
+
+tissue spreadsheet updates:
+- add "mpIF" field (UI, excel) DONE
+
 to do:
-- add fields for "IMF Sample Status" and show/hide conditionals
+- add "mpIF"/"IF" fields
+- add "IHC" fields
