@@ -523,17 +523,19 @@ Sub show_hide_PPBC_Info()
         End If
     Next
 
-    colNum = ColumnNumber("PPBC Bank Number")
+    colNum = ColumnNumber("PPBC Bank #")
     If Hide = True Then
         Columns(colNum).EntireColumn.Hidden = True
         Columns(colNum + 1).EntireColumn.Hidden = True
         Columns(colNum + 2).EntireColumn.Hidden = True
         Columns(colNum + 3).EntireColumn.Hidden = True
+        Columns(colNum + 4).EntireColumn.Hidden = True
     Else
         Columns(colNum).EntireColumn.Hidden = False
         Columns(colNum + 1).EntireColumn.Hidden = False
         Columns(colNum + 2).EntireColumn.Hidden = False
         Columns(colNum + 3).EntireColumn.Hidden = False
+        Columns(colNum + 4).EntireColumn.Hidden = False
     End If
 
 End Sub
@@ -542,11 +544,12 @@ End Sub
 Sub show_PPBC_Info()
     ' show PPBC Info
 
-    colNum = ColumnNumber("PPBC Bank Number")
+    colNum = ColumnNumber("PPBC Bank #")
     Columns(colNum).EntireColumn.Hidden = False
     Columns(colNum + 1).EntireColumn.Hidden = False
     Columns(colNum + 2).EntireColumn.Hidden = False
     Columns(colNum + 3).EntireColumn.Hidden = False
+    Columns(colNum + 4).EntireColumn.Hidden = False
 End Sub
 
 Sub show_hide_WGS_Bulk_Info()
@@ -618,8 +621,10 @@ Sub show_hide_Curls_Info()
 
     If Hide = True Then
         Columns(colNum).EntireColumn.Hidden = True
+        Columns(colNum + 1).EntireColumn.Hidden = True
     Else
         Columns(colNum).EntireColumn.Hidden = False
+        Columns(colNum + 1).EntireColumn.Hidden = False
     End If
 
     colNum = ColumnNumber("Concentration (ng/ul)")
@@ -657,6 +662,7 @@ Sub show_Curls_Info()
 
     colNum = ColumnNumber("# of Curls Cut")
     Columns(colNum).EntireColumn.Hidden = False
+    Columns(colNum + 1).EntireColumn.Hidden = False
 
     colNum = ColumnNumber("Concentration (ng/ul)")
     Columns(colNum).EntireColumn.Hidden = False
@@ -1054,18 +1060,14 @@ Sub show_hide_BCCRC_DLP_Sequencing_Info()
         End If
     Next
 
-    colNum = ColumnNumber("BCCRC Sequencing ID")
+    colNum = ColumnNumber("BCCRC Sample ID")
 
     If Hide = True Then
         Columns(colNum).EntireColumn.Hidden = True
         Columns(colNum + 1).EntireColumn.Hidden = True
-        Columns(colNum + 2).EntireColumn.Hidden = True
-        Columns(colNum + 3).EntireColumn.Hidden = True
     Else
         Columns(colNum).EntireColumn.Hidden = False
         Columns(colNum + 1).EntireColumn.Hidden = False
-        Columns(colNum + 2).EntireColumn.Hidden = False
-        Columns(colNum + 3).EntireColumn.Hidden = False
     End If
 
 End Sub
@@ -1074,11 +1076,9 @@ End Sub
 Sub show_BCCRC_DLP_Sequencing_Info()
     ' show BCCRC DLP Sequencing Info
 
-    colNum = ColumnNumber("BCCRC Sequencing ID")
+    colNum = ColumnNumber("BCCRC Sample ID")
     Columns(colNum).EntireColumn.Hidden = False
         Columns(colNum + 1).EntireColumn.Hidden = False
-        Columns(colNum + 2).EntireColumn.Hidden = False
-        Columns(colNum + 3).EntireColumn.Hidden = False
 End Sub
 
 
@@ -1159,4 +1159,3 @@ Function Last(choice As Long, rng As Range)
     End Select
 End Function
 
-jamie
