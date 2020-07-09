@@ -58,7 +58,9 @@ blood spreadsheet updates:
     - change "IMF Accession #" to "IMF Clinical Trial Sample ID" (UI, excel, macros) DONE
     - remove all original IMF fields DONE
     - add "IMF freeze date", "current # of vials" DONE
-- add blood data to spreadsheet
+- add blood data to spreadsheet DONE
+- add "Requested Reads" field for submission (UI, excel, macros) DONE
+- add "IGO Submission ID" field for submission (UI, excel, macros) DONE
 
 tissue spreadsheet updates:
 - add "mpIF" field (UI, excel) DONE
@@ -66,3 +68,4 @@ tissue spreadsheet updates:
 to do:
 - add "mpIF"/"IF" fields
 - add "IHC" fields
+- import blood data into elab
