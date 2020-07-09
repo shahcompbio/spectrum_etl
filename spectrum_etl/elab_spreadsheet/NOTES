@@ -54,6 +54,10 @@ blood spreadsheet updates:
 
 062920 blood spreadsheet updates
 - add fields for "IMF Sample Status" and show/hide conditionals (UI, excel, macros) DONE
+- edit IMF fields
+    - change "IMF Accession #" to "IMF Clinical Trial Sample ID" (UI, excel, macros) DONE
+    - remove all original IMF fields DONE
+    - add "IMF freeze date", "current # of vials" DONE
 - add blood data to spreadsheet
 
 tissue spreadsheet updates:
