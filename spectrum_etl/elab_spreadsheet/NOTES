@@ -61,6 +61,7 @@ blood spreadsheet updates:
 - add blood data to spreadsheet DONE
 - add "Requested Reads" field for submission (UI, excel, macros) DONE
 - add "IGO Submission ID" field for submission (UI, excel, macros) DONE
+- add "Submission Indicator" to show repeat submissions (excel, macros)
 
 tissue spreadsheet updates:
 - add "mpIF" field (UI, excel) DONE
