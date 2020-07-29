@@ -66,7 +66,13 @@ blood spreadsheet updates:
 tissue spreadsheet updates:
 - add "mpIF" field (UI, excel) DONE
 
-to do:
-- add "mpIF"/"IF" fields
+072920 updates:
+- import blood data into elab DONE
+- add "mpIF"/"IF" fields (UI, excel, macros) DONE
+    - change "IF info" to "IF/mpIF info" DONE
+    - add "H&E Submitted" Field (Yes/No) DONE
+    - change "# slides submitted" to "# USS Submitted" DONE
+    - change "Panel" to "Block Origin" (GYN/Diagnostic) DONE
+        - if "Diagnostic blocks", add fields: "Accession #", "Block ID", "Matched site", "Nomenclature" (UI, excel, macros) DONE
 - add "IHC" fields
-- import blood data into elab
+
