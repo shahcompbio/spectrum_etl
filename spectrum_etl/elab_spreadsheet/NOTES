@@ -75,5 +75,5 @@ tissue spreadsheet updates:
     - change "Panel" to "Block Origin" (GYN/Diagnostic) DONE
         - if "Diagnostic blocks", add fields: "Accession #", "Block ID", "Matched site", "Nomenclature" (UI, excel, macros) DONE
 - add "IHC" fields
-- add "GYN Nomenclature" to schema
+- add "GYN Nomenclature" to schema DONE
 
