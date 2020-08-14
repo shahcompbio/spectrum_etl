@@ -76,4 +76,8 @@ tissue spreadsheet updates:
         - if "Diagnostic blocks", add fields: "Accession #", "Block ID", "Matched site", "Nomenclature" (UI, excel, macros) DONE
 - add "IHC" fields
 - add "GYN Nomenclature" to schema DONE
+- add "Study Protocol" to tissue and blood spreadsheets - 06-107, 12-245, 17-182
+    - Tissue Spreadsheet (excel macros UI) DONE
+    - Blood Spreadsheet
+    - scripts
 
