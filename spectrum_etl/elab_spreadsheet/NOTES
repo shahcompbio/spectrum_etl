@@ -81,3 +81,10 @@ tissue spreadsheet updates:
     - Blood Spreadsheet (excel macros UI) DONE
     - scripts
 
+081920 updates:
+- Add "IMPACT" to "Facility Submitted to" in Data Validation list DONE
+- add DMG WGS Process with relevant fields: DONE
+    (Nucleic Acid Type, Molecular Pathology Accession #, DMP Sample ID, Date of Request from DMG, Appendix C Form, DMP Investigator Request Form, CMO Plate ID, Date of Transfer to CMO)
+- set up macro conditionals for "LM/IMF Sequencing Info" based on "Date of Transfer to CMO" field DONE
+- Update UI on elab DONE
+- Set UI conditionals on excel spreadsheet for updates DONE
